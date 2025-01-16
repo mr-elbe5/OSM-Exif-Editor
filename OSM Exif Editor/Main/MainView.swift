@@ -19,8 +19,9 @@ struct MainView: View {
                         .frame(width: proxy.size.width, height: proxy.size.height)
                         .clipped()
                         .background(.red)
-                    CrossButton()
-                        .hide(mainStatus.hideCrossButton)
+                    Image(systemName: "plus.circle")
+                            .font(Font.system(size: 24))
+                            .foregroundColor(Color.blue)
                 }
                 .clipped()
             }

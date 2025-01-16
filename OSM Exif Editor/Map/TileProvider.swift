@@ -50,7 +50,7 @@ class TileProvider{
                 //debug("TileProvider file saved to \(fileUrl)")
                 return true
             } catch let err{
-                //debugPrint("TileProvider saving tile: " + err.localizedDescription)
+                debugPrint("TileProvider saving tile: " + err.localizedDescription)
                 return false
             }
         }

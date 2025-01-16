@@ -11,7 +11,4 @@ import SwiftUI
     
     static var shared = MainStatus()
     
-    var hideCrossButton: Bool = true
-    var hideBottomMenu: Bool = true
-    
 }
