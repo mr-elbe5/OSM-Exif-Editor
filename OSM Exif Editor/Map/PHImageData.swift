@@ -32,8 +32,8 @@ import CoreLocation
         self.data = data
     }
     
-    var osImage: OSImage? {
-        OSImage(data: data)
+    var nsImage: NSImage? {
+        NSImage(data: data)
     }
     
     func evaluateExifData(){

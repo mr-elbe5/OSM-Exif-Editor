@@ -11,15 +11,22 @@ struct ExifEditView: View {
     
     @State var mainStatus = MainStatus.shared
     
+    @State var name = ""
+    
     var body: some View {
         VStack{
             HStack{
                 Text("Exif Data")
                 Spacer()
             }
-            if let item = mainStatus.currentImage, let image = item.getImage() {
-                Form{
-                    
+            .padding()
+            Form{
+                TextField("Name", text: $name)
+            }
+            .padding()
+            .onAppear(){
+                if let item = mainStatus.currentImage{
+                    debugPrint(item.fileURL)
                 }
             }
             Spacer()

@@ -13,7 +13,7 @@ struct ImageDetailView: View {
     var body: some View {
         VStack{
             if let item = mainStatus.currentImage, let image = item.getImage() {
-                Image(osImage: image)
+                Image(nsImage: image)
                     .resizable()
                     .scaledToFit()
             }

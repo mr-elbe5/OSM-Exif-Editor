@@ -4,11 +4,7 @@
  Copyright: Michael Rönnau mr@elbe5.de
  */
 
-#if os(macOS)
 import AppKit
-#else
-import UIKit
-#endif
 
 @Observable class MapTile{
     

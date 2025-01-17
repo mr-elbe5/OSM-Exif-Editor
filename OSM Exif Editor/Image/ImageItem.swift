@@ -6,12 +6,7 @@
 
 import Foundation
 import CoreLocation
-
-#if os(macOS)
 import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
 
 @Observable class ImageItem : Equatable, Hashable{
     
@@ -26,7 +21,7 @@ import UIKit
     var fileURL : URL
     var selected = false
     var metaData: ImageMetaData? = nil
-    var preview: OSImage? = nil
+    var preview: NSImage? = nil
     
     init(url: URL){
         id = UUID()
@@ -41,15 +36,15 @@ import UIKit
         }
     }
     
-    func getImage() -> OSImage?{
+    func getImage() -> NSImage?{
         if let data = FileManager.default.readFile(url: fileURL){
-            return OSImage(data: data)
+            return NSImage(data: data)
         } else{
             return nil
         }
     }
     
-    func getPreview() -> OSImage?{
+    func getPreview() -> NSImage?{
         if preview != nil{
             createPreview()
         }
@@ -61,7 +56,7 @@ import UIKit
     }
     
     func createPreview(){
-        if let preview = OSImage.createResizedImage(of: getImage(), size: ImageItem.previewSize){
+        if let preview = NSImage.createResizedImage(of: getImage(), size: ImageItem.previewSize){
             self.preview = preview
         }
     }

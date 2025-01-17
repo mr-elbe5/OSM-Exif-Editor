@@ -5,11 +5,7 @@
  */
 
 import SwiftUI
-#if os(macOS)
 import AppKit
-#elseif os(iOS)
-import UIKit
-#endif
 
 struct TileView: View {
     
@@ -21,13 +17,8 @@ struct TileView: View {
     
     var body: some View {
         if let image = getImage(){
-#if os(macOS)
             Image(nsImage: image)
                 .resizable()
-#else
-            Image(uiImage: image)
-                .resizable()
-#endif
         }
         else{
             Image("gear.grey")
@@ -35,9 +26,9 @@ struct TileView: View {
         }
     }
     
-    func getImage() -> OSImage?{
+    func getImage() -> NSImage?{
         if let imageData = mapTile.imageData{
-            return OSImage(data: imageData)
+            return NSImage(data: imageData)
         }
         return nil
     }

@@ -12,13 +12,13 @@ struct ImageCellView: View {
     
     var body: some View {
         if let image = getImage() {
-            Image(osImage: image)
+            Image(nsImage: image)
                 .resizable()
                 .scaledToFit()
         }
     }
     
-    func getImage() -> OSImage? {
+    func getImage() -> NSImage? {
         debugPrint("using image \(imageItem.fileURL)")
         return imageItem.getImage()
     }

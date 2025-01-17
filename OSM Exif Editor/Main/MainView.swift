@@ -14,7 +14,6 @@ struct MainView: View {
         GeometryReader { proxy in
             HSplitView{
                 ImageListView()
-                    .background(Color.yellow)
                     .frame(maxWidth: proxy.size.width/4)
                     .frame(minWidth: 100)
                 VSplitView{
@@ -26,7 +25,6 @@ struct MainView: View {
                         .frame(maxHeight: proxy.size.height*3/4)
                 }
                 ExifEditView()
-                    .background(Color.green)
                     .frame(maxWidth: proxy.size.width/3)
                     .frame(minWidth: 100)
             }
