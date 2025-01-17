@@ -19,7 +19,7 @@ import CoreLocation
         imageList = ImageItemList()
     }
     
-    func addImage(_ image: ImageItem){
+    func addImage(_ image: ImageData){
         imageList.append(image)
         //debugPrint("\(imageItems.count) image items")
     }

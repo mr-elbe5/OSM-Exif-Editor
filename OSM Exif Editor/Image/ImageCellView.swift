@@ -8,7 +8,7 @@ import SwiftUI
 
 struct ImageCellView: View {
     
-    @State var imageItem : ImageItem
+    @State var imageItem : ImageData
     
     var body: some View {
         if let image = getImage() {
@@ -19,7 +19,7 @@ struct ImageCellView: View {
     }
     
     func getImage() -> NSImage? {
-        debugPrint("using image \(imageItem.fileURL)")
+        debugPrint("using image \(imageItem.fileName)")
         return imageItem.getImage()
     }
     

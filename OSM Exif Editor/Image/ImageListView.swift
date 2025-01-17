@@ -6,6 +6,7 @@
 
 import SwiftUI
 import PhotosUI
+import Photos
 
 struct ImageListView: View {
     
@@ -13,8 +14,6 @@ struct ImageListView: View {
     @State var showImporter: Bool = false
     
     @State private var selectedItems: [PhotosPickerItem] = []
-    @State private var phImages: [PHImageData] = []
-    @State private var loading: Bool = false
     
     var body: some View {
         VStack {
@@ -26,7 +25,19 @@ struct ImageListView: View {
             PhotosPicker(selection: $selectedItems, matching: .images, photoLibrary: .shared()) {
                 Text("Select Images from Photo Library")
             }
-            .onChange(of: selectedItems, loadImages)
+            .onChange(of: selectedItems, initial: false){
+                Task {
+                    var list = ImageItemList()
+                    for item in selectedItems {
+                        guard let data = try? await item.loadTransferable(type: Data.self) else { continue }
+                        debugPrint(item.itemIdentifier ?? "no ident")
+                        let imageData = PHImageData(localIdentifier: item.itemIdentifier ?? "", data: data)
+                        list.append(imageData)
+                    }
+                    imageItems.removeAll()
+                    imageItems.append(contentsOf: list)
+                }
+            }
             List {
                 ForEach(imageItems, id: \.id) { item in
                     ImageCellView(imageItem: item)
@@ -36,12 +47,15 @@ struct ImageListView: View {
         }
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.image], allowsMultipleSelection: true, onCompletion: { result in
             switch result {
-            case .success(let files):
-                files.forEach { file in
-                    let gotAccess = file.startAccessingSecurityScopedResource()
-                    if !gotAccess { return }
-                    debugPrint(file.path)
-                    file.stopAccessingSecurityScopedResource()
+            case .success(let urls):
+                urls.forEach { url in
+                    let gotAccess = url.startAccessingSecurityScopedResource()
+                    if gotAccess, let data = FileManager.default.readFile(url: url){
+                        let imageItem = FileImageData(url: url, data: data)
+                        imageItems.append(imageItem)
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                    
                 }
             case .failure(let error):
                 debugPrint(error)
@@ -54,49 +68,6 @@ struct ImageListView: View {
         
     }
     
-    func loadImages() {
-        loading = true
-        Task {
-            debugPrint("starting task with \(selectedItems.count) selected items")
-            var phImages: [PHImageData] = []
-            var identifiers: [String] = []
-            for item in self.selectedItems{
-                if let identifier = item.itemIdentifier {
-                    identifiers.append(identifier)
-                }
-            }
-            let options = PHFetchOptions()
-            options.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-            let results = PHAsset.fetchAssets(withLocalIdentifiers: identifiers, options: options)
-            for i in 0..<results.count {
-                let asset = results[i]
-                if asset.mediaType == .image {
-                    debugPrint("got image asset image for \(asset.localIdentifier)")
-                    let options = PHImageRequestOptions()
-                    options.deliveryMode = .highQualityFormat
-                    options.isNetworkAccessAllowed = true
-                    if let imageData = try await PHImageManager.default().requestImage(for: asset, options: options){
-                        let resources = PHAssetResource.assetResources(for: asset)
-                        if let resource = resources.first {
-                            imageData.fileName = resource.originalFilename
-                            imageData.size = CGSize(width: resource.pixelWidth, height: resource.pixelHeight)
-                        }
-                        imageData.evaluateExifData()
-                        if imageData.coordinate == nil {
-                            imageData.coordinate = asset.location?.coordinate
-                        }
-                        debugPrint("got \(imageData.fileName) created on \(imageData.creationDate?.dateTimeString() ?? "unknown date") at location \(imageData.coordinate?.asShortString ?? "unknown")")
-                        phImages.append(imageData)
-                    }
-                }
-            }
-            DispatchQueue.main.async {
-                //debugPrint("replacing phImages")
-                self.phImages = phImages
-                loading = false
-            }
-        }
-    }
 }
 
 #Preview {

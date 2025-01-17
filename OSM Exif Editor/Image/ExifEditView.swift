@@ -26,7 +26,7 @@ struct ExifEditView: View {
             .padding()
             .onAppear(){
                 if let item = mainStatus.currentImage{
-                    debugPrint(item.fileURL)
+                    debugPrint(item.fileName)
                 }
             }
             Spacer()

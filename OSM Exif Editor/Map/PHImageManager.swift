@@ -19,7 +19,7 @@ extension PHImageManager {
                     return
                 }
                 if let data = data {
-                    let imageData = PHImageData(data: data)
+                    let imageData = PHImageData(localIdentifier: asset.localIdentifier, data: data)
                     imageData.orientation = orientation
                     imageData.utType = uti
                     continuation.resume(returning: imageData)

@@ -9,38 +9,13 @@ import Foundation
 import SwiftUI
 import CoreLocation
 
-@Observable class PHImageData: Equatable {
+@Observable class PHImageData: ImageData {
     
-    static func == (lhs: PHImageData, rhs: PHImageData) -> Bool {
-        lhs.id == rhs.id
-    }
+    let localIdentifier: String
     
-    let id: UUID = UUID()
-    let data: Data
-    var orientation: CGImagePropertyOrientation = .up
-    var utType: String?
-    var fileName = ""
-    var size: CGSize = .zero
-    var coordinate: CLLocationCoordinate2D?
-    var metaData = ImageMetaData()
-    
-    var creationDate: Date? {
-        metaData.dateTime
-    }
-    
-    init(data: Data) {
-        self.data = data
-    }
-    
-    var nsImage: NSImage? {
-        NSImage(data: data)
-    }
-    
-    func evaluateExifData(){
-        metaData.readData(data: data)
-        if let latitude = metaData.latitude, let longitude = metaData.longitude {
-            coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        }
+    init(localIdentifier: String, data: Data) {
+        self.localIdentifier = localIdentifier
+        super.init(data: data)
     }
     
 }
