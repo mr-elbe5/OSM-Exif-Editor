@@ -21,13 +21,20 @@ struct CrossButton: View {
         } label:  {Image(systemName: "plus.circle")
                 .font(Font.system(size: 24))
             .foregroundColor(CrossButton.crossIconColor)}
+        .buttonStyle(.borderless)
         .popover(isPresented: $showDetailPopover,
-                 attachmentAnchor: .point(.bottom),
+                 attachmentAnchor: .point(.center),
                  arrowEdge: .top) {
             VStack {
                 Text(detailText)
                     .font(.headline)
                     .padding(3)
+                Button {
+                    setImageLocation()
+                } label: {
+                    Text("Set Image Location")
+                }
+                .padding(3)
             }
             .padding()
             .frame(minWidth: 200)
@@ -46,6 +53,10 @@ struct CrossButton: View {
             }
         })
         showDetailPopover = true
+    }
+    
+    func setImageLocation(){
+        
     }
     
 }

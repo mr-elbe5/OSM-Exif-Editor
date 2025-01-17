@@ -8,13 +8,20 @@ import SwiftUI
 
 struct ImageDetailView: View {
     
-    @State var imageItem: ImageItem
+    @State var mainStatus = MainStatus.shared
     
     var body: some View {
-        if let image = imageItem.getImage() {
-            Image(osImage: image)
-                .resizable()
-                .scaledToFit()
+        VStack{
+            if let item = mainStatus.currentImage, let image = item.getImage() {
+                Image(osImage: image)
+                    .resizable()
+                    .scaledToFit()
+            }
+            else{
+                Image("gear.grey")
+                    .resizable()
+                    .scaledToFit()
+            }
         }
     }
     

@@ -11,19 +11,24 @@ struct MainView: View {
     @State var mainStatus: MainStatus = MainStatus.shared
     
     var body: some View {
-        HStack{
-            MapMenuView()
-            GeometryReader{ proxy in
-                ZStack(alignment: .center){
-                    MapView()
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .clipped()
-                        .background(.red)
-                    Image(systemName: "plus.circle")
-                            .font(Font.system(size: 24))
-                            .foregroundColor(Color.blue)
+        GeometryReader { proxy in
+            HSplitView{
+                ImageListView()
+                    .background(Color.yellow)
+                    .frame(maxWidth: proxy.size.width/4)
+                    .frame(minWidth: 100)
+                VSplitView{
+                    ImageDetailView()
+                        .frame(minHeight: proxy.size.height/4)
+                        .frame(maxHeight: proxy.size.height*3/4)
+                    MapContainerView()
+                        .frame(minHeight: proxy.size.height/4)
+                        .frame(maxHeight: proxy.size.height*3/4)
                 }
-                .clipped()
+                ExifEditView()
+                    .background(Color.green)
+                    .frame(maxWidth: proxy.size.width/3)
+                    .frame(minWidth: 100)
             }
         }
     }

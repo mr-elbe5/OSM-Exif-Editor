@@ -6,7 +6,7 @@
 
 import SwiftUI
 
-struct ImageView: View {
+struct ImageCellView: View {
     
     @State var imageItem : ImageItem
     

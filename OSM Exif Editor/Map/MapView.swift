@@ -10,7 +10,7 @@ struct MapView: View {
     
     static let minDragOffset: CGFloat = 3
     
-    @State var appStatus = MapStatus.shared
+    @State var mapStatus = MapStatus.shared
     @State var tileGrid = MapTileGrid.shared
     //@State var visibleItems = VisibleMapItems.shared
     
@@ -20,14 +20,14 @@ struct MapView: View {
         DragGesture()
             .onChanged { gesture in
                 if abs(gesture.translation.width - lastOffset.width) > MapView.minDragOffset || abs(gesture.translation.height - lastOffset.height) > MapView.minDragOffset {
-                    appStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
+                    mapStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
                     tileGrid.update()
                     //visibleItems.update()
                     lastOffset = gesture.translation
                 }
             }
             .onEnded { gesture in
-                appStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
+                mapStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
                 tileGrid.update()
                 //visibleItems.update()
                 lastOffset = .zero
@@ -38,14 +38,14 @@ struct MapView: View {
         MagnifyGesture()
             .onEnded { value in
                 if value.magnification > 1 {
-                    appStatus.zoomIn()
+                    mapStatus.zoomIn()
                 }
                 else if value.magnification < 1 {
-                    appStatus.zoomOut()
+                    mapStatus.zoomOut()
                 }
             }
     }
-
+    
     var body: some View {
         ZStack(alignment: .center){
             VStack(alignment: .center, spacing: 0){
@@ -62,18 +62,19 @@ struct MapView: View {
             .gesture(dragGesture)
             .gesture(pinchGesture)
             /*ForEach(visibleItems.visibleMapItems, id: \.self){ item in
-                    ItemView(item: item)
-                    .offset(World.offset(from: AppStatus.shared.centerCoordinate, to: item.coordinate, at: AppStatus.shared.zoom))
-            }
-            ForEach(visibleItems.visibleItemGroups, id: \.self){ group in
-                if let coordinate = group.centerCoordinate{
-                    GroupView(item: group)
-                        .offset(World.offset(from: AppStatus.shared.centerCoordinate, to: coordinate, at: AppStatus.shared.zoom))
-                }
-            }*/
+             ItemView(item: item)
+             .offset(World.offset(from: AppStatus.shared.centerCoordinate, to: item.coordinate, at: AppStatus.shared.zoom))
+             }
+             ForEach(visibleItems.visibleItemGroups, id: \.self){ group in
+             if let coordinate = group.centerCoordinate{
+             GroupView(item: group)
+             .offset(World.offset(from: AppStatus.shared.centerCoordinate, to: coordinate, at: AppStatus.shared.zoom))
+             }
+             }*/
         }
         .background(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .clipped()
     }
     
     func setPos() -> some View{
@@ -84,25 +85,25 @@ struct MapView: View {
     }
     
     /*struct ItemView: View{
-        let item: MapItem
-        var body: some View{
-            switch item.type{
-            case .note:
-                NoteItemView(item: item as! NoteItem)
-            case .image:
-                ImageItemView(item: item as! ImageItem)
-            case .trackStart:
-                EmptyView()
-            }
-        }
-    }*/
+     let item: MapItem
+     var body: some View{
+     switch item.type{
+     case .note:
+     NoteItemView(item: item as! NoteItem)
+     case .image:
+     ImageItemView(item: item as! ImageItem)
+     case .trackStart:
+     EmptyView()
+     }
+     }
+     }*/
     
     /*struct GroupView: View{
-        let item: ItemGroup
-        var body: some View{
-            ItemGroupView(item: item)
-        }
-    }*/
+     let item: ItemGroup
+     var body: some View{
+     ItemGroupView(item: item)
+     }
+     }*/
     
 }
 

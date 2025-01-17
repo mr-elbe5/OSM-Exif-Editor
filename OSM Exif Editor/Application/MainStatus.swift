@@ -11,4 +11,6 @@ import SwiftUI
     
     static var shared = MainStatus()
     
+    var currentImage: ImageItem? = nil
+    
 }
