@@ -40,7 +40,7 @@ struct ImageListView: View {
             }
             List {
                 ForEach(imageItems, id: \.id) { item in
-                    ImageCellView(imageItem: item)
+                    ImageCellView(imageData: item)
                 }
             }
             .padding()

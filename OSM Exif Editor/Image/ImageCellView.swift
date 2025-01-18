@@ -8,19 +8,25 @@ import SwiftUI
 
 struct ImageCellView: View {
     
-    @State var imageItem : ImageData
+    @State var mainStatus: MainStatus = MainStatus.shared
+    @State var imageData : ImageData
     
     var body: some View {
         if let image = getImage() {
-            Image(nsImage: image)
+            Button(action: {
+                mainStatus.currentImage = imageData
+            }, label: {Image(nsImage: image)
                 .resizable()
-                .scaledToFit()
+                .scaledToFit()}
+            )
+            .buttonStyle(PlainButtonStyle())
+            .frame(width: .infinity)
         }
     }
     
     func getImage() -> NSImage? {
-        debugPrint("using image \(imageItem.fileName)")
-        return imageItem.getImage()
+        debugPrint("using image \(imageData.fileName)")
+        return imageData.getImage()
     }
     
 }
