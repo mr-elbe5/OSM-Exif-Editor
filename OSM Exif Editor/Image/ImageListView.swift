@@ -16,15 +16,16 @@ struct ImageListView: View {
     @State private var selectedItems: [PhotosPickerItem] = []
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             Button(action: {
                 showImporter = true
-            }, label: {Text("Select Images from File System")}
+            }, label: {Text("File System")}
             )
-            .padding()
+            .padding(5)
             PhotosPicker(selection: $selectedItems, matching: .images, photoLibrary: .shared()) {
-                Text("Select Images from Photo Library")
+                Text("Photo Library")
             }
+            .padding(5)
             .onChange(of: selectedItems, initial: false){
                 Task {
                     var list = ImageItemList()

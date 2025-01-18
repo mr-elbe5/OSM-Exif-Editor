@@ -18,9 +18,7 @@ struct ImageDetailView: View {
                     .scaledToFit()
             }
             else{
-                Image("gear.grey")
-                    .resizable()
-                    .scaledToFit()
+                Spacer()
             }
         }
     }

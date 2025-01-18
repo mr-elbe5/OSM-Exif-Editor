@@ -15,17 +15,18 @@ struct MainView: View {
             HStack{
                 ImageListView()
                     .frame(width: 200)
-                VSplitView{
-                    ImageDetailView()
-                        .frame(minHeight: proxy.size.height/4)
-                        .frame(maxHeight: proxy.size.height*3/4)
-                        .frame(maxWidth: .infinity)
-                    MapContainerView()
-                        .frame(minHeight: proxy.size.height/4)
-                        .frame(maxHeight: proxy.size.height*3/4)
-                        .frame(maxWidth: .infinity)
+                ZStack{
+                    VSplitView{
+                        ImageDetailView()
+                            .frame(minHeight: proxy.size.height/4)
+                            .frame(maxHeight: proxy.size.height*3/4)
+                            .frame(maxWidth: .infinity)
+                        MapContainerView()
+                            .frame(minHeight: proxy.size.height/4)
+                            .frame(maxHeight: proxy.size.height*3/4)
+                            .frame(maxWidth: .infinity)
+                    }
                 }
-                .frame(width: proxy.size.width - 510)
                 ExifEditView()
                     .frame(width: 300)
             }
