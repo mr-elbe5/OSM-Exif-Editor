@@ -29,6 +29,6 @@ class MapDefaults{
     static var previewSize: CGFloat = 100
     
     static var startCoordinate = CLLocationCoordinate2D(latitude: 53.5416, longitude: 9.6833)
-    static var startZoom: Int = 14
+    static var startZoom: Int = 8
     
 }

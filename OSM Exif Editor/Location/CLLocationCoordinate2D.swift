@@ -33,8 +33,8 @@ extension CLLocationCoordinate2D : @retroactive Equatable{
         return String(format: "%.04f", abs(latitude)) + "° " + latitudeText + ", " + String(format: "%.04f", abs(longitude)) + "° "  + longitudeText
     }
     
-    var debugString : String{
-        "lat: \(String(format: "%.7f", latitude)), lon: \(String(format: "%.7f", longitude))"
+    var techString : String{
+        "latitude: \(String(format: "%.7f", latitude)), longitude: \(String(format: "%.7f", longitude))"
     }
     
 }

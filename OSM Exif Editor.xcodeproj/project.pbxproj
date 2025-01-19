@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		4E502D0D2D3CEA4D00D9A04C /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 4E502D0C2D3CEA4D00D9A04C /* Localizable.xcstrings */; };
+		4E50300A2D3CEF8300D9A04C /* Location.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 4E5030092D3CEF8300D9A04C /* Location.xcstrings */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		4E5024602D394EF500D9A04C /* OSM Exif Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OSM Exif Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4E502D0C2D3CEA4D00D9A04C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		4E5030092D3CEF8300D9A04C /* Location.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Location.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -32,6 +39,8 @@
 		4E5024572D394EF500D9A04C = {
 			isa = PBXGroup;
 			children = (
+				4E5030092D3CEF8300D9A04C /* Location.xcstrings */,
+				4E502D0C2D3CEA4D00D9A04C /* Localizable.xcstrings */,
 				4E5024622D394EF500D9A04C /* OSM Exif Editor */,
 				4E5024612D394EF500D9A04C /* Products */,
 			);
@@ -91,6 +100,7 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = 4E5024572D394EF500D9A04C;
 			minimizedProjectReferenceProxies = 1;
@@ -109,6 +119,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E50300A2D3CEF8300D9A04C /* Location.xcstrings in Resources */,
+				4E502D0D2D3CEA4D00D9A04C /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +196,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -240,6 +253,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};

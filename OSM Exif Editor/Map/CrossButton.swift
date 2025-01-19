@@ -13,7 +13,7 @@ struct CrossButton: View {
     static let crossIconColor = Color.blue
     
     @State private var showDetailPopover = false
-    @State private var detailText = "Unknown location"
+    @State private var detailText = "unknownLocation".localize()
     
     var body: some View {
         Button {
@@ -29,10 +29,13 @@ struct CrossButton: View {
                 Text(detailText)
                     .font(.headline)
                     .padding(3)
+                Text(MapStatus.shared.centerCoordinate.asShortString)
+                    .font(.body)
+                    .padding(3)
                 Button {
                     setImageLocation()
                 } label: {
-                    Text("Set Image Location")
+                    Text("setImageLocation".localize())
                 }
                 .padding(3)
             }
@@ -49,14 +52,15 @@ struct CrossButton: View {
                 self.detailText = placemark.locationString
             }
             else{
-                self.detailText = "Unknown location"
+                self.detailText = "unknownLocation".localize()
             }
         })
         showDetailPopover = true
     }
     
     func setImageLocation(){
-        
+        MainStatus.shared.latitude = MapStatus.shared.centerCoordinate.latitude
+        MainStatus.shared.longitude = MapStatus.shared.centerCoordinate.longitude
     }
     
 }

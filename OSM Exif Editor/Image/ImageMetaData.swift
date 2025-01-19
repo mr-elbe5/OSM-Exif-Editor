@@ -9,7 +9,7 @@ import ImageIO
 import UniformTypeIdentifiers
 import CoreLocation
 
-class ImageMetaData: NSObject, Codable {
+@Observable class ImageMetaData: NSObject, Codable {
     
     enum CodingKeys: String, CodingKey {
         case width
@@ -43,6 +43,20 @@ class ImageMetaData: NSObject, Codable {
     
     override init() {
         super.init()
+    }
+    
+    init(metaData: ImageMetaData){
+        width = metaData.width
+        height = metaData.height
+        orientation = metaData.orientation
+        aperture = metaData.aperture
+        brightness = metaData.brightness
+        dateTime = metaData.dateTime
+        offsetTime = metaData.offsetTime
+        cameraModel = metaData.cameraModel
+        altitude = metaData.altitude
+        latitude = metaData.latitude
+        longitude = metaData.longitude
     }
     
     required init(from decoder: Decoder) throws {

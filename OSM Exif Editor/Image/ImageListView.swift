@@ -9,7 +9,7 @@ import PhotosUI
 import Photos
 
 struct ImageListView: View {
-    
+
     @State var imageItems: ImageItemList = ApplicationData.shared.imageList
     @State var showImporter: Bool = false
     
@@ -17,13 +17,16 @@ struct ImageListView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            Text("imageSelection".localize())
+                .font(.headline)
+                .padding(10)
             Button(action: {
                 showImporter = true
-            }, label: {Text("File System")}
+            }, label: {Text("fileSystem".localize())}
             )
             .padding(5)
             PhotosPicker(selection: $selectedItems, matching: .images, photoLibrary: .shared()) {
-                Text("Photo Library")
+                Text("photoLibrary".localize())
             }
             .padding(5)
             .onChange(of: selectedItems, initial: false){
@@ -37,6 +40,7 @@ struct ImageListView: View {
                     }
                     imageItems.removeAll()
                     imageItems.append(contentsOf: list)
+                    MainStatus.shared.reset()
                 }
             }
             List {
@@ -58,15 +62,12 @@ struct ImageListView: View {
                     }
                     
                 }
+                MainStatus.shared.reset()
             case .failure(let error):
                 debugPrint(error)
             }
             
         })
-    }
-    
-    func selectImages(){
-        
     }
     
 }

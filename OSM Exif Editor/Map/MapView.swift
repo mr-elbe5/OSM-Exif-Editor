@@ -12,6 +12,7 @@ struct MapView: View {
     
     @State var mapStatus = MapStatus.shared
     @State var tileGrid = MapTileGrid.shared
+    
     //@State var visibleItems = VisibleMapItems.shared
     
     @State private var lastOffset: CGSize = .zero

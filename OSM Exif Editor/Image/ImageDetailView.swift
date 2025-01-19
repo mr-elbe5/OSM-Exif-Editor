@@ -16,9 +16,10 @@ struct ImageDetailView: View {
                 Image(nsImage: image)
                     .resizable()
                     .scaledToFit()
+                    .padding()
             }
             else{
-                Spacer()
+                Text("noImageSelected".localize())
             }
         }
     }

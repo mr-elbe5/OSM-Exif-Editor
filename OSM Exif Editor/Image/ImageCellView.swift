@@ -14,13 +14,19 @@ struct ImageCellView: View {
     var body: some View {
         if let image = getImage() {
             Button(action: {
-                mainStatus.currentImage = imageData
+                mainStatus.setImageData(imageData)
+                if let coordinate = imageData.coordinate{
+                    if MapStatus.shared.zoom < 10 {
+                        MapStatus.shared.zoom = 14
+                    }
+                    MapStatus.shared.centerCoordinate = coordinate
+                    MapTileGrid.shared.update()
+                }
             }, label: {Image(nsImage: image)
                 .resizable()
                 .scaledToFit()}
             )
             .buttonStyle(PlainButtonStyle())
-            .frame(width: .infinity)
         }
     }
     
