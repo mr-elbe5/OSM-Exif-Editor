@@ -6,6 +6,7 @@
 
 import Foundation
 import SwiftUI
+import Photos
 
 @Observable class MainStatus: NSObject{
     

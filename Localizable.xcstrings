@@ -72,23 +72,6 @@
         }
       }
     },
-    "fileSystem" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dateisystem"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "File System"
-          }
-        }
-      }
-    },
     "height" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -180,25 +163,8 @@
     "OSM Maps" : {
 
     },
-    "photoLibrary" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fotos"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Photos"
-          }
-        }
-      }
-    },
     "saveToImage" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -210,6 +176,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Save Image with new Data"
+          }
+        }
+      }
+    },
+    "selectImages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte auswählen…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select…"
           }
         }
       }

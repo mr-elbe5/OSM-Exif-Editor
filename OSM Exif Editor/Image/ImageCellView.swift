@@ -31,7 +31,7 @@ struct ImageCellView: View {
     }
     
     func getImage() -> NSImage? {
-        debugPrint("using image \(imageData.fileName)")
+        debugPrint("using image \(imageData.url)")
         return imageData.getImage()
     }
     

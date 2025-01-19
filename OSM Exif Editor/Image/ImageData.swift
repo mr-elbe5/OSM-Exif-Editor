@@ -7,6 +7,7 @@
 import Foundation
 import CoreLocation
 import AppKit
+import Photos
 
 @Observable class ImageData : Equatable, Hashable{
     
@@ -17,32 +18,29 @@ import AppKit
     static var previewSize: CGFloat = 512
     
     var id : UUID = UUID()
-    var fileName: String = ""
-    var utType: String? = nil
-    var orientation: CGImagePropertyOrientation = .up
     var data: Data
+    var url : URL
     var preview: NSImage? = nil
-    var selected = false
-    var size: CGSize = .zero
-    var coordinate: CLLocationCoordinate2D?
     var metaData = ImageMetaData()
     
     var creationDate: Date? {
         metaData.dateTime
     }
     
-    init(data: Data){
+    var coordinate: CLLocationCoordinate2D? {
+        metaData.coordinate
+    }
+    
+    init(url: URL, data: Data){
         id = UUID()
         self.data = data
+        self.url = url
         evaluateExifData()
         createPreview()
     }
     
     func evaluateExifData(){
         metaData.readData(data: data)
-        if let latitude = metaData.latitude, let longitude = metaData.longitude {
-            coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        }
     }
     
     func getImage() -> NSImage?{
