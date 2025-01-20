@@ -24,5 +24,15 @@ extension URL {
     var utType: UTType?{
         UTType(filenameExtension: self.pathExtension)
     }
+    
+    func getSecureData() -> Data? {
+        var data: Data? = nil
+        let gotAccess = startAccessingSecurityScopedResource()
+        if gotAccess{
+            data = FileManager.default.readFile(url: self)
+            stopAccessingSecurityScopedResource()
+        }
+        return data
+    }
 
 }

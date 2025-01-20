@@ -12,24 +12,21 @@ struct MainView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            HStack{
-                ImageListView()
-                    .frame(width: 200)
-                ZStack{
-                    VSplitView{
-                        ImageDetailView()
-                            .frame(minHeight: proxy.size.height/4)
-                            .frame(maxHeight: proxy.size.height*3/4)
-                            .frame(maxWidth: .infinity)
+            VStack{
+                MainMenu()
+                    .zIndex(1)
+                HStack{
+                    ImageGridView()
+                        .frame(width: 800)
+                        .zIndex(1)
+                    VStack{
+                        ExifEditView()
+                            .zIndex(1)
                         MapContainerView()
-                            .frame(minHeight: proxy.size.height/4)
-                            .frame(maxHeight: proxy.size.height*3/4)
-                            .frame(maxWidth: .infinity)
                     }
                 }
-                ExifEditView()
-                    .frame(width: 300)
             }
+            
         }
     }
     

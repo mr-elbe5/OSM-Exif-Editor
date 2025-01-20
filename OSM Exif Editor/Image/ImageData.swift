@@ -15,13 +15,15 @@ import Photos
         lhs.id == rhs.id
     }
     
+    static let fileExtensions = ["jpg","jpeg","png","tiff","tif"]
+    
     static var previewSize: CGFloat = 512
     
     var id : UUID = UUID()
-    var data: Data
     var url : URL
     var preview: NSImage? = nil
     var metaData = ImageMetaData()
+    var loaded: Bool = false
     
     var creationDate: Date? {
         metaData.dateTime
@@ -31,37 +33,35 @@ import Photos
         metaData.coordinate
     }
     
-    init(url: URL, data: Data){
+    init(url: URL){
         id = UUID()
-        self.data = data
         self.url = url
-        evaluateExifData()
-        createPreview()
+        
     }
     
-    func evaluateExifData(){
-        metaData.readData(data: data)
-    }
-    
-    func getImage() -> NSImage?{
-        return NSImage(data: data)
-    }
-    
-    func getPreview() -> NSImage?{
-        if preview != nil{
-            createPreview()
-        }
-        if let preview = preview{
-            return preview
-        } else{
-            return nil
+    func asssertComplete(){
+        if !loaded{
+            debugPrint("loading \(url.lastPathComponent)")
+            if let data = url.getSecureData(){
+                if let preview = NSImage.createResizedImage(of: NSImage(data: data), size: ImageData.previewSize){
+                    self.preview = preview
+                }
+                else{
+                    self.preview = NSImage(named: "gear.grey")!
+                }
+                metaData.readData(data: data)
+            }
+            loaded = true
         }
     }
     
-    func createPreview(){
-        if let preview = NSImage.createResizedImage(of: getImage(), size: ImageData.previewSize){
-            self.preview = preview
-        }
+    func getPreview() -> NSImage{
+        asssertComplete()
+        return preview!
+    }
+    
+    func getData() -> Data?{
+        url.getSecureData()
     }
     
     func hash(into hasher: inout Hasher) {
@@ -70,4 +70,4 @@ import Photos
     
 }
 
-typealias ImageItemList = Array<ImageData>
+typealias ImageDataList = Array<ImageData>

@@ -19,9 +19,9 @@ struct MapContainerView: View {
                         MapView()
                             .frame(width: proxy.size.width, height: proxy.size.height)
                             .clipped()
-                        
                         CrossButton()
                     }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .clipped()
                     ZStack(alignment: .top){
                         Button(action: {
                             mapStatus.zoomIn()
@@ -37,9 +37,7 @@ struct MapContainerView: View {
                             .foregroundColor(.black)}
                         )
                         .position(x: 30, y: 80)
-                        
                     }
-                    
                 }
             }
             

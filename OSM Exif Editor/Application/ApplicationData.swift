@@ -13,10 +13,10 @@ import CoreLocation
     
     static var shared = ApplicationData()
     
-    var imageList : ImageItemList
+    var imageList : ImageDataList
     
     init(){
-        imageList = ImageItemList()
+        imageList = ImageDataList()
     }
     
     func addImage(_ image: ImageData){
