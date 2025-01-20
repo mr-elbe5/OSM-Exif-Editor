@@ -15,8 +15,6 @@ import Photos
         lhs.id == rhs.id
     }
     
-    static let fileExtensions = ["jpg","jpeg","png","tiff","tif"]
-    
     static var previewSize: CGFloat = 512
     
     var id : UUID = UUID()
@@ -50,6 +48,9 @@ import Photos
                     self.preview = NSImage(named: "gear.grey")!
                 }
                 metaData.readData(data: data)
+            }
+            else{
+                self.preview = NSImage(named: "gear.grey")!
             }
             loaded = true
         }

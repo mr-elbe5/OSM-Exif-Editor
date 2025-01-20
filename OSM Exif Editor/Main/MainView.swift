@@ -17,13 +17,14 @@ struct MainView: View {
                     .zIndex(1)
                 HStack{
                     ImageGridView()
-                        .frame(width: 800)
+                        .frame(maxWidth: .infinity)
                         .zIndex(1)
                     VStack{
                         ExifEditView()
                             .zIndex(1)
                         MapContainerView()
                     }
+                    .frame(width: 300)
                 }
             }
             
