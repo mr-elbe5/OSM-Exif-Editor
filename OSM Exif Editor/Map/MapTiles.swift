@@ -55,12 +55,12 @@ import SwiftUI
         updateTiles()
     }
     
-    func updateTiles(){
+    func updateTiles(force: Bool = false){
         for y in 0..<gridHeight {
             for x in 0..<gridWidth {
                 let currentTile = grid[y][x]
                 let newTilePoint = IntPoint(x: centerTilePoint.x - horzExtraTiles + x, y: centerTilePoint.y - vertExtraTiles + y)
-                if currentTile.zoom != MapStatus.shared.zoom || currentTile.x != newTilePoint.x || currentTile.y != newTilePoint.y{
+                if force || currentTile.zoom != MapStatus.shared.zoom || currentTile.x != newTilePoint.x || currentTile.y != newTilePoint.y{
                     //debugPrint("changing tile")
                     let tile = MapTile(zoom: MapStatus.shared.zoom, x: newTilePoint.x, y: newTilePoint.y)
                     TileProvider.shared?.getTileImage(tile: tile){ success in

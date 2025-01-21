@@ -27,7 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         Preferences.shared.save()
         let count = FileManager.default.deleteTemporaryFiles()
         if count > 0{
-            debugPrint("\(count) temporary files deleted")
+            debugPrint("\(count) temporary file(s) deleted")
         }
     }
     

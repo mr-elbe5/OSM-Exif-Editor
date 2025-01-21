@@ -10,16 +10,26 @@ struct MainMenu: View {
 
     @State var appData: ApplicationData = ApplicationData.shared
     @State var showImporter: Bool = false
-    
+    @State var showPreferences: Bool = false
     
     var body: some View {
         HStack() {
             Button(action: {
                 showImporter = true
-            }, label: {Text("selectImages".localize())}
+            }, label: {HStack{
+                Image(systemName: "photo.on.rectangle")
+                Text("selectImages".localize())}
+            }
             )
             .padding()
             Spacer()
+            Button(action: {
+                showPreferences = true
+            }, label: {HStack{
+                Image(systemName: "gearshape")
+                Text("preferences".localize())}
+            })
+            .padding()
         }
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.jpeg, .png, .tiff], allowsMultipleSelection: true, onCompletion: { result in
             switch result {
@@ -37,6 +47,11 @@ struct MainMenu: View {
                 debugPrint(error)
             }
         })
+        .sheet(isPresented: $showPreferences) {
+        } content: {
+            PreferencesView()
+                .frame(maxWidth: 300)
+        }
     }
     
 }

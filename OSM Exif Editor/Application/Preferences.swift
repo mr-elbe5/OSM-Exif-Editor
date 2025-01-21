@@ -48,7 +48,7 @@ import Foundation
 
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        urlTemplate = try values.decodeIfPresent(String.self, forKey: .urlTemplate) ?? MapDefaults.osmUrl
+        urlTemplate = try values.decodeIfPresent(String.self, forKey: .urlTemplate) ?? MapDefaults.elbe5Url
         followTrack = try values.decodeIfPresent(Bool.self, forKey: .followTrack) ?? false
         trackpointInterval = try values.decodeIfPresent(Double.self, forKey: .trackpointInterval) ?? MapDefaults.defaultTrackpointInterval
         maxHorizontalUncertainty = try values.decodeIfPresent(Double.self, forKey: .maxHorizontalUncertainty) ?? MapDefaults.defaultMaxHorizontalUncertainty

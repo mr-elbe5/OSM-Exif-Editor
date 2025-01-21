@@ -61,6 +61,7 @@ class TileProvider{
         do{
             try FileManager.default.removeItem(at: FileManager.tileDirURL)
             try FileManager.default.createDirectory(at: FileManager.tileDirURL, withIntermediateDirectories: true)
+            tileCache.removeAll()
             //debugPrint("TileProvider tile directory cleared")
         }
         catch let err{
