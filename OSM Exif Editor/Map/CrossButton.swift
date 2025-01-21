@@ -32,12 +32,6 @@ struct CrossButton: View {
                 Text(MapStatus.shared.centerCoordinate.asShortString)
                     .font(.body)
                     .padding(3)
-                Button {
-                    setImageLocation()
-                } label: {
-                    Text("setImageLocation".localize())
-                }
-                .padding(3)
             }
             .padding()
             .frame(minWidth: 200)
@@ -56,11 +50,6 @@ struct CrossButton: View {
             }
         })
         showDetailPopover = true
-    }
-    
-    func setImageLocation(){
-        CurrentImage.shared.latitude = MapStatus.shared.centerCoordinate.latitude
-        CurrentImage.shared.longitude = MapStatus.shared.centerCoordinate.longitude
     }
     
 }

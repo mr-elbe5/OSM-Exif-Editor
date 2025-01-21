@@ -64,7 +64,7 @@ class TileProvider{
             //debugPrint("TileProvider tile directory cleared")
         }
         catch let err{
-            debugPrint("TileProvider", err)
+            debugPrint("TileProvider deleting files: ", err)
         }
     }
     

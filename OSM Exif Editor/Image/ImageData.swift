@@ -159,7 +159,7 @@ import Photos
     
     func asssertPreview(){
         if preview == nil{
-            debugPrint("creating preview for \(url.lastPathComponent)")
+            //debugPrint("creating preview for \(url.lastPathComponent)")
             if let data = url.getSecureData(){
                 if let preview = NSImage.createResizedImage(of: NSImage(data: data), size: ImageData.previewSize){
                     self.preview = preview

@@ -26,7 +26,7 @@ struct ExifEditView: View {
             HStack{
                 Text("size".localize())
                 if let width = currentImage.imageData?.width, let height = currentImage.imageData?.height{
-                    Text("\(width) x \(height)")
+                    Text("\(Int(width)) x \(Int(height))")
                 }
                 Spacer()
             }
@@ -75,6 +75,13 @@ struct ExifEditView: View {
                 TextField("", value: $currentImage.altitude, format: .number)
             }
             .padding(5)
+            Button("copyMapLocation".localize(), action: {
+                currentImage.latitude = MapStatus.shared.centerCoordinate.latitude
+                currentImage.longitude = MapStatus.shared.centerCoordinate.longitude
+            })
+            .padding(5)
+            .alert(resultText, isPresented: $showSaveResult, actions: {
+            })
             Button("saveToImage".localize(), action: {
                 if currentImage.updateImageData(){
                     resultText = "imageSaved".localize()

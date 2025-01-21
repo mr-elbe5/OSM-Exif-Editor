@@ -14,12 +14,12 @@
         }
       }
     },
-    "%lf x %lf" : {
+    "%lld x %lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$lf x %2$lf"
+            "value" : "%1$lld x %2$lld"
           }
         }
       }
@@ -71,6 +71,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Camera"
+          }
+        }
+      }
+    },
+    "copyMapLocation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kartenposition übernehmen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy map location"
           }
         }
       }

@@ -24,6 +24,7 @@ struct MainView: View {
                 ExifEditView()
                     .zIndex(1)
                 MapContainerView()
+                    .padding()
             }
             .frame(width: 400)
         }

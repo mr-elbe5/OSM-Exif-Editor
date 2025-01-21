@@ -46,7 +46,7 @@ import Photos
     }
     
     func setImageData(_ data: ImageData){
-        debugPrint(data.metaData)
+        //debugPrint(data.metaData)
         imageData = data
         dateTime = data.dateTime ?? CurrentImage.dummyDate
         latitude = data.latitude ?? 0.0

@@ -8,16 +8,16 @@ import SwiftUI
 
 struct ImageCellView: View {
     
-    @State var mainStatus: CurrentImage = CurrentImage.shared
+    @State var currentImage: CurrentImage = CurrentImage.shared
     @State var imageData : ImageData
     
     var body: some View {
         ZStack(alignment: .center){
-            Color(.darkGray)
+            Color(backgroundColor)
                 .cornerRadius(10)
-            
+
             Button(action: {
-                mainStatus.setImageData(imageData)
+                currentImage.setImageData(imageData)
                 if let coordinate = imageData.coordinate{
                     if MapStatus.shared.zoom < 10 {
                         MapStatus.shared.zoom = 14
@@ -42,6 +42,14 @@ struct ImageCellView: View {
             if imageData.coordinate != nil{
                 Image(systemName: "map")
                     .offset(x: ImageGridView.cellSize/2 - 15, y: ImageGridView.cellSize/2 - 15)
+            }
+        }
+        
+        var backgroundColor : NSColor {
+            if currentImage.imageData?.id == imageData.id{
+                return .lightGray
+            }else{
+                return .darkGray
             }
         }
         

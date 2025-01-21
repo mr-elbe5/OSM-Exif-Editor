@@ -13,8 +13,6 @@ struct MapView: View {
     @State var mapStatus = MapStatus.shared
     @State var mapTiles = MapTiles.shared
     
-    //@State var visibleItems = VisibleMapItems.shared
-    
     @State private var lastOffset: CGSize = .zero
     
     var dragGesture: some Gesture {
@@ -30,20 +28,7 @@ struct MapView: View {
             .onEnded { gesture in
                 mapStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
                 mapTiles.update()
-                //visibleItems.update()
                 lastOffset = .zero
-            }
-    }
-    
-    var pinchGesture: some Gesture {
-        MagnifyGesture()
-            .onEnded { value in
-                if value.magnification > 1 {
-                    mapStatus.zoomIn()
-                }
-                else if value.magnification < 1 {
-                    mapStatus.zoomOut()
-                }
             }
     }
     
@@ -63,53 +48,14 @@ struct MapView: View {
             }
             .offset(mapTiles.centerTileOffset)
             .gesture(dragGesture)
-            .gesture(pinchGesture)
-            /*ForEach(visibleItems.visibleMapItems, id: \.self){ item in
-             ItemView(item: item)
-             .offset(World.offset(from: AppStatus.shared.centerCoordinate, to: item.coordinate, at: AppStatus.shared.zoom))
-             }
-             ForEach(visibleItems.visibleItemGroups, id: \.self){ group in
-             if let coordinate = group.centerCoordinate{
-             GroupView(item: group)
-             .offset(World.offset(from: AppStatus.shared.centerCoordinate, to: coordinate, at: AppStatus.shared.zoom))
-             }
-             }*/
         }
         .background(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .clipped()
     }
     
-    func setPos() -> some View{
-        //visibleItems.update()
-        debugPrint("setting dummies")
-        //ApplicationData.shared.setDummies()
-        return self
-    }
-    
-    /*struct ItemView: View{
-     let item: MapItem
-     var body: some View{
-     switch item.type{
-     case .note:
-     NoteItemView(item: item as! NoteItem)
-     case .image:
-     ImageItemView(item: item as! ImageItem)
-     case .trackStart:
-     EmptyView()
-     }
-     }
-     }*/
-    
-    /*struct GroupView: View{
-     let item: ItemGroup
-     var body: some View{
-     ItemGroupView(item: item)
-     }
-     }*/
-    
 }
 
 #Preview {
-    MapView().setPos()
+    MapView()
 }

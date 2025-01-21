@@ -45,7 +45,7 @@ struct MacApp: App {
                     proxy.size
                 } action: { newSize in
                     MapStatus.shared.bounds = CGRect(origin: .zero, size: newSize)
-                    debugPrint(newSize)
+                    //debugPrint(newSize)
                     MapTiles.shared.updateTiles()
                     MapTiles.shared.update()
                 }
