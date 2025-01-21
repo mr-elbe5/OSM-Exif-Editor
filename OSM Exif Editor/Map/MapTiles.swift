@@ -8,13 +8,13 @@ import Foundation
 import CoreLocation
 import SwiftUI
 
-@Observable class MapTileGrid: NSObject{
+@Observable class MapTiles: NSObject{
     
-    static var shared = MapTileGrid()
+    static var shared = MapTiles()
     
     var gridWidth: Int = 1
     var gridHeight: Int = 1
-    var tileGrid: [[MapTile]] = []
+    var grid: [[MapTile]] = []
     
     private var centerTilePoint: IntPoint = IntPoint(x: 0,y: 0)
     
@@ -25,11 +25,11 @@ import SwiftUI
     
     override init(){
         super.init()
-        updateTileGrid()
+        updateGrid()
     }
     
-    func updateTileGrid(){
-        tileGrid.removeAll()
+    func updateGrid(){
+        grid.removeAll()
         horzExtraTiles = Int(floor(MapStatus.shared.bounds.width/2 / World.tileExtent)) + 1
         vertExtraTiles = Int(floor(MapStatus.shared.bounds.height/2 / World.tileExtent)) + 1
         gridWidth = Int(2 * horzExtraTiles + 1)
@@ -40,7 +40,7 @@ import SwiftUI
             for _ in 0..<gridWidth {
                 row.append(MapTile())
             }
-            tileGrid.append(row)
+            grid.append(row)
         }
     }
     
@@ -52,13 +52,13 @@ import SwiftUI
         // diff of tile edge to center plus offset to tile center
         centerTileOffset = CGSize(width: (Double(centerTilePoint.x)*World.tileExtent - scaledWorldCenterPoint.x + World.tileExtent/2), height: (Double(centerTilePoint.y)*World.tileExtent - scaledWorldCenterPoint.y + World.tileExtent/2))
         //debugPrint("offset: \(tileOffset)")
-        updateGrid()
+        updateTiles()
     }
     
-    func updateGrid(){
+    func updateTiles(){
         for y in 0..<gridHeight {
             for x in 0..<gridWidth {
-                let currentTile = tileGrid[y][x]
+                let currentTile = grid[y][x]
                 let newTilePoint = IntPoint(x: centerTilePoint.x - horzExtraTiles + x, y: centerTilePoint.y - vertExtraTiles + y)
                 if currentTile.zoom != MapStatus.shared.zoom || currentTile.x != newTilePoint.x || currentTile.y != newTilePoint.y{
                     //debugPrint("changing tile")
@@ -68,10 +68,17 @@ import SwiftUI
                             debugPrint("loading tile failed")
                         }
                     }
-                    tileGrid[y][x] = tile
+                    grid[y][x] = tile
                 }
             }
         }
+    }
+    
+    func getTile(_ x: Int, _ y: Int) -> MapTile? {
+        if x < 0 || x >= gridWidth || y < 0 || y >= gridHeight{
+            return nil
+        }
+        return grid[y][x]
     }
     
 }

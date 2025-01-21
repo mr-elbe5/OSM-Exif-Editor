@@ -26,8 +26,11 @@ struct MainMenu: View {
             case .success(let urls):
                 appData.imageList.removeAll()
                 urls.forEach { url in
-                    let imageData = ImageData(url: url)
-                    appData.imageList.append(imageData)
+                    if let data = url.getSecureData() {
+                        let imageData = ImageData(url: url, data: data)
+                        appData.imageList.append(imageData)
+                    }
+
                 }
                 MainStatus.shared.reset()
             case .failure(let error):

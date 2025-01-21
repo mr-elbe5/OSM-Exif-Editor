@@ -4,6 +4,26 @@
     "" : {
 
     },
+    "%@ / %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ / %2$@"
+          }
+        }
+      }
+    },
+    "%lf x %lf" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lf x %2$lf"
+          }
+        }
+      }
+    },
     "altitude" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -17,6 +37,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Altitude"
+          }
+        }
+      }
+    },
+    "brightness/aperture" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Helligkeit/Blende"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brightness/Aperture"
           }
         }
       }
@@ -210,6 +247,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Set Image Location"
+          }
+        }
+      }
+    },
+    "size" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Größe"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Size"
           }
         }
       }

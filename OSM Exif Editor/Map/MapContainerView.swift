@@ -9,7 +9,7 @@ import SwiftUI
 struct MapContainerView: View {
     
     @State var mapStatus = MapStatus.shared
-    @State var tileGrid = MapTileGrid.shared
+    @State var mapTiles = MapTiles.shared
     
     var body: some View {
         NavigationStack {
@@ -25,14 +25,14 @@ struct MapContainerView: View {
                     ZStack(alignment: .top){
                         Button(action: {
                             mapStatus.zoomIn()
-                            tileGrid.update()
+                            mapTiles.update()
                         }, label: {Image(systemName: "plus").menuIconImage()
                             .foregroundColor(.black)}
                         )
                         .position(x: 30, y: 30)
                         Button(action: {
                             mapStatus.zoomOut()
-                            tileGrid.update()
+                            mapTiles.update()
                         }, label: {Image(systemName: "minus").menuIconImage()
                             .foregroundColor(.black)}
                         )

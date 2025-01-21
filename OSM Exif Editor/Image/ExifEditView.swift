@@ -17,29 +17,29 @@ struct ExifEditView: View {
         VStack(alignment: .leading){
             HStack{
                 Text("exifData".localize())
-                    .font(.headline)
+                    .font(.system(size: 24))
                 Spacer()
             }
             .padding(5)
             HStack{
-                Text("width".localize())
-                if let width = mainStatus.currentImage?.metaData.width{
-                    Text(String(width))
+                Text("size".localize())
+                if let width = mainStatus.currentImage?.width, let height = mainStatus.currentImage?.height{
+                    Text("\(width) x \(height)")
                 }
                 Spacer()
             }
             .padding(5)
             HStack{
-                Text("height".localize())
-                if let height = mainStatus.currentImage?.metaData.height{
-                    Text(String(height))
+                Text("brightness/aperture".localize())
+                if let brightness = mainStatus.currentImage?.brightness, let aperture = mainStatus.currentImage?.aperture{
+                    Text("\(brightness) / \(aperture)")
                 }
                 Spacer()
             }
             .padding(5)
             HStack{
                 Text("cameraModel".localize())
-                if let cameraModel = mainStatus.currentImage?.metaData.cameraModel{
+                if let cameraModel = mainStatus.currentImage?.cameraModel{
                     Text(String(cameraModel))
                 }
             }

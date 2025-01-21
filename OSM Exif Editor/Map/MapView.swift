@@ -11,7 +11,7 @@ struct MapView: View {
     static let minDragOffset: CGFloat = 3
     
     @State var mapStatus = MapStatus.shared
-    @State var tileGrid = MapTileGrid.shared
+    @State var mapTiles = MapTiles.shared
     
     //@State var visibleItems = VisibleMapItems.shared
     
@@ -22,14 +22,14 @@ struct MapView: View {
             .onChanged { gesture in
                 if abs(gesture.translation.width - lastOffset.width) > MapView.minDragOffset || abs(gesture.translation.height - lastOffset.height) > MapView.minDragOffset {
                     mapStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
-                    tileGrid.update()
+                    mapTiles.update()
                     //visibleItems.update()
                     lastOffset = gesture.translation
                 }
             }
             .onEnded { gesture in
                 mapStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
-                tileGrid.update()
+                mapTiles.update()
                 //visibleItems.update()
                 lastOffset = .zero
             }
@@ -50,16 +50,18 @@ struct MapView: View {
     var body: some View {
         ZStack(alignment: .center){
             VStack(alignment: .center, spacing: 0){
-                ForEach(0..<tileGrid.gridHeight, id: \.self){ y in
+                ForEach(0..<mapTiles.gridHeight, id: \.self){ y in
                     HStack(alignment: .center, spacing: 0){
-                        ForEach(0..<tileGrid.gridWidth, id: \.self){ x in
-                            TileView(mapTile: tileGrid.tileGrid[y][x])
-                                .frame(width: World.tileExtent, height: World.tileExtent)
+                        ForEach(0..<mapTiles.gridWidth, id: \.self){ x in
+                            if let tile = mapTiles.getTile(x, y){
+                                TileView(mapTile: tile)
+                                    .frame(width: World.tileExtent, height: World.tileExtent)
+                            }
                         }
                     }
                 }
             }
-            .offset(tileGrid.centerTileOffset)
+            .offset(mapTiles.centerTileOffset)
             .gesture(dragGesture)
             .gesture(pinchGesture)
             /*ForEach(visibleItems.visibleMapItems, id: \.self){ item in

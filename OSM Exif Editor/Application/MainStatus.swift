@@ -28,12 +28,12 @@ import Photos
     }
     
     func setImageData(_ data: ImageData){
-        debugPrint(data.metaData.dictionary)
+        debugPrint(data.metaData)
         currentImage = data
-        dateTime = data.metaData.dateTime ?? Date()
-        latitude = data.metaData.latitude ?? 0.0
-        longitude = data.metaData.longitude ?? 0.0
-        altitude = data.metaData.altitude ?? 0.0
+        dateTime = data.dateTime ?? Date()
+        latitude = data.latitude ?? 0.0
+        longitude = data.longitude ?? 0.0
+        altitude = data.altitude ?? 0.0
     }
     
 }

@@ -12,44 +12,39 @@ struct ImageCellView: View {
     @State var imageData : ImageData
     
     var body: some View {
-            ZStack(alignment: .center){
+        ZStack(alignment: .center){
             Color(.darkGray)
                 .cornerRadius(10)
-            VStack{
-                if let dateTime = imageData.metaData.dateTime{
-                    Text(dateTime.exifString)
-                        .foregroundColor(.white)
-                }
-
-                Button(action: {
-                    mainStatus.setImageData(imageData)
-                    if let coordinate = imageData.coordinate{
-                        if MapStatus.shared.zoom < 10 {
-                            MapStatus.shared.zoom = 14
-                        }
-                        MapStatus.shared.centerCoordinate = coordinate
-                        MapTileGrid.shared.update()
+            
+            Button(action: {
+                mainStatus.setImageData(imageData)
+                if let coordinate = imageData.coordinate{
+                    if MapStatus.shared.zoom < 10 {
+                        MapStatus.shared.zoom = 14
                     }
-                }, label: {
-                    Image(nsImage: imageData.getPreview())
-                        .resizable()
-                        .scaledToFit()
-                    
-                })
-                .padding(10)
+                    MapStatus.shared.centerCoordinate = coordinate
+                    MapTiles.shared.update()
+                }
+            }, label: {
+                Image(nsImage: imageData.getPreview())
+                    .resizable()
+                    .scaledToFit()
                 
+            })
+            .buttonStyle(PlainButtonStyle())
+            .padding(20)
+            
+            if let dateTime = imageData.dateTime{
+                Text(dateTime.exifString)
+                    .offset(y: -ImageGridView.cellSize/2 + 15)
+            }
+            
+            if imageData.coordinate != nil{
+                Image(systemName: "map")
+                    .offset(x: ImageGridView.cellSize/2 - 15, y: ImageGridView.cellSize/2 - 15)
             }
         }
-        .aspectRatio(1, contentMode: .fill)
-        .buttonStyle(PlainButtonStyle())
+        
     }
 }
 
-
-#Preview {
-    @Previewable @State var imageData = ImageData(url: URL(fileURLWithPath: ""))
-    imageData.metaData.dateTime = Date()
-    imageData.metaData.latitude = 32.6514
-    imageData.metaData.longitude = 61.4333
-    return ImageCellView(imageData: imageData)
-}

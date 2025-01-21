@@ -11,24 +11,23 @@ struct MainView: View {
     @State var mainStatus: MainStatus = MainStatus.shared
     
     var body: some View {
-        GeometryReader { proxy in
+        HStack{
             VStack{
                 MainMenu()
                     .zIndex(1)
-                HStack{
-                    ImageGridView()
-                        .frame(maxWidth: .infinity)
-                        .zIndex(1)
-                    VStack{
-                        ExifEditView()
-                            .zIndex(1)
-                        MapContainerView()
-                    }
-                    .frame(width: 300)
-                }
+                
+                ImageGridView()
+                    .frame(maxWidth: .infinity)
+                    .zIndex(1)
             }
-            
+            VStack{
+                ExifEditView()
+                    .zIndex(1)
+                MapContainerView()
+            }
+            .frame(width: 400)
         }
+        
     }
     
 }

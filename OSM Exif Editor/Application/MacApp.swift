@@ -46,8 +46,8 @@ struct MacApp: App {
                 } action: { newSize in
                     MapStatus.shared.bounds = CGRect(origin: .zero, size: newSize)
                     debugPrint(newSize)
-                    MapTileGrid.shared.updateTileGrid()
-                    MapTileGrid.shared.update()
+                    MapTiles.shared.updateTiles()
+                    MapTiles.shared.update()
                 }
         }
     }
