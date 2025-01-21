@@ -9,7 +9,9 @@ import SwiftUI
 
 struct ExifEditView: View {
     
-    @State var mainStatus = MainStatus.shared
+    @State var currentImage = CurrentImage.shared
+    @State private var showSaveResult: Bool = false
+    @State private var resultText: String = ""
     
     let insets = EdgeInsets(top: 0, leading: 0, bottom: 5, trailing: 0)
     
@@ -23,7 +25,7 @@ struct ExifEditView: View {
             .padding(5)
             HStack{
                 Text("size".localize())
-                if let width = mainStatus.currentImage?.width, let height = mainStatus.currentImage?.height{
+                if let width = currentImage.imageData?.width, let height = currentImage.imageData?.height{
                     Text("\(width) x \(height)")
                 }
                 Spacer()
@@ -31,7 +33,7 @@ struct ExifEditView: View {
             .padding(5)
             HStack{
                 Text("brightness/aperture".localize())
-                if let brightness = mainStatus.currentImage?.brightness, let aperture = mainStatus.currentImage?.aperture{
+                if let brightness = currentImage.imageData?.brightness, let aperture = currentImage.imageData?.aperture{
                     Text("\(brightness) / \(aperture)")
                 }
                 Spacer()
@@ -39,32 +41,52 @@ struct ExifEditView: View {
             .padding(5)
             HStack{
                 Text("cameraModel".localize())
-                if let cameraModel = mainStatus.currentImage?.cameraModel{
+                if let cameraModel = currentImage.imageData?.cameraModel{
                     Text(String(cameraModel))
                 }
             }
             .padding(5)
-            DatePicker("creationDate".localize(), selection: $mainStatus.dateTime, displayedComponents: [.date, .hourAndMinute])
+            DatePicker("creationDate".localize(), selection: $currentImage.dateTime, displayedComponents: [.date, .hourAndMinute])
                 .padding(5)
             HStack{
                 Text("latitude".localize())
-                TextField("", value: $mainStatus.latitude, format: .number)
+                TextField("", value: $currentImage.latitude, format: .number)
+                    .onChange(of: currentImage.latitude, initial: false) { _,_ in
+                        if let coordinate = currentImage.coordinate{
+                            MapStatus.shared.centerCoordinate = coordinate
+                            MapTiles.shared.update()
+                        }
+                    }
             }
             .padding(5)
             HStack{
                 Text("longitude".localize())
-                TextField("", value: $mainStatus.longitude, format: .number)
+                TextField("", value: $currentImage.longitude, format: .number)
+                    .onChange(of: currentImage.longitude, initial: false) { _,_ in
+                        if let coordinate = currentImage.coordinate{
+                            MapStatus.shared.centerCoordinate = coordinate
+                            MapTiles.shared.update()
+                        }
+                    }
             }
             .padding(5)
             HStack{
                 Text("altitude".localize())
-                TextField("", value: $mainStatus.altitude, format: .number)
+                TextField("", value: $currentImage.altitude, format: .number)
             }
             .padding(5)
             Button("saveToImage".localize(), action: {
-                
+                if currentImage.updateImageData(){
+                    resultText = "imageSaved".localize()
+                }
+                else{
+                    resultText = "imageNotSaved".localize()
+                }
+                showSaveResult = true
             })
             .padding(5)
+            .alert(resultText, isPresented: $showSaveResult, actions: {
+            })
             Spacer()
         }
         .padding()

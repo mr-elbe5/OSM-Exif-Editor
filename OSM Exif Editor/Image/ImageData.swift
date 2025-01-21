@@ -146,13 +146,13 @@ import Photos
                 dict[kCGImagePropertyGPSDictionary] = gpsDict
             }
             if let altitude = altitude{
-                gpsDict[kCGImagePropertyExifApertureValue] = altitude
+                gpsDict[kCGImagePropertyGPSAltitude] = altitude
             }
             if let latitude = latitude{
-                gpsDict[kCGImagePropertyExifBrightnessValue] = latitude
+                gpsDict[kCGImagePropertyGPSLatitude] = latitude
             }
             if let longitude = longitude{
-                gpsDict[kCGImagePropertyExifOffsetTime] = longitude
+                gpsDict[kCGImagePropertyGPSLongitude] = longitude
             }
         }
     }
@@ -181,6 +181,30 @@ import Photos
     
     func getData() -> Data?{
         url.getSecureData()
+    }
+    
+    func saveFile() -> Bool{
+        var success = false
+        let gotAccess = url.startAccessingSecurityScopedResource()
+        if gotAccess{
+            if let oldData = FileManager.default.readFile(url: url){
+                let options = [kCGImageSourceShouldCache as String: kCFBooleanFalse]
+                if let imageSource = CGImageSourceCreateWithData(oldData as CFData, options as CFDictionary) {
+                    let uti: CFString = CGImageSourceGetType(imageSource)!
+                    let newData: NSMutableData = NSMutableData(data: oldData)
+                    let destination: CGImageDestination = CGImageDestinationCreateWithData((newData as CFMutableData), uti, 1, nil)!
+                    if let oldMetaData: NSDictionary = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, options as CFDictionary){
+                        let newMetaData: NSMutableDictionary = oldMetaData.mutableCopy() as! NSMutableDictionary
+                        modifyDictionary(dict: newMetaData)
+                        CGImageDestinationAddImageFromSource(destination, imageSource, 0, (newMetaData as CFDictionary))
+                        CGImageDestinationFinalize(destination)
+                        success = FileManager.default.saveFile(data: newData as Data, url: url)
+                    }
+                }
+            }
+            url.stopAccessingSecurityScopedResource()
+        }
+        return success
     }
     
     func hash(into hasher: inout Hasher) {

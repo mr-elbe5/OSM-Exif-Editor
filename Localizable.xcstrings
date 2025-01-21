@@ -129,6 +129,40 @@
     "Hello, world!" : {
 
     },
+    "imageNotSaved" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Bild konnte nicht gespeichert werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The image could not be changed."
+          }
+        }
+      }
+    },
+    "imageSaved" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Bild wurde mit neuen Werten gespeichert."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The image has been saved with new values."
+          }
+        }
+      }
+    },
     "imageSelection" : {
       "extractionState" : "manual",
       "localizations" : {

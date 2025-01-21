@@ -8,7 +8,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @State var mainStatus: MainStatus = MainStatus.shared
+    @State var mainStatus: CurrentImage = CurrentImage.shared
     
     var body: some View {
         HStack{

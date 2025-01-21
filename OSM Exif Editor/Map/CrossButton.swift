@@ -59,8 +59,8 @@ struct CrossButton: View {
     }
     
     func setImageLocation(){
-        MainStatus.shared.latitude = MapStatus.shared.centerCoordinate.latitude
-        MainStatus.shared.longitude = MapStatus.shared.centerCoordinate.longitude
+        CurrentImage.shared.latitude = MapStatus.shared.centerCoordinate.latitude
+        CurrentImage.shared.longitude = MapStatus.shared.centerCoordinate.longitude
     }
     
 }

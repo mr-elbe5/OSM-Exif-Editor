@@ -32,7 +32,7 @@ struct MainMenu: View {
                     }
 
                 }
-                MainStatus.shared.reset()
+                CurrentImage.shared.reset()
             case .failure(let error):
                 debugPrint(error)
             }

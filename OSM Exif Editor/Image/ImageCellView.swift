@@ -8,7 +8,7 @@ import SwiftUI
 
 struct ImageCellView: View {
     
-    @State var mainStatus: MainStatus = MainStatus.shared
+    @State var mainStatus: CurrentImage = CurrentImage.shared
     @State var imageData : ImageData
     
     var body: some View {
