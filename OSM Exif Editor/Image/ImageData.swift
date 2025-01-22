@@ -183,7 +183,7 @@ import Photos
         url.getSecureData()
     }
     
-    func saveFile() -> Bool{
+    func saveFile(updateCreation: Bool = false) -> Bool{
         var success = false
         let gotAccess = url.startAccessingSecurityScopedResource()
         if gotAccess{
@@ -199,6 +199,9 @@ import Photos
                         CGImageDestinationAddImageFromSource(destination, imageSource, 0, (newMetaData as CFDictionary))
                         CGImageDestinationFinalize(destination)
                         success = FileManager.default.saveFile(data: newData as Data, url: url)
+                        if updateCreation{
+                            url.creation = dateTime
+                        }
                     }
                 }
             }

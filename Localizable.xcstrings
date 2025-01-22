@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-
+      "shouldTranslate" : false
     },
     "%@ / %@" : {
       "localizations" : {
@@ -12,7 +12,8 @@
             "value" : "%1$@ / %2$@"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "%lld x %lld" : {
       "localizations" : {
@@ -22,7 +23,8 @@
             "value" : "%1$lld x %2$lld"
           }
         }
-      }
+      },
+      "shouldTranslate" : false
     },
     "altitude" : {
       "extractionState" : "manual",
@@ -83,6 +85,12 @@
             "state" : "translated",
             "value" : "Abbrechen"
           }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
         }
       }
     },
@@ -98,7 +106,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy map location"
+            "value" : "Copy Map Location"
           }
         }
       }
@@ -174,9 +182,6 @@
         }
       }
     },
-    "Hello, world!" : {
-
-    },
     "imageNotSaved" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -189,13 +194,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The image could not be changed."
+            "value" : "The Image could not be changed."
           }
         }
       }
     },
     "imageSaved" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -206,7 +211,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The image has been saved with new values."
+            "value" : "The image has been saved with new Values."
           }
         }
       }
@@ -384,6 +389,23 @@
         }
       }
     },
+    "setCreationDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateidatum auf Erstellungsdatum setzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set File Date to Creation Date"
+          }
+        }
+      }
+    },
     "setImageLocation" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -401,6 +423,23 @@
         }
       }
     },
+    "setNow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf aktuelles Datum setzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set current Date/Time"
+          }
+        }
+      }
+    },
     "size" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -414,17 +453,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Size"
-          }
-        }
-      }
-    },
-    "test" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save"
           }
         }
       }

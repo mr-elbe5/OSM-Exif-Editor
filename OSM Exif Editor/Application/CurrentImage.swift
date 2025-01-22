@@ -54,13 +54,13 @@ import Photos
         altitude = data.altitude ?? 0.0
     }
     
-    func updateImageData() -> Bool{
+    func updateImageData(updateCreation: Bool = false) -> Bool{
         if let imageData = imageData{
             imageData.dateTime = dateTime == CurrentImage.dummyDate ? nil : dateTime
             imageData.latitude = latitude  == 0.0 ? nil : latitude
             imageData.longitude = longitude == 0.0 ? nil : longitude
             imageData.altitude = altitude == 0.0 ? nil : altitude
-            return imageData.saveFile()
+            return imageData.saveFile(updateCreation: updateCreation)
         }
         return false
     }

@@ -10,6 +10,7 @@ import SwiftUI
 struct ExifEditView: View {
     
     @State var currentImage = CurrentImage.shared
+    @State var setCreationDate: Bool = false
     @State private var showSaveResult: Bool = false
     @State private var resultText: String = ""
     
@@ -48,6 +49,14 @@ struct ExifEditView: View {
             .padding(5)
             DatePicker("creationDate".localize(), selection: $currentImage.dateTime, displayedComponents: [.date, .hourAndMinute])
                 .padding(5)
+            Button("setNow".localize(), action: {
+                currentImage.dateTime = Date.now
+            })
+            .padding(5)
+            Toggle(isOn: $setCreationDate) {
+                Text("setCreationDate".localize())
+                        }
+                        .toggleStyle(.checkbox)
             HStack{
                 Text("latitude".localize())
                 TextField("", value: $currentImage.latitude, format: .number)
@@ -83,7 +92,7 @@ struct ExifEditView: View {
             .alert(resultText, isPresented: $showSaveResult, actions: {
             })
             Button("saveToImage".localize(), action: {
-                if currentImage.updateImageData(){
+                if currentImage.updateImageData(updateCreation: setCreationDate){
                     resultText = "imageSaved".localize()
                 }
                 else{

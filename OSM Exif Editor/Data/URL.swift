@@ -25,6 +25,17 @@ extension URL {
         UTType(filenameExtension: self.pathExtension)
     }
     
+    var creation: Date? {
+        get {
+            return (try? resourceValues(forKeys: [.creationDateKey]))?.creationDate
+        }
+        set {
+            var resourceValues = URLResourceValues()
+            resourceValues.creationDate = newValue
+            try? setResourceValues(resourceValues)
+        }
+    }
+    
     func getSecureData() -> Data? {
         var data: Data? = nil
         let gotAccess = startAccessingSecurityScopedResource()

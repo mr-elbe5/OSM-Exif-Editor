@@ -15,6 +15,7 @@
 			<array>
 				<string>public.jpeg</string>
 				<string>public.png</string>
+				<string>public.tiff</string>
 			</array>
 			<key>NSDocumentClass</key>
 			<string>NSDocument</string>
