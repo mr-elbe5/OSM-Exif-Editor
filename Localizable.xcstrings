@@ -94,6 +94,23 @@
         }
       }
     },
+    "copy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        }
+      }
+    },
     "copyMapLocation" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -317,6 +334,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "OSM Karten"
+          }
+        }
+      }
+    },
+    "paste" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einfügen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paste"
           }
         }
       }

@@ -47,43 +47,71 @@ struct ExifEditView: View {
                 }
             }
             .padding(5)
-            DatePicker("creationDate".localize(), selection: $currentImage.dateTime, displayedComponents: [.date, .hourAndMinute])
-                .padding(5)
+            HStack{
+                DatePicker("creationDate".localize(), selection: $currentImage.dateTime, displayedComponents: [.date, .hourAndMinute])
+                    .padding(5)
+                Button(action: {
+                    ExifClipboard.shared.copyDate()
+                }) {
+                    Image(systemName: "document.on.document")
+                }
+                .help("copy".localize())
+                Button(action: {
+                    ExifClipboard.shared.pasteDate()
+                }) {
+                    Image(systemName: "document.on.clipboard")
+                }
+                .help("paste".localize())
+            }
             Button("setNow".localize(), action: {
                 currentImage.dateTime = Date.now
             })
+            .padding(5)
             .padding(5)
             Toggle(isOn: $setCreationDate) {
                 Text("setCreationDate".localize())
                         }
                         .toggleStyle(.checkbox)
             HStack{
-                Text("latitude".localize())
-                TextField("", value: $currentImage.latitude, format: .number)
-                    .onChange(of: currentImage.latitude, initial: false) { _,_ in
-                        if let coordinate = currentImage.coordinate{
-                            MapStatus.shared.centerCoordinate = coordinate
-                            MapTiles.shared.update()
-                        }
+                VStack{
+                    HStack{
+                        Text("latitude".localize())
+                        TextField("", value: $currentImage.latitude, format: .number)
+                            .onChange(of: currentImage.latitude, initial: false) { _,_ in
+                                if let coordinate = currentImage.coordinate{
+                                    MapStatus.shared.centerCoordinate = coordinate
+                                    MapTiles.shared.update()
+                                }
+                            }
                     }
-            }
-            .padding(5)
-            HStack{
-                Text("longitude".localize())
-                TextField("", value: $currentImage.longitude, format: .number)
-                    .onChange(of: currentImage.longitude, initial: false) { _,_ in
-                        if let coordinate = currentImage.coordinate{
-                            MapStatus.shared.centerCoordinate = coordinate
-                            MapTiles.shared.update()
-                        }
+                    HStack{
+                        Text("longitude".localize())
+                        TextField("", value: $currentImage.longitude, format: .number)
+                            .onChange(of: currentImage.longitude, initial: false) { _,_ in
+                                if let coordinate = currentImage.coordinate{
+                                    MapStatus.shared.centerCoordinate = coordinate
+                                    MapTiles.shared.update()
+                                }
+                            }
                     }
-            }
-            .padding(5)
-            HStack{
-                Text("altitude".localize())
-                TextField("", value: $currentImage.altitude, format: .number)
-            }
-            .padding(5)
+                    HStack{
+                        Text("altitude".localize())
+                        TextField("", value: $currentImage.altitude, format: .number)
+                    }
+                }
+                Button(action: {
+                    ExifClipboard.shared.copyLocation()
+                }) {
+                    Image(systemName: "document.on.document")
+                }
+                .help("copy".localize())
+                Button(action: {
+                    ExifClipboard.shared.pasteLocation()
+                }) {
+                    Image(systemName: "document.on.clipboard")
+                }
+                .help("paste".localize())
+            }.padding(5)
             Button("copyMapLocation".localize(), action: {
                 currentImage.latitude = MapStatus.shared.centerCoordinate.latitude
                 currentImage.longitude = MapStatus.shared.centerCoordinate.longitude
