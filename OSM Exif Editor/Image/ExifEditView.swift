@@ -23,32 +23,38 @@ struct ExifEditView: View {
                     .font(.system(size: 24))
                 Spacer()
             }
-            .padding(5)
+            .padding(3)
             HStack{
-                Text("size".localize())
+                Text("selectedImage".localizeWithColon())
+                Text(currentImage.imageData?.url.lastPathComponent ?? "noImageSelected".localize())
+            }
+            .padding(2)
+            HStack{
+                Text("size".localizeWithColon())
                 if let width = currentImage.imageData?.width, let height = currentImage.imageData?.height{
                     Text("\(Int(width)) x \(Int(height))")
                 }
                 Spacer()
             }
-            .padding(5)
+            .padding(2)
             HStack{
-                Text("brightness/aperture".localize())
+                Text("brightness/aperture".localizeWithColon())
                 if let brightness = currentImage.imageData?.brightness, let aperture = currentImage.imageData?.aperture{
                     Text("\(brightness) / \(aperture)")
                 }
                 Spacer()
             }
-            .padding(5)
+            .padding(2)
             HStack{
-                Text("cameraModel".localize())
+                Text("cameraModel".localizeWithColon())
                 if let cameraModel = currentImage.imageData?.cameraModel{
                     Text(String(cameraModel))
                 }
             }
-            .padding(5)
+            .padding(2)
             HStack{
-                DatePicker("creationDate".localize(), selection: $currentImage.dateTime, displayedComponents: [.date, .hourAndMinute])
+                DatePicker("creationDate".localizeWithColon(), selection: $currentImage.dateTime, displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(.stepperField)
                     .padding(5)
                 Button(action: {
                     ExifClipboard.shared.copyDate()
@@ -66,8 +72,7 @@ struct ExifEditView: View {
             Button("setNow".localize(), action: {
                 currentImage.dateTime = Date.now
             })
-            .padding(5)
-            .padding(5)
+            .padding(2)
             Toggle(isOn: $setCreationDate) {
                 Text("setCreationDate".localize())
                         }
@@ -75,7 +80,7 @@ struct ExifEditView: View {
             HStack{
                 VStack{
                     HStack{
-                        Text("latitude".localize())
+                        Text("latitude".localizeWithColon())
                         TextField("", value: $currentImage.latitude, format: .number)
                             .onChange(of: currentImage.latitude, initial: false) { _,_ in
                                 if let coordinate = currentImage.coordinate{
@@ -85,8 +90,9 @@ struct ExifEditView: View {
                             }
                     }
                     HStack{
-                        Text("longitude".localize())
+                        Text("longitude".localizeWithColon())
                         TextField("", value: $currentImage.longitude, format: .number)
+                        
                             .onChange(of: currentImage.longitude, initial: false) { _,_ in
                                 if let coordinate = currentImage.coordinate{
                                     MapStatus.shared.centerCoordinate = coordinate
@@ -95,7 +101,7 @@ struct ExifEditView: View {
                             }
                     }
                     HStack{
-                        Text("altitude".localize())
+                        Text("altitude".localizeWithColon())
                         TextField("", value: $currentImage.altitude, format: .number)
                     }
                 }
@@ -111,12 +117,12 @@ struct ExifEditView: View {
                     Image(systemName: "document.on.clipboard")
                 }
                 .help("paste".localize())
-            }.padding(5)
+            }.padding(2)
             Button("copyMapLocation".localize(), action: {
                 currentImage.latitude = MapStatus.shared.centerCoordinate.latitude
                 currentImage.longitude = MapStatus.shared.centerCoordinate.longitude
             })
-            .padding(5)
+            .padding(2)
             .alert(resultText, isPresented: $showSaveResult, actions: {
             })
             Button("saveToImage".localize(), action: {
@@ -128,10 +134,10 @@ struct ExifEditView: View {
                 }
                 showSaveResult = true
             })
-            .padding(5)
+            .padding(2)
+            .disabled(currentImage.imageData == nil)
             .alert(resultText, isPresented: $showSaveResult, actions: {
             })
-            Spacer()
         }
         .padding()
     }

@@ -12,11 +12,9 @@ import Photos
     
     static var shared = CurrentImage()
     
-    static let dummyDate = Date(timeIntervalSince1970: 0)
-    
     var imageData: ImageData? = nil
     
-    var dateTime : Date = CurrentImage.dummyDate
+    var dateTime : Date = Date()
     var latitude : Double = 0.0
     var longitude : Double = 0.0
     var altitude : Double = 0.0
@@ -39,24 +37,29 @@ import Photos
     
     func reset(){
         imageData = nil
-        dateTime = CurrentImage.dummyDate
+        dateTime = Date()
         latitude = 0.0
         longitude = 0.0
         altitude = 0.0
     }
     
-    func setImageData(_ data: ImageData){
+    func setImageData(_ data: ImageData?){
         //debugPrint(data.metaData)
-        imageData = data
-        dateTime = data.dateTime ?? CurrentImage.dummyDate
-        latitude = data.latitude ?? 0.0
-        longitude = data.longitude ?? 0.0
-        altitude = data.altitude ?? 0.0
+        if let data = data{
+            imageData = data
+            dateTime = data.dateTime ?? Date()
+            latitude = data.latitude ?? 0.0
+            longitude = data.longitude ?? 0.0
+            altitude = data.altitude ?? 0.0
+        }
+        else{
+            reset()
+        }
     }
     
     func updateImageData(updateCreation: Bool = false) -> Bool{
         if let imageData = imageData{
-            imageData.dateTime = dateTime == CurrentImage.dummyDate ? nil : dateTime
+            imageData.dateTime = dateTime
             imageData.latitude = latitude  == 0.0 ? nil : latitude
             imageData.longitude = longitude == 0.0 ? nil : longitude
             imageData.altitude = altitude == 0.0 ? nil : altitude

@@ -76,11 +76,15 @@ import CoreLocation
     }
     
     func zoomIn(){
-        zoom += 1
+        if zoom < World.maxZoom{
+            zoom += 1
+        }
     }
     
     func zoomOut(){
-        zoom -= 1
+        if zoom > World.minZoom{
+            zoom -= 1
+        }
     }
     
     func moveBy(offset: CGSize){

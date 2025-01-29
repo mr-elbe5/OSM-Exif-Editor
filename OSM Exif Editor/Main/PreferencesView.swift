@@ -45,5 +45,5 @@ struct PreferencesView: View {
 }
     
 #Preview {
-    MainView()
+    PreferencesView()
 }

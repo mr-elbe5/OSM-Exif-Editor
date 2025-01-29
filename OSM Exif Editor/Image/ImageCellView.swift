@@ -17,13 +17,18 @@ struct ImageCellView: View {
                 .cornerRadius(10)
 
             Button(action: {
-                currentImage.setImageData(imageData)
-                if let coordinate = imageData.coordinate{
-                    if MapStatus.shared.zoom < 10 {
-                        MapStatus.shared.zoom = 14
+                if imageData == currentImage.imageData{
+                    currentImage.setImageData(nil)
+                }
+                else{
+                    currentImage.setImageData(imageData)
+                    if let coordinate = imageData.coordinate{
+                        if MapStatus.shared.zoom < 10 {
+                            MapStatus.shared.zoom = 14
+                        }
+                        MapStatus.shared.centerCoordinate = coordinate
+                        MapTiles.shared.update()
                     }
-                    MapStatus.shared.centerCoordinate = coordinate
-                    MapTiles.shared.update()
                 }
             }, label: {
                 Image(nsImage: imageData.getPreview())

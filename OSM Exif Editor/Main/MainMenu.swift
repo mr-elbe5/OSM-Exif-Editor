@@ -11,6 +11,7 @@ struct MainMenu: View {
     @State var appData: ApplicationData = ApplicationData.shared
     @State var showImporter: Bool = false
     @State var showPreferences: Bool = false
+    @State var showHelp: Bool = false
     
     var body: some View {
         HStack() {
@@ -28,6 +29,13 @@ struct MainMenu: View {
             }, label: {HStack{
                 Image(systemName: "gearshape")
                 Text("preferences".localize())}
+            })
+            .padding()
+            Button(action: {
+                showHelp = true
+            }, label: {HStack{
+                Image(systemName: "questionmark.circle")
+                Text("help".localize())}
             })
             .padding()
         }
@@ -51,6 +59,11 @@ struct MainMenu: View {
         } content: {
             PreferencesView()
                 .frame(maxWidth: 300)
+        }
+        .sheet(isPresented: $showHelp) {
+        } content: {
+            HelpView()
+                .frame(maxWidth: 500)
         }
     }
     

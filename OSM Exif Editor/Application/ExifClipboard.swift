@@ -11,7 +11,7 @@ import SwiftUI
     
     static var shared = ExifClipboard()
     
-    var dateTime : Date = CurrentImage.dummyDate
+    var dateTime : Date = Date()
     var latitude : Double = 0.0
     var longitude : Double = 0.0
     var altitude : Double = 0.0
