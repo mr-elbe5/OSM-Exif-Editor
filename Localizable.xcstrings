@@ -188,13 +188,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geogr. Höhe von Koordinaten abrufen"
+            "value" : "Geogr. Höhe aus Karte abrufen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get Altitude from Coordinate"
+            "value" : "Get Altitude from Map"
           }
         }
       }
