@@ -36,6 +36,7 @@ import Foundation
     var urlTemplate : String = MapDefaults.elbe5Url
     var followTrack : Bool = false
     var showTrackpoints : Bool = false
+    var elevationUrl: String = MapDefaults.elbe5ElevationUrl
     
     var trackpointInterval: Double = MapDefaults.defaultTrackpointInterval
     var maxHorizontalUncertainty: Double = MapDefaults.defaultMaxHorizontalUncertainty

@@ -125,6 +125,14 @@ struct ExifEditView: View {
             .padding(2)
             .alert(resultText, isPresented: $showSaveResult, actions: {
             })
+            Button("getAltitude".localize(), action: {
+                ElevationProvider.shared.getElevation(at: MapStatus.shared.centerCoordinate) { elevation in
+                    currentImage.altitude = elevation
+                }
+            })
+            .padding(2)
+            .alert(resultText, isPresented: $showSaveResult, actions: {
+            })
             Button("saveToImage".localize(), action: {
                 if currentImage.updateImageData(updateCreation: setCreationDate){
                     resultText = "imageSaved".localize()

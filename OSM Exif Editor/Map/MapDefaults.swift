@@ -13,6 +13,8 @@ class MapDefaults{
     static var elbe5TopoUrl = "https://maps.elbe5.de/topo/{z}/{x}/{y}.png"
     static var osmUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
     
+    static var elbe5ElevationUrl = "https://gdalserver.elbe5.de/elevation?latitude={lat}&longitude={lon}"
+    
     static var defaultTrackpointInterval: Double = 5.0
     static var defaultMaxHorizontalUncertainty: Double = 10.0
     
