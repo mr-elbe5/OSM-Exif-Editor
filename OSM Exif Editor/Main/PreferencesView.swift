@@ -10,6 +10,7 @@ struct PreferencesView: View {
     
     @State var preferences: Preferences = Preferences.shared
     @State var mapSource: String = Preferences.shared.urlTemplate
+    @State var showTwoColumns: Bool = Preferences.shared.showTwoColumns
     
     @Environment(\.dismiss) private var dismiss
     
@@ -20,7 +21,9 @@ struct PreferencesView: View {
                 Text("Elbe5").tag(MapDefaults.elbe5Url)
                 Text("Elbe5Topo").tag(MapDefaults.elbe5TopoUrl)
             }
-            .padding()
+            .padding(10)
+            Toggle("showTwoColumns".localize(), isOn: $showTwoColumns)
+                .padding(10)
             HStack{
                 Button(action: {
                     self.dismiss()
@@ -29,11 +32,15 @@ struct PreferencesView: View {
                 }
                 Button(action: {
                     preferences.urlTemplate = self.mapSource
+                    preferences.showTwoColumns = self.showTwoColumns
+                    if !showTwoColumns {
+                        ApplicationData.shared.removeAllImages(of: .right)
+                    }
                     TileProvider.shared?.deleteAllTiles()
                     MapTiles.shared.updateTiles(force: true)
                     self.dismiss()
                 }) {
-                    Text("save".localize())
+                    Text("ok".localize())
                 }
             }
             .padding()

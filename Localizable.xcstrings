@@ -239,13 +239,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diese App ist für alle Fotograf/innen, die eine Kamera ohne GPS-Modul oder Fotos mit falschem Erstellungsdatum haben.\nSie ermöglicht das Ändern von Exif-Datum und -Ort in der Foto-Datei.\nZuerst wählen Sie ein oder mehrere Bilder von Ihrem Gerät.\nIn der Vorschau werden das Exif-Aufnahmedatum und - falls ein Ort gespeichert ist - ein Kartensymbol angezeigt.\nSie können ein Bild durch Anklicken auswählen. Das ausgewählte Bild hat einen Helen Hintergrund. Falls ein Ort gespeichert wurde, wird dieser auf der Karte angezeigt.\nJetzt können Sie das Datum und den Ort entweder manuell oder mit der Karte ändern.\nAusserdem kann das Dateierstellungsdatum auf das Exif-Aufnahmedatum gesetzt werden..\nBeim Speichern werden die Daten in die Originaldatei geschrieben. Wenn Das Original erhalten bleiben soll, machen Sie bitte vorher eine Kopie.\nAktuell werden Jpeg-, Png- und Tiff-Dateien unterstützt."
+            "value" : "Diese App ist für alle Fotograf/innen, die eine Kamera ohne GPS-Modul oder Fotos mit falschem Erstellungsdatum haben.\nSie ermöglicht das Ändern von Exif-Datum und -Ort in der Foto-Datei.\nZuerst wählen Sie ein oder mehrere Bilder von Ihrem Gerät. Dies kann in einer oder zwei Spalten erfolgen (siehe Einstellungen).\nIn der Vorschau werden das Exif-Aufnahmedatum und - falls ein Ort gespeichert ist - ein Kartensymbol angezeigt.\nSie können ein Bild durch Anklicken auswählen. Das ausgewählte Bild hat einen Helen Hintergrund. Falls ein Ort gespeichert wurde, wird dieser auf der Karte angezeigt.\nJetzt können Sie das Datum und den Ort entweder manuell oder mit der Karte ändern.\nAusserdem kann das Dateierstellungsdatum auf das Exif-Aufnahmedatum gesetzt werden..\nBeim Speichern werden die Daten in die Originaldatei geschrieben. Wenn Das Original erhalten bleiben soll, machen Sie bitte vorher eine Kopie.\nAktuell werden Jpeg-, Png- und Tiff-Dateien unterstützt."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This app is for all photographers who have cameras without a GPS module or who have photos with a wrong creation date.\nIt can set or change exif date and location of your images.\nFirst you choose one or more files from your device.\nThe previews show the exif creation date and a map icon, if there is an exif location. \nThen you select each image by clicking on it. The selected image has a light background.  Now you can change date and location either manually or by using the map.\nIf the images contains a location, it is shown on the map.\nFurther, you can set the file creation date to the image creation date.\nOn saving, the respective data is written to the original image. So if you want to keep the original, please make a copy first.\nCurrently Jpeg, Png and Tiff files are supported."
+            "value" : "This app is for all photographers who have cameras without a GPS module or who have photos with a wrong creation date.\nIt can set or change exif date and location of your images.\nFirst you choose one or more files from your device. This can be done in one or two columns with equal or different images (see Preferences)\nThe previews show the exif creation date and a map icon, if there is an exif location. \nThen you select each image by clicking on it. The selected image has a light background.  Now you can change date and location either manually or by using the map.\nIf the images contains a location, it is shown on the map.\nFurther, you can set the file creation date to the image creation date.\nOn saving, the respective data is written to the original image. So if you want to keep the original, please make a copy first.\nCurrently Jpeg, Png and Tiff files are supported."
           }
         }
       }
@@ -508,6 +508,40 @@
         }
       }
     },
+    "selectLeftImages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder links auswählen…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Left Images…"
+          }
+        }
+      }
+    },
+    "selectRightImages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bilder rechts auswählen…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Right Images…"
+          }
+        }
+      }
+    },
     "setCreationDate" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -559,6 +593,23 @@
         }
       }
     },
+    "showTwoColumns" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zwei Bildspalten anzeigen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show two image columns"
+          }
+        }
+      }
+    },
     "size" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -572,6 +623,57 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Size"
+          }
+        }
+      }
+    },
+    "sortByDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Datum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        }
+      }
+    },
+    "sortByLatitude" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "geogr. Breite"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latitude"
+          }
+        }
+      }
+    },
+    "sortByLongitude" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "geogr. Länge"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Longitude"
           }
         }
       }
