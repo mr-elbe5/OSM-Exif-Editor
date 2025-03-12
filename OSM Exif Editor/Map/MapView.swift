@@ -21,7 +21,6 @@ struct MapView: View {
                 if abs(gesture.translation.width - lastOffset.width) > MapView.minDragOffset || abs(gesture.translation.height - lastOffset.height) > MapView.minDragOffset {
                     mapStatus.moveBy(offset: CGSize(width: gesture.translation.width - lastOffset.width, height: gesture.translation.height - lastOffset.height))
                     mapTiles.update()
-                    //visibleItems.update()
                     lastOffset = gesture.translation
                 }
             }
@@ -51,7 +50,6 @@ struct MapView: View {
         }
         .background(.white)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .clipped()
     }
     
 }

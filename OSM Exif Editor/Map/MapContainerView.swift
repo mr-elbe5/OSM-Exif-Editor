@@ -17,7 +17,6 @@ struct MapContainerView: View {
                 ZStack(alignment: .topLeading){
                     ZStack(alignment: .center){
                         MapView()
-                            .clipped()
                             .frame(width: proxy.size.width, height: proxy.size.height)
                         CrossButton()
                     }.frame(maxWidth: .infinity, maxHeight: .infinity)
