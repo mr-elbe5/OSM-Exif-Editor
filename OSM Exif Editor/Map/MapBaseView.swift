@@ -14,7 +14,6 @@ protocol MapBaseViewDelegate{
     func centerChanged(to coordinate: CLLocationCoordinate2D)
 }
 
-#if os(macOS)
 import AppKit
 
 struct MapBaseView: NSViewRepresentable {
@@ -22,7 +21,7 @@ struct MapBaseView: NSViewRepresentable {
     @State var mapStatus = MapStatus.shared
     
     func makeNSView(context: Context) -> NSMapBaseView {
-        debugPrint("make")
+        //debugPrint("make")
         context.coordinator.setupView()
         return context.coordinator.mapView
     }
@@ -30,69 +29,27 @@ struct MapBaseView: NSViewRepresentable {
     func updateNSView(_ nsView: NSMapBaseView, context: Context) {
         //debugPrint("update")
         if context.coordinator.zoom != mapStatus.zoom{
-            debugPrint("updating zoom")
+            //debugPrint("updating zoom")
             context.coordinator.zoomTo(mapStatus.zoom)
         }
         if context.coordinator.centerCoordinate != mapStatus.centerCoordinate{
-            debugPrint("updating coordinate")
+            //debugPrint("updating coordinate")
             context.coordinator.scrollTo(mapStatus.centerCoordinate)
         }
     }
     
     func makeCoordinator() -> MapBaseViewCoordinator {
-        debugPrint("make coordinator")
+        //debugPrint("make coordinator")
         let coordinator = MapBaseViewCoordinator()
         coordinator.setupView()
         return coordinator
     }
     
 }
-
-
-#elseif os(iOS)
-
-import UIKit
-
-struct MapBaseView: UIViewRepresentable {
-    
-    @State var mapStatus = MapStatus.shared
-    
-    func makeUIView(context: Context) -> UIMapBaseView {
-        debugPrint("make view")
-        context.coordinator.setupView()
-        return context.coordinator.mapView
-    }
-
-    func updateUIView(_ uiView: UIMapBaseView, context: Context) {
-        //debugPrint("update")
-        if context.coordinator.zoom != mapStatus.zoom{
-            debugPrint("updating zoom")
-            context.coordinator.zoomTo(mapStatus.zoom)
-        }
-        if context.coordinator.centerCoordinate != mapStatus.centerCoordinate{
-            debugPrint("updating coordinate")
-            context.coordinator.scrollTo(mapStatus.centerCoordinate)
-        }
-    }
-    
-    func makeCoordinator() -> MapBaseViewCoordinator {
-        debugPrint("make coordinator")
-        let coordinator = MapBaseViewCoordinator()
-        coordinator.setupView()
-        return coordinator
-    }
-    
-}
-
-#endif
 
 class MapBaseViewCoordinator: NSObject, MapBaseViewDelegate{
     
-#if os(macOS)
-    var mapView = NSMapBaseView()
-#elseif os(iOS)
-    var mapView = UIMapBaseView()
-#endif
+var mapView = NSMapBaseView()
     
     var zoom: Int?{
         mapView.zoom

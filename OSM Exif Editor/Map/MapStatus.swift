@@ -87,14 +87,6 @@ import CoreLocation
         }
     }
     
-    func moveBy(offset: CGSize){
-        var scaledWorldCenterPoint = scaledWorldCenterPoint
-        scaledWorldCenterPoint = CGPoint(x: scaledWorldCenterPoint.x - offset.width, y: scaledWorldCenterPoint.y - offset.height)
-        let newCoordinate = World.coordinate(scaledX: scaledWorldCenterPoint.x, scaledY: scaledWorldCenterPoint.y, at: zoom)
-        //debugPrint("moving to coordinate \(newCoordinate)")
-        centerCoordinate = CLLocationCoordinate2D(latitude: newCoordinate.latitude, longitude: newCoordinate.longitude)
-    }
-    
     func save(){
         StatusManager.shared.saveCodable(key: MapStatus.storeKey, value: self)
     }

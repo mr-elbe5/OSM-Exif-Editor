@@ -22,7 +22,7 @@ class NSMapBaseView: NSScrollView {
         didSet {
             if !didSetFrame, frame != .zero {
                 didSetFrame = true
-                debugPrint(frame)
+                //debugPrint(frame)
                 scrollTo(centerCoordinate)
             }
         }

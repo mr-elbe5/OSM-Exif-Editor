@@ -15,7 +15,7 @@ struct MapContainerView: View {
             GeometryReader{ proxy in
                 ZStack(alignment: .topLeading){
                     ZStack(alignment: .center){
-                        MapView()
+                        MapBaseView()
                             .frame(width: proxy.size.width, height: proxy.size.height)
                         CrossButton()
                     }.frame(maxWidth: .infinity, maxHeight: .infinity)
