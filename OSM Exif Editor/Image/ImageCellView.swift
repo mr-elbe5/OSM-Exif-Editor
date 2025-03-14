@@ -23,7 +23,6 @@ struct ImageCellView: View {
                         MapStatus.shared.zoom = 14
                     }
                     MapStatus.shared.centerCoordinate = coordinate
-                    MapTiles.shared.update()
                 }
             }
         }, label: {

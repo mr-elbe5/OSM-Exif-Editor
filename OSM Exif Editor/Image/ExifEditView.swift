@@ -85,7 +85,6 @@ struct ExifEditView: View {
                             .onChange(of: currentImage.latitude, initial: false) { _,_ in
                                 if let coordinate = currentImage.coordinate{
                                     MapStatus.shared.centerCoordinate = coordinate
-                                    MapTiles.shared.update()
                                 }
                             }
                     }
@@ -96,7 +95,6 @@ struct ExifEditView: View {
                             .onChange(of: currentImage.longitude, initial: false) { _,_ in
                                 if let coordinate = currentImage.coordinate{
                                     MapStatus.shared.centerCoordinate = coordinate
-                                    MapTiles.shared.update()
                                 }
                             }
                     }

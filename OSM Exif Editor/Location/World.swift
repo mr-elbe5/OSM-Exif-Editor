@@ -1,6 +1,6 @@
 /*
- OSM Maps
- Display and use of OSM maps
+ E5MapData
+ Base classes and extension for IOS and MacOS
  Copyright: Michael Rönnau mr@elbe5.de
  */
 
@@ -12,6 +12,7 @@ struct World{
     static var maxZoom : Int = 18
     static var minZoom : Int = 4
     static let tileExtent : Double = 256.0
+    static let tileSize : CGSize = CGSize(width: tileExtent, height: tileExtent)
     static var fullExtent = pow(2,Double(maxZoom))*tileExtent
     static let equatorInMeters : CGFloat = 40075016.686
     static var worldSize = CGSize(width: fullExtent, height: fullExtent)
@@ -31,12 +32,16 @@ struct World{
         pow(2.0, CGFloat(zoom))
     }
     
-    static func downScale(to zoom: Int) -> Double{
-        zoomScale(at: zoom - maxZoom)
+    static func zoomScale(from: Int, to: Int) -> Double{
+        zoomScale(at: to - from)
     }
     
-    static func upScale(from zoom: Int) -> Double{
-        zoomScale(at: maxZoom - zoom)
+    static func zoomScaleToWorld(from zoom: Int) -> Double{
+        zoomScale(from: zoom, to: maxZoom)
+    }
+    
+    static func zoomScaleFromWorld(to zoom: Int) -> Double{
+        zoomScale(from: maxZoom, to: zoom)
     }
     
     static func zoomLevelFromScale(scale: CGFloat) -> Int{
@@ -47,12 +52,12 @@ struct World{
     }
     
     static func zoomedWorld(zoom: Int) -> CGRect{
-        let scale = downScale(to: zoom)
+        let scale = zoomScale(from: maxZoom, to: zoom)
         return CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: fullExtent*scale, height: fullExtent*scale))
     }
     
     static func scaledWorld(zoom: Int) -> CGRect{
-        let scale = downScale(to: zoom)
+        let scale = zoomScale(from: maxZoom, to: zoom)
         return CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: fullExtent*scale, height: fullExtent*scale))
     }
     
@@ -72,37 +77,28 @@ struct World{
         1/metersPerMapPointAtLatitude(lat)
     }
     
-    private static func projectedLongitude(_ longitude: Double) -> Double {
+    static func projectedLongitude(_ longitude: Double) -> Double {
         (longitude + 180)/360.0
     }
     
-    private static func projectedLatitude(_ latitude: Double) -> Double {
+    static func projectedLatitude(_ latitude: Double) -> Double {
         (1 - log( tan(latitude * Double.pi/180.0 ) + 1/cos(latitude * Double.pi / 180.0 ))/Double.pi)/2
     }
     
-    static func tilePoint(coordinate: CLLocationCoordinate2D, at zoom: Int) -> IntPoint {
-        IntPoint(x: Int(floor(projectedLongitude(coordinate.longitude)*pow(2.0, Double(zoom)))),
-                     y: Int(floor(projectedLatitude(coordinate.latitude)*pow(2.0, Double(zoom)))))
+    static func tileX(_ longitude: Double) -> Int {
+        Int(floor(projectedLongitude(longitude)))
     }
     
-    static func coordinate(scaledPoint: CGPoint, at zoom: Int) -> CLLocationCoordinate2D {
-        let scale = downScale(to: zoom)
-        var worldPoint = CGPoint(x: scaledPoint.x/scale, y: scaledPoint.y / scale)
-        if worldPoint.x > World.worldSize.width{
-            worldPoint = CGPoint(x: worldPoint.x - World.worldSize.width, y: worldPoint.y)
-        }
-        return coordinate(worldPoint)
+    static func tileX(_ longitude: Double, at zoom: Int) -> Int {
+        Int(floor(projectedLongitude(longitude)*pow(2.0, Double(zoom))))
     }
     
-    static func coordinate(_ worldPoint: CGPoint) -> CLLocationCoordinate2D{
-        let longitude = worldPoint.x/World.fullExtent*360.0 - 180.0
-        let latitude = atan(sinh(CGFloat.pi - (worldPoint.y/World.fullExtent)*2*CGFloat.pi))*(180.0/CGFloat.pi)
-        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    static func tileY(_ latitude: Double) -> Int {
+        Int(floor(projectedLatitude(latitude)))
     }
     
-    static func zoomedPoint(coordinate: CLLocationCoordinate2D, zoom: Int) -> CGPoint {
-        CGPoint(x: round(projectedLongitude(coordinate.longitude)*fullExtent*zoomScale(at: zoom - maxZoom)),
-                y: round(projectedLatitude(coordinate.latitude)*fullExtent*zoomScale(at: zoom - maxZoom)))
+    static func tileY(_ latitude: Double, at zoom: Int) -> Int {
+        Int(floor(projectedLatitude(latitude)*pow(2.0, Double(zoom))))
     }
     
     static func worldX(_ longitude: Double) -> Double {
@@ -118,8 +114,24 @@ struct World{
                 y: worldY(coordinate.latitude))
     }
     
-    static func worldRect(scaledX : Double, scaledY : Double, scaledWidth: Double, scaledHeight: Double, at zoom: Int) -> CGRect{
-        let downScale = downScale(to: zoom)
+    static func coordinate(worldX : Double, worldY : Double) -> CLLocationCoordinate2D {
+        let lon = worldX/World.fullExtent*360.0 - 180.0
+        let lat = atan( sinh (Double.pi - (worldY/World.fullExtent)*2*Double.pi)) * (180.0/Double.pi)
+        return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+    }
+    
+    static func mapPoint(scaledX : Double, scaledY : Double, downScale: Double) -> CGPoint{
+        if downScale == 0{
+            return CGPoint()
+        }
+        return CGPoint(x: scaledX/downScale, y: scaledY / downScale)
+    }
+    
+    static func mapPoint(scaledPoint: CGPoint, downScale: Double) -> CGPoint{
+        mapPoint(scaledX: scaledPoint.x, scaledY: scaledPoint.y, downScale: downScale)
+    }
+    
+    static func worldRect(scaledX : Double, scaledY : Double, scaledWidth: Double, scaledHeight: Double, downScale: Double) -> CGRect{
         if downScale == 0{
             return CGRect()
         }
@@ -127,13 +139,37 @@ struct World{
     }
     
     static func worldRect(scaledRect: CGRect, at zoom: Int) -> CGRect{
-        worldRect(scaledX: scaledRect.origin.x, scaledY: scaledRect.origin.y, scaledWidth: scaledRect.size.width, scaledHeight: scaledRect.size.height, at: zoom)
+        worldRect(scaledRect: scaledRect, downScale: zoomScaleFromWorld(to: zoom))
     }
     
-    static func offset(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D, at zoom: Int) -> CGSize{
-        let fromPoint = zoomedPoint(coordinate: from, zoom: zoom)
-        let toPoint = zoomedPoint(coordinate: to, zoom: zoom)
-        return CGSize(width: toPoint.x - fromPoint.x, height: toPoint.y - fromPoint.y)
+    static func worldRect(scaledRect: CGRect, downScale: Double) -> CGRect{
+        worldRect(scaledX: scaledRect.origin.x, scaledY: scaledRect.origin.y, scaledWidth: scaledRect.size.width, scaledHeight: scaledRect.size.height, downScale: downScale)
+    }
+    
+    static func coordinate(scaledX : Double, scaledY : Double, at zoom: Int) -> CLLocationCoordinate2D {
+        coordinate(scaledX: scaledX, scaledY: scaledY, downScale: zoomScaleFromWorld(to: zoom))
+    }
+    
+    static func coordinate(scaledX : Double, scaledY : Double, downScale: Double) -> CLLocationCoordinate2D {
+        let mapPoint = mapPoint(scaledX: scaledX, scaledY: scaledY, downScale: downScale).normalizedPoint
+        return mapPoint.coordinate
+    }
+    
+    static func scaledExtent(downScale: Double) -> Double {
+        fullExtent*downScale
+    }
+    
+    static func scaledX(_ longitude: Double, downScale: Double) -> Double {
+        round(projectedLongitude(longitude)*fullExtent*downScale)
+    }
+    
+    static func scaledY(_ latitude: Double, downScale: Double) -> Double {
+        round(projectedLatitude(latitude)*fullExtent*downScale)
+    }
+    
+    static func zoomedPoint(coordinate: CLLocationCoordinate2D, zoom: Int) -> CGPoint {
+        CGPoint(x: round(projectedLongitude(coordinate.longitude)*fullExtent*zoomScale(at: zoom - maxZoom)),
+                y: round(projectedLatitude(coordinate.latitude)*fullExtent*zoomScale(at: zoom - maxZoom)))
     }
     
     static func getZoomToFit(worldRect: CGRect, scaledSize: CGSize) -> Int{
@@ -142,6 +178,12 @@ struct World{
         }
         let scaleDiff = min(scaledSize.width/worldRect.size.width, scaledSize.height/worldRect.size.height)
         return World.maxZoom + min(0, zoomLevelFromScale(scale: scaleDiff))
+    }
+    
+    static func offset(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D, at zoom: Int) -> CGSize{
+        let fromPoint = zoomedPoint(coordinate: from, zoom: zoom)
+        let toPoint = zoomedPoint(coordinate: to, zoom: zoom)
+        return CGSize(width: toPoint.x - fromPoint.x, height: toPoint.y - fromPoint.y)
     }
     
 }

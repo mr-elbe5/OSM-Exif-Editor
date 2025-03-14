@@ -37,7 +37,6 @@ struct PreferencesView: View {
                         ApplicationData.shared.removeAllImages(of: .right)
                     }
                     TileProvider.shared?.deleteAllTiles()
-                    MapTiles.shared.updateTiles(force: true)
                     self.dismiss()
                 }) {
                     Text("ok".localize())

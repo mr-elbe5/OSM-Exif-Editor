@@ -25,6 +25,7 @@ import CoreLocation
     
     enum CodingKeys: String, CodingKey {
         case zoom
+        case scale
         case latitude
         case longitude
     }
@@ -32,6 +33,7 @@ import CoreLocation
     private var _centerCoordinate: CLLocationCoordinate2D
     
     var zoom = World.minZoom
+    var scale = 1.0
     var centerCoordinate: CLLocationCoordinate2D{
         get{
             _centerCoordinate
@@ -42,10 +44,6 @@ import CoreLocation
     }
     
     var bounds: CGRect = .zero
-    
-    var scale : Double{
-        World.downScale(to: zoom)
-    }
     
     var scaledWorldCenterPoint: CGPoint{
         World.zoomedPoint(coordinate: centerCoordinate, zoom: zoom)
@@ -58,6 +56,7 @@ import CoreLocation
     required init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         zoom = try values.decodeIfPresent(Int.self, forKey: .zoom) ?? MapDefaults.startZoom
+        scale = try values.decodeIfPresent(Double.self, forKey: .scale) ?? 1.0
         let latitude = try values.decodeIfPresent(Double.self, forKey: .latitude)
         let longitude = try values.decodeIfPresent(Double.self, forKey: .longitude)
         if let latitude = latitude, let longitude = longitude{
@@ -71,6 +70,7 @@ import CoreLocation
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(zoom, forKey: .zoom)
+        try container.encode(scale, forKey: .scale)
         try container.encode(centerCoordinate.latitude, forKey: .latitude)
         try container.encode(centerCoordinate.longitude, forKey: .longitude)
     }
@@ -90,7 +90,7 @@ import CoreLocation
     func moveBy(offset: CGSize){
         var scaledWorldCenterPoint = scaledWorldCenterPoint
         scaledWorldCenterPoint = CGPoint(x: scaledWorldCenterPoint.x - offset.width, y: scaledWorldCenterPoint.y - offset.height)
-        let newCoordinate = World.coordinate(scaledPoint: scaledWorldCenterPoint, at: zoom)
+        let newCoordinate = World.coordinate(scaledX: scaledWorldCenterPoint.x, scaledY: scaledWorldCenterPoint.y, at: zoom)
         //debugPrint("moving to coordinate \(newCoordinate)")
         centerCoordinate = CLLocationCoordinate2D(latitude: newCoordinate.latitude, longitude: newCoordinate.longitude)
     }
