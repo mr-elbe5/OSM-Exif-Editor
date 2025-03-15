@@ -23,15 +23,14 @@ struct ImageGridView: View {
             ]
         
         VStack{
-            HStack{
+            HStack(spacing: 10){
                 Button(action: {
                     showImporter = true
                 }, label: {
                     HStack{
                     Image(systemName: "photo.on.rectangle")
                     Text("selectImages".localize())}
-                }
-                )
+                })
                 .padding()
                 Button(action: {
                     appData.sortByDate(id: listId)

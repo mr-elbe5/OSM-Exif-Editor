@@ -497,47 +497,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bilder auswählen…"
+            "value" : "Bilder…"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select Images…"
-          }
-        }
-      }
-    },
-    "selectLeftImages" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bilder links auswählen…"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select Left Images…"
-          }
-        }
-      }
-    },
-    "selectRightImages" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bilder rechts auswählen…"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Select Right Images…"
+            "value" : "Images…"
           }
         }
       }
@@ -632,7 +598,7 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
+            "state" : "translated",
             "value" : "Datum"
           }
         },
@@ -649,14 +615,14 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "geogr. Breite"
+            "state" : "translated",
+            "value" : "° Breite"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Latitude"
+            "value" : "° Lat"
           }
         }
       }
@@ -666,14 +632,14 @@
       "localizations" : {
         "de" : {
           "stringUnit" : {
-            "state" : "needs_review",
-            "value" : "geogr. Länge"
+            "state" : "translated",
+            "value" : "° Länge"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Longitude"
+            "value" : "° Lon"
           }
         }
       }
