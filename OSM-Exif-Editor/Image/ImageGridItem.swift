@@ -9,7 +9,6 @@ import AppKit
 
 protocol ImageGridItemDelegate{
     func showImageFullSize(_ image: ImageItem)
-    func deleteImage(_ image: ImageItem)
 }
 
 class ImageGridItem: GridItem, ImageGridItemViewDelegate{
@@ -81,10 +80,6 @@ class ImageGridItem: GridItem, ImageGridItemViewDelegate{
         let controller = ImageGridDetailViewController(image: imageItem)
         controller.popover.show(relativeTo: view.bounds, of: view, preferredEdge: .minY)
     }
-    
-    func deleteImage(){
-        delegate?.deleteImage(imageItem)
-    }
 
 }
 
@@ -92,7 +87,6 @@ fileprivate protocol ImageGridItemViewDelegate{
     func showImageFullSize()
     func showImageOnMap()
     func showImageDetail()
-    func deleteImage()
 }
 
 fileprivate class ImageGridItemView: NSView{

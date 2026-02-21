@@ -99,13 +99,6 @@ extension ImageGridView: ImageGridItemDelegate{
         MainViewController.shared.showImage(image)
     }
     
-    func deleteImage(_ image: ImageItem) {
-        items.remove(obj: image)
-        AppData.shared.deleteItem(image)
-        AppData.shared.save()
-        collectionView.reloadData()
-    }
-    
 }
 
 

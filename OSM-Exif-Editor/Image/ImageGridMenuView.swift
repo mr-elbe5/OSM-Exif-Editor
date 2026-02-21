@@ -34,7 +34,6 @@ class ImageGridMenuView: GridMenuView{
         addSubviewBelow(increaseSizeButton, upperView: showPresenterButton, insets: insets)
         addSubviewBelow(decreaseSizeButton, upperView: increaseSizeButton, insets: insets)
         addSubviewBelow(importImagesFromFilesButton, upperView: decreaseSizeButton, insets: insets)
-        addSubviewBelow(deleteButton, upperView: importImagesFromFilesButton, insets: insets)
     }
     
     @objc func showSelected() {

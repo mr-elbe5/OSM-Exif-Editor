@@ -8,7 +8,7 @@ import Foundation
 import CoreLocation
 import CloudKit
 
-class Track: NSObject, Codable{
+class Track: NSObject{
     
     static func loadFromFile(gpxUrl: URL) -> Track?{
         if let data = FileManager.default.readFile(url: gpxUrl){
@@ -101,39 +101,6 @@ class Track: NSObject, Codable{
         upDistance = 0
         downDistance = 0
         super.init()
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
-        name = try values.decodeIfPresent(String.self, forKey: .name) ?? ""
-        trackpoints = try values.decodeIfPresent(MapPointList.self, forKey: .trackpoints) ?? MapPointList()
-        distance = try values.decodeIfPresent(CGFloat.self, forKey: .distance) ?? 0
-        upDistance = try values.decodeIfPresent(CGFloat.self, forKey: .upDistance) ?? 0
-        downDistance = try values.decodeIfPresent(CGFloat.self, forKey: .downDistance) ?? 0
-        coordinateRegion = try values.decodeIfPresent(CoordinateRegion.self, forKey: .coordinateRegion)
-        if let lat = try values.decodeIfPresent(CLLocationDegrees.self, forKey: .centerCoordinateLatitude), lat != 0,
-           let lon = try values.decodeIfPresent(CLLocationDegrees.self, forKey: .centerCoordinateLongitude){
-            if lat != 0 || lon != 0{
-                centerCoordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-            }
-        }
-        super.init()
-        if coordinateRegion == nil{
-            updateCoordinateRegion()
-        }
-    }
-    
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(name, forKey: .name)
-        try container.encode(trackpoints, forKey: .trackpoints)
-        try container.encode(distance, forKey: .distance)
-        try container.encode(upDistance, forKey: .upDistance)
-        try container.encode(downDistance, forKey: .downDistance)
-        try container.encode(coordinateRegion, forKey: .coordinateRegion)
-        try container.encodeIfPresent(centerCoordinate?.latitude, forKey: .centerCoordinateLatitude)
-        try container.encodeIfPresent(centerCoordinate?.longitude, forKey: .centerCoordinateLongitude)
-        
     }
     
     func update(from track: Track){

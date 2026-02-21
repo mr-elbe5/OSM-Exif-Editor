@@ -6,10 +6,10 @@
 
 import AppKit
 
-class SplitView: NSView{
+class HorizontalSplitView: NSView{
     
     var mainView: NSView
-    var separator = ViewSeparator()
+    var separator = VerticalViewSeparator()
     var sideView: NSView
     var sideViewWidthConstraint = NSLayoutConstraint()
     
@@ -67,7 +67,7 @@ class SplitView: NSView{
     
 }
 
-extension SplitView: ViewSeparatorDelegate{
+extension HorizontalSplitView: ViewSeparatorDelegate{
     
     func dragged(by dx: CGFloat){
         sideViewWidthConstraint.constant = min(max(minSideWidth, sideViewWidthConstraint.constant - dx), maxSideWidth)

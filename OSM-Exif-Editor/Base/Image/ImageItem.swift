@@ -11,53 +11,10 @@ import Photos
 
 class ImageItem: MapItem{
     
-    static var itemType: String = "image"
-    
-    static var previewSize: CGFloat = 512
-    static var imageSize: CGFloat = 2048
-    
-    private enum CodingKeys: String, CodingKey {
-        case originalFileName
-        case fileName
-        case metaData
-    }
-    
-    override var itemType: String{
-        get{
-            ImageItem.itemType
-        }
-    }
-    
-    var originalFileName: String = ""
-    var fileName: String = ""
     var metaData: ImageMetaData? = nil
     
-    func generateFileName()
-    {
-        let ext = originalFileName.split(separator: ".").last
-        if let ext = ext, !ext.isEmpty{
-            fileName = "img_\(id.uuidString).\(ext)"
-        }
-        else{
-            fileName = "img_\(id.uuidString).jpg"
-        }
-    }
-    
-    var url: URL{
-        BasePaths.imageDirURL.appendingPathComponent(fileName)
-    }
-    
-    var previewUrl: URL{
-        BasePaths.previewDirURL.appendingPathComponent(fileName)
-    }
-    
-    var fileExists: Bool{
-        if !FileManager.default.fileExists(atPath: url.path){
-            Log.error("image file does not exist: \(url)")
-            return false
-        }
-        return true
-    }
+    var url: URL
+    var previewData: Data? = nil
     
     var imageData: Data?{
         if let data = FileManager.default.readFile(url: url){
@@ -74,19 +31,6 @@ class ImageItem: MapItem{
         return nil
     }
     
-    var previewData: Data?{
-        if !FileManager.default.fileExists(atPath: previewUrl.path), let image = image{
-            if !createPreviewFile(original: image){
-                return nil
-            }
-        }
-        if let data = FileManager.default.readFile(url: previewUrl){
-            return data
-        }
-        Log.error("preview file does not exist: \(url)")
-        return nil
-    }
-    
     var preview: OSImage?{
         if let data = previewData{
             return OSImage(data: data)
@@ -94,34 +38,9 @@ class ImageItem: MapItem{
         return nil
     }
     
-    override init(){
+    init(url: URL){
+        self.url = url
         super.init()
-    }
-    
-    override init(coordinate: CLLocationCoordinate2D){
-        super.init(coordinate: coordinate)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
-        originalFileName = try values.decodeIfPresent(String.self, forKey: .originalFileName) ?? ""
-        fileName = try values.decodeIfPresent(String.self, forKey: .fileName) ?? ""
-        metaData = try values.decodeIfPresent(ImageMetaData.self, forKey: .metaData)
-        try super.init(from: decoder)
-        if fileName.isEmpty{
-            generateFileName()
-        }
-        if metaData == nil{
-            loadMetaData()
-        }
-    }
-    
-    override func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(originalFileName, forKey: .originalFileName)
-        try container.encode(fileName, forKey: .fileName)
-        try container.encode(metaData, forKey: .metaData)
     }
     
     @discardableResult
@@ -180,34 +99,13 @@ class ImageItem: MapItem{
     
     @discardableResult
     func createPreviewFile(original: OSImage) -> Bool{
-        if let preview = OSImage.createResizedImage(of: original, size: ImageItem.previewSize){
-            if let previewData = OSImage.getJpegData(from: preview), FileManager.default.saveFile(data: previewData, url: previewUrl){
+        if let preview = OSImage.createResizedImage(of: original, size: 200){
+            if let previewData = OSImage.getJpegData(from: preview){
+                self .previewData = previewData
                 return true
             }
         }
         return false
-    }
-    
-    @discardableResult
-    func deleteFiles() -> Bool{
-        var success = true
-        if FileManager.default.fileExists(url: url){
-            if !FileManager.default.deleteFile(url: url){
-                Log.error("ImageItem could not delete file: \(fileName)")
-                success = false
-            }
-        }
-        if FileManager.default.fileExists(url: previewUrl){
-            if !FileManager.default.deleteFile(url: previewUrl){
-                Log.error("ImageItem could not delete preview: \(fileName)")
-                success = false
-            }
-        }
-        return success
-    }
-    
-    override func prepareToDelete(){
-        deleteFiles()
     }
     
     func updateData(_ oldData: Data) -> Data?{

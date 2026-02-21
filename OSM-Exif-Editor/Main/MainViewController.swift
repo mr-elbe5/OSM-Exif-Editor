@@ -18,10 +18,11 @@ class MainViewController: ViewController {
     
     let mainMenu = MainMenuView()
     let separator = NSView()
-    var mapSplitView: SplitView!
-    var mapView = MapView()
+    var mainSplitView: HorizontalSplitView!
+    var imageGridView = ImageGridView()
+    var sideSplitView: VerticalSplitView!
     var mapDetailView = MapDetailView()
-    var gridView: GridView?
+    var mapView = MapView()
     
     var mapScrollView: MapScrollView{
         mapView.scrollView
@@ -29,18 +30,6 @@ class MainViewController: ViewController {
     
     var mapMenuView: MapMenuView{
         mapView.menuView
-    }
-    
-    var itemListView: ItemListView{
-        mapDetailView.itemListView
-    }
-    
-    var imageGridView: ImageGridView?{
-        gridView as? ImageGridView
-    }
-    
-    var trackGridView: TrackGridView?{
-        gridView as? TrackGridView
     }
     
     override func loadView(){
@@ -51,11 +40,14 @@ class MainViewController: ViewController {
         separator.backgroundColor = .darkGray
         view.addSubviewBelow(separator, upperView: mainMenu, insets: .zero)
             .height(3)
+        imageGridView.setupView()
         mapView.setupView()
         mapDetailView.setupView()
-        mapSplitView = SplitView(mainView: mapView, sideView: mapDetailView)
-        mapSplitView.setupView()
-        view.addSubviewBelow(mapSplitView, upperView: separator, insets: .zero)
+        sideSplitView = VerticalSplitView(topView: mapDetailView, bottomView: mapView)
+        sideSplitView.setupView()
+        mainSplitView = HorizontalSplitView(mainView: imageGridView, sideView: sideSplitView)
+        mainSplitView.setupView()
+        view.addSubviewBelow(mainSplitView, upperView: separator, insets: .zero)
             .connectToBottom(of: view, inset: .zero)
     }
     
@@ -66,20 +58,7 @@ class MainViewController: ViewController {
     }
     
     func showItemDetails(item: MapItem){
-        itemListView.setItems([item])
-    }
-    
-    func setGridView(_ gridView: GridView?){
-        self.gridView?.removeFromSuperview()
-        if gridView == nil {
-            self.gridView = nil
-        }
-        else{
-            self.gridView = gridView
-            self.gridView!.setupView()
-            view.addSubviewWithAnchors(self.gridView!, top: separator.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, bottom: view.bottomAnchor, insets: .zero)
-        }
-        mainMenu.centerMenu.selectedSegment = gridView?.idx ?? 0
+        
     }
     
     func setViewer(_ viewer: PresenterView){
@@ -113,12 +92,7 @@ class MainViewController: ViewController {
         mapView.toggleCross()
     }
     
-    func toggleMapPins() {
-        mapView.toggleMarkers()
-    }
-    
     func showItemOnMap(_ item: MapItem){
-        setGridView(nil)
         mapView.showLocationOnMap(coordinate: item.coordinate)
     }
     
@@ -137,7 +111,6 @@ class MainViewController: ViewController {
         mapScrollView.updateItemLayerContent()
         mapScrollView.updateTrackLayerContent()
         updateImageGrid()
-        updateTrackGrid()
     }
     
     // images
@@ -160,13 +133,12 @@ class MainViewController: ViewController {
     }
     
     func updateImageGrid(){
-        imageGridView?.updateData()
+        imageGridView.updateData()
     }
     
     // tracks
     
     func showTrackOnMap(_ item: TrackItem?){
-        setGridView(nil)
         if let item = item{
             VisibleTrack.shared.setTrack(item.track)
             mapScrollView.updateTrackLayerContent()
@@ -184,10 +156,6 @@ class MainViewController: ViewController {
             VisibleTrack.shared.reset()
             mapScrollView.updateTrackLayerContent()
         }
-    }
-    
-    func updateTrackGrid(){
-        trackGridView?.updateData()
     }
     
 }

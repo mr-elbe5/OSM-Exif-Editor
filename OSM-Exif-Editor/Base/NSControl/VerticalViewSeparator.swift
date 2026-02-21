@@ -10,7 +10,7 @@ protocol ViewSeparatorDelegate{
     func dragged(by dx: CGFloat)
 }
 
-class ViewSeparator: NSControl{
+class VerticalViewSeparator: NSControl{
     
     var trackingArea: NSTrackingArea? = nil
     

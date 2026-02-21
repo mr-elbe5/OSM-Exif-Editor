@@ -48,7 +48,7 @@ class GridView: NSView, GridMenuDelegate{
     }
     
     func increasePreviewSize() {
-        if Preferences.shared.gridSizeFactorIndex < TrackGridView.gridSizeFactors.count - 1{
+        if Preferences.shared.gridSizeFactorIndex < GridView.gridSizeFactors.count - 1{
             Preferences.shared.gridSizeFactorIndex += 1
             setCellSize()
         }
@@ -89,19 +89,6 @@ class GridView: NSView, GridMenuDelegate{
     func deselectAll() {
         items.deselectAll()
         collectionView.reloadData()
-    }
-    
-    func deleteSelected() {
-        let selected = getSelectedItems()
-        if !selected.isEmpty{
-            if NSAlert.acceptWarning(message: "deleteItemsWarning".localize()){
-                AppData.shared.deleteItems(selected)
-                for item in selected{
-                    items.remove(obj: item)
-                }
-                collectionView.reloadData()
-            }
-        }
     }
     
     func getSelectedItems() -> MapItemList{

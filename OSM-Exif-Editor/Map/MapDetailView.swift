@@ -10,11 +10,8 @@ import CoreLocation
 
 class MapDetailView: NSView{
     
-    var itemListView = ItemListView()
-    
     override func setupView(){
-        itemListView.setupView()
-        addSubviewFilling(itemListView, insets: .zero)
+        
     }
     
     

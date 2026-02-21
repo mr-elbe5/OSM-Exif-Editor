@@ -11,12 +11,13 @@ class AppData : Codable{
     
     static var storeKey = "appData"
     
+    static var imageExtensions = ["jpg", "jpeg", "png", "gif", "dng"]
+    
     static var shared = AppData()
     
     static func load(){
         if let data: AppData = StatusManager.shared.getCodable(key: storeKey){
-            Log.debug("got \(data.images.count) local images")
-            Log.debug("got \(data.tracks.count) local tracks")
+            
             shared = data
         }
         else{
@@ -26,103 +27,119 @@ class AppData : Codable{
     
     func save(){
         if StatusManager.shared.saveCodable(key: Self.storeKey, value: self){
-            Log.debug("saved \(images.count) local images")
-            Log.debug("saved \(tracks.count) local tracks")
+            
         }
         else{
-            Log.error("could not save map items data to StatusManager")
+            Log.error("could not save app data to StatusManager")
         }
     }
     
     private enum CodingKeys: String, CodingKey {
-        case mapItems
+        case bookmark
     }
     
-    private var _mapItems: MapItemList
-    
-    var mapItems: MapItemList{
-        get{
-            return _mapItems
-        }
-    }
-    
-    var images: ImageItemList{
-        get{
-            var imageItems = ImageItemList()
-            for item in _mapItems{
-                if item is ImageItem{
-                    imageItems.append(item as! ImageItem)
-                }
-            }
-            imageItems.sortByDate(ascending: ViewFilter.shared.defaultSortAscending)
-            return imageItems
-        }
-    }
+    var bookmark: Data? = nil
+    var folderURL: URL? = nil
+    var images = ImageItemList()
+    var track: TrackItem? = nil
     
     var selectedImages: ImageItemList{
         get{
-            var imageItems = ImageItemList()
-            for item in _mapItems{
-                if item is ImageItem, item.selected{
-                    imageItems.append(item as! ImageItem)
+            var items = ImageItemList()
+            for item in self.images{
+                if item.selected{
+                    items.append(item)
                 }
             }
-            imageItems.sortByDate(ascending: ViewFilter.shared.defaultSortAscending)
-            return imageItems
-        }
-    }
-    
-    var tracks: TrackItemList{
-        get{
-            var trackItems = TrackItemList()
-            for item in _mapItems{
-                if item is TrackItem{
-                    trackItems.append(item as! TrackItem)
-                }
-            }
-            trackItems.sortByDate(ascending: ViewFilter.shared.defaultSortAscending)
-            return trackItems
+            items.sortByDate(ascending: ViewFilter.shared.defaultSortAscending)
+            return items
         }
     }
     
     init(){
-        _mapItems = MapItemList()
     }
     
     required init(from decoder: Decoder) throws {
         let values: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
-        let mapItemsMetaData = try values.decodeIfPresent(MapItemMetaDataList.self, forKey: .mapItems) ?? MapItemMetaDataList()
-        _mapItems = mapItemsMetaData.items
+        bookmark = try values.decodeIfPresent(Data.self, forKey: .bookmark)
+        if setFolderURL(), let url = folderURL{
+            Log.info("folder url is \(url.path())")
+        }
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        let mapItemsMetaData = MapItemMetaDataList(items: _mapItems)
-        try container.encode(mapItemsMetaData, forKey: .mapItems)
+        try container.encodeIfPresent(bookmark, forKey: .bookmark)
     }
     
-    func saveAsFile() -> URL?{
-        let value = self.toJSON()
-        let url = URL.temporaryDirectory.appendingPathComponent(Self.storeKey + ".json")
-        if FileManager.default.saveFile(text: value, url: url){
-            return url
+    func setFolderURL() -> Bool{
+        if let bookmark = bookmark{
+            var stale: Bool = false
+            let bookmarkURL = try? URL(resolvingBookmarkData: bookmark, options: [.withSecurityScope], relativeTo: nil, bookmarkDataIsStale: &stale)
+            if bookmarkURL != nil, stale == false, FileManager.default.isDirectory(url: bookmarkURL!){
+                folderURL = bookmarkURL!
+                return true
+            }
         }
-        return nil
+        return false
     }
     
-    func loadFromFile(url: URL){
-        if let string = FileManager.default.readTextFile(url: url),let data : AppData = AppData.fromJSON(encoded: string){
-            _mapItems.removeAll()
-            _mapItems.append(contentsOf: data._mapItems)
+    func setBookmark() -> Bool{
+        do{
+            bookmark = try folderURL?.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+            return true
+        }
+        catch{
+            bookmark = nil
+        }
+        return false
+    }
+    
+    func startSecurityScope() -> Bool{
+        folderURL?.startAccessingSecurityScopedResource() ?? false
+    }
+    
+    func stopSecurityScope(){
+        folderURL?.stopAccessingSecurityScopedResource()
+    }
+    
+    func setFolderUrl(_ url:URL) -> Bool{
+        folderURL = url
+        return setBookmark()
+    }
+    
+    func scan(){
+        if let url = folderURL, startSecurityScope(){
+            images.removeAll()
+            var childURLs = Array<URL>()
+            do{
+                childURLs = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: .skipsHiddenFiles)
+            }
+            catch{
+                return
+            }
+            for childURL in childURLs{
+                do{
+                    let resourceValues = try childURL.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey, .fileSizeKey, .isRegularFileKey])
+                    if !(resourceValues.isRegularFile ?? false), !Self.imageExtensions.contains(childURL.pathExtension.lowercased()){
+                        continue
+                    }
+                    let item = ImageItem(url: childURL)
+                    item.createPreview()
+                    //item.size = resourceValues.fileSize ?? -1
+                    //item.fileCreationDate = resourceValues.creationDate
+                    //item.fileModificationDate = resourceValues.contentModificationDate
+                    images.append(item)
+                }
+                catch (let err){
+                    Log.error(err.localizedDescription)
+                }
+            }
         }
     }
     
-    func addItem(_ item: MapItem){
-        _mapItems.append(item)
-    }
-    
-    func getItem(at coordinate: CLLocationCoordinate2D) -> MapItem?{
-        for item in _mapItems{
+    func getItem(at coordinate: CLLocationCoordinate2D) -> ImageItem?{
+        for item in images{
             if item.coordinate == coordinate || item.coordinate.distance(to: coordinate) < MapItem.mergeDistance{
                 return item
             }
@@ -130,49 +147,20 @@ class AppData : Codable{
         return nil
     }
     
-    func deleteAllData(){
-        _mapItems.removeAll()
-        FileManager.default.deleteAllFiles(dirURL: BasePaths.imageDirURL)
-        FileManager.default.deleteAllFiles(dirURL: BasePaths.previewDirURL)
-        save()
-    }
-    
-    func deleteItem(_ item: MapItem){
-        item.prepareToDelete()
-        _mapItems.remove(obj: item)
-    }
-    
-    func deleteItems(_ items: MapItemList){
-        for item in items{
-            item.prepareToDelete()
-            _mapItems.remove(obj: item)
-        }
-    }
-    
-    func deleteItem(withId id: UUID){
-        for item in _mapItems{
-            if item.id == id{
-                item.prepareToDelete()
-                _mapItems.remove(obj: item)
-                return
-            }
-        }
-    }
-    
     func sortItemsByDate(ascending: Bool){
         if ascending{
-            _mapItems.sort(by: { $0.creationDate < $1.creationDate})
+            images.sort(by: { $0.creationDate < $1.creationDate})
         }
         else{
-            _mapItems.sort(by: { $0.creationDate > $1.creationDate})
+            images.sort(by: { $0.creationDate > $1.creationDate})
         }
     }
     
     func getImagesOfTrack(item: TrackItem, maxDistance: Double = 20) -> ImageItemList{
         var list = ImageItemList()
         let track = item.track
-        for mapItem in mapItems{
-            if let image = mapItem as? ImageItem, mapItem.hasValidCoordinate{
+        for image in images{
+            if image.hasValidCoordinate{
                 if let result = track.trackpoints.findNearestPoint(to: image.coordinate){
                     let distance = result.1
                     if distance < maxDistance{
@@ -188,11 +176,9 @@ class AppData : Codable{
         var list = ImageItemList()
         let startDate = item.track.startTime
         let endDate = item.track.endTime
-        for item in mapItems{
-            if let image = item as? ImageItem{
-                if image.creationDate >= startDate && image.creationDate <= endDate{
-                    list.append(image)
-                }
+        for image in images{
+            if image.creationDate >= startDate && image.creationDate <= endDate{
+                list.append(image)
             }
         }
         return list

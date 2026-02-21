@@ -11,7 +11,6 @@ protocol GridMenuDelegate{
     func decreasePreviewSize()
     func selectAll()
     func deselectAll()
-    func deleteSelected()
 }
 
 class GridMenuView: NSView{
@@ -19,7 +18,6 @@ class GridMenuView: NSView{
     var selectButton: NSButton!
     var increaseSizeButton: NSButton!
     var decreaseSizeButton: NSButton!
-    var deleteButton: NSButton!
     
     var selectMenu: NSMenu!
     
@@ -38,8 +36,6 @@ class GridMenuView: NSView{
         increaseSizeButton.toolTip = "increaseImageSize".localize()
         decreaseSizeButton = NSButton(icon: "minus.circle", target: self, action: #selector(decreasePreviewSize))
         decreaseSizeButton.toolTip = "decreaseImageSize".localize()
-        deleteButton = NSButton(icon: "trash.square", color: .systemRed, target: self, action: #selector(deleteSelected))
-        deleteButton.toolTip = "deleteSelectedImages".localize()
     }
     
     required init?(coder: NSCoder) {
@@ -65,10 +61,6 @@ class GridMenuView: NSView{
     
     @objc func decreasePreviewSize() {
         delegate?.decreasePreviewSize()
-    }
-    
-    @objc func deleteSelected(){
-        delegate?.deleteSelected()
     }
     
 }

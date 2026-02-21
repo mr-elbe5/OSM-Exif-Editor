@@ -73,12 +73,6 @@ class MapView: NSView {
         Preferences.shared.save()
     }
     
-    func toggleMarkers() {
-        Preferences.shared.showMapPins = !Preferences.shared.showMapPins
-        Preferences.shared.save()
-        scrollView.updateItemLayerContent()
-    }
-    
     func refreshMap() {
         refresh()
         scrollView.updateLayerPositions()

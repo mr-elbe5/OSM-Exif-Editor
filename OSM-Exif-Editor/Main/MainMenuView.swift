@@ -56,12 +56,7 @@ class MainMenuView: NSView{
     }
     
     @objc func centerMenuChanged(){
-        switch centerMenu.selectedSegment{
-        case 0: MainViewController.shared.setGridView(nil)
-        case 1: MainViewController.shared.setGridView(ImageGridView())
-        case 3: MainViewController.shared.setGridView(TrackGridView())
-        default: return
-        }
+        
     }
     
     @objc func openViewSettings(){

@@ -7,19 +7,12 @@
 import Foundation
 import CoreLocation
 
-class Mappoint: Codable, Equatable{
+class Mappoint: Equatable{
     
     static var zero = Mappoint(coordinate: .zero)
     
     static func == (lhs: Mappoint, rhs: Mappoint) -> Bool {
         lhs.coordinate.latitude == rhs.coordinate.latitude && lhs.coordinate.longitude == rhs.coordinate.longitude
-    }
-    
-    enum CodingKeys: String, CodingKey {
-        case latitude
-        case longitude
-        case altitude
-        case timestamp
     }
     
     var latitude: Double
@@ -71,22 +64,6 @@ class Mappoint: Codable, Equatable{
         self.longitude = location.coordinate.longitude
         self.altitude = location.altitude
         self.timestamp = location.timestamp
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values = try decoder.container(keyedBy: CodingKeys.self)
-        latitude = try values.decode(Double.self, forKey: .latitude)
-        longitude = try values.decode(Double.self, forKey: .longitude)
-        altitude = try values.decodeIfPresent(Double.self, forKey: .altitude)
-        timestamp = try values.decodeIfPresent(Date.self, forKey: .timestamp)
-    }
-    
-    func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(latitude, forKey: .latitude)
-        try container.encode(longitude, forKey: .longitude)
-        try container.encodeIfPresent(altitude, forKey: .altitude)
-        try container.encodeIfPresent(timestamp, forKey: .timestamp)
     }
     
 }

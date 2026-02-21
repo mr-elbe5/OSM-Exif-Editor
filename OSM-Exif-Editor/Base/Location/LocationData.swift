@@ -31,11 +31,6 @@ class LocationData: Mappoint{
         }
     }
     
-    private enum CodingKeys: String, CodingKey {
-        case street
-        case city
-    }
-    
     var street: String
     var city: String
     
@@ -67,20 +62,6 @@ class LocationData: Mappoint{
         self.street = original.street
         self.city = original.city
         super.init(coordinate: original.coordinate, altitude: original.altitude, timestamp: original.timestamp)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
-        street = try values.decodeIfPresent(String.self, forKey: .street) ?? ""
-        city = try values.decodeIfPresent(String.self, forKey: .city) ?? ""
-        try super.init(from: decoder)
-    }
-    
-    override func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try super .encode(to: encoder)
-        try container.encode(self.street, forKey: .street)
-        try container.encode(self.city, forKey: .city)
     }
     
     var worldPoint: CGPoint{

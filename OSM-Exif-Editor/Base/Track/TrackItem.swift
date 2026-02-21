@@ -20,10 +20,6 @@ class TrackItem: MapItem{
         lhs.id == rhs.id
     }
     
-    private enum CodingKeys: String, CodingKey {
-        case track
-    }
-    
     var track : Track
     
     override var itemType: String{
@@ -64,19 +60,6 @@ class TrackItem: MapItem{
     init(track: Track){
         self.track = track
         super.init()
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
-        track = try values.decodeIfPresent(Track.self, forKey: .track) ?? Track()
-        try super.init(from: decoder)
-        coordinate = track.startCoordinate ?? .zero
-    }
-    
-    override func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try super .encode(to: encoder)
-        try container.encode(track, forKey: .track)
     }
     
     func getPreviewFile() -> Data?{

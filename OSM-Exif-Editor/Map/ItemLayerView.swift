@@ -51,10 +51,7 @@ class ItemLayerView: LayerView {
         for subview in subviews {
             subview.removeFromSuperview()
         }
-        if !Preferences.shared.showMapPins{
-            return
-        }
-        for item in AppData.shared.mapItems{
+        for item in AppData.shared.images{
             if !item.hasValidCoordinate{
                 continue
             }

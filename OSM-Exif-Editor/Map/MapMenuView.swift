@@ -11,7 +11,6 @@ class MapMenuView: NSView{
     var zoomInButton: NSButton!
     var zoomOutButton: NSButton!
     var toggleCrossButton: NSButton!
-    var toggleMapPinsButton: NSButton!
     var centerButton: NSButton!
     var refreshButton: NSButton!
     
@@ -26,8 +25,6 @@ class MapMenuView: NSView{
         zoomOutButton.toolTip = "zoomOut".localize()
         toggleCrossButton = NSButton(icon: "plus.circle", target: self, action: #selector(toggleCross))
         toggleCrossButton.toolTip = "toggleCross".localize()
-        toggleMapPinsButton = NSButton(icon: "mappin.slash", target: self, action: #selector(toggleMapPins))
-        toggleMapPinsButton.toolTip = "toggleMapPins".localize()
         refreshButton = NSButton(icon: "arrow.clockwise", target: self, action: #selector(refreshMap))
         refreshButton.toolTip = "refresh".localize()
     }
@@ -40,8 +37,7 @@ class MapMenuView: NSView{
         addSubviewBelow(zoomInButton, insets: insets)
         addSubviewBelow(zoomOutButton, upperView: zoomInButton, insets: insets)
         addSubviewBelow(toggleCrossButton, upperView: zoomOutButton, insets: insets)
-        addSubviewBelow(toggleMapPinsButton, upperView: toggleCrossButton, insets: insets)
-        addSubviewBelow(refreshButton, upperView: toggleMapPinsButton, insets: insets)
+        addSubviewBelow(refreshButton, upperView: toggleCrossButton, insets: insets)
     }
     
     @objc func zoomIn(){
@@ -54,10 +50,6 @@ class MapMenuView: NSView{
     
     @objc func toggleCross() {
         MainViewController.shared.toggleCross()
-    }
-    
-    @objc func toggleMapPins() {
-        MainViewController.shared.toggleMapPins()
     }
     
     @objc func refreshMap() {

@@ -18,12 +18,6 @@ class MapItem: LocationData, Identifiable, Hashable {
         lhs.id == rhs.id
     }
     
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case creationDate
-        case changeDate
-    }
-    
     var id: UUID
     var creationDate: Date
     var changeDate: Date
@@ -48,23 +42,6 @@ class MapItem: LocationData, Identifiable, Hashable {
         creationDate = date
         changeDate = date
         super.init(coordinate: coordinate)
-    }
-    
-    required init(from decoder: Decoder) throws {
-        let values: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
-        id = try values.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
-        let date = try values.decodeIfPresent(Date.self, forKey: .creationDate) ?? Date()
-        creationDate = date
-        changeDate = try values.decodeIfPresent(Date.self, forKey: .changeDate) ?? date
-        try super.init(from: decoder)
-    }
-    
-    override func encode(to encoder: Encoder) throws {
-        try super.encode(to: encoder)
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(id, forKey: .id)
-        try container.encode(creationDate, forKey: .creationDate)
-        try container.encode(changeDate, forKey: .changeDate)
     }
     
     func setModified(){
