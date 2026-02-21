@@ -41,7 +41,6 @@ class ServerTileProvider: TileProvider{
                 if tries > 1{
                     //debugPrint("TileProvider got tile in try \(tries)")
                 }
-                self.tileCache[tile.shortDescription] = data
                 if !self.saveTile(fileUrl: tile.fileUrl, data: data){
                     debugPrint("TileProvider could not save tile \(tile.shortDescription)")
                 }
