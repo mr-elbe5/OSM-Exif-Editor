@@ -18,18 +18,15 @@ class MainViewController: ViewController {
     
     let mainMenu = MainMenuView()
     let separator = NSView()
-    var mainSplitView: HorizontalSplitView!
     var imageGridView = ImageGridView()
-    var sideSplitView: VerticalSplitView!
-    var mapDetailView = MapDetailView()
-    var mapView = MapView()
+    var detailView = DetailView()
     
     var mapScrollView: MapScrollView{
-        mapView.scrollView
+        detailView.mapView.scrollView
     }
     
     var mapMenuView: MapMenuView{
-        mapView.menuView
+        detailView.mapView.menuView
     }
     
     override func loadView(){
@@ -41,11 +38,9 @@ class MainViewController: ViewController {
         view.addSubviewBelow(separator, upperView: mainMenu, insets: .zero)
             .height(3)
         imageGridView.setupView()
-        mapView.setupView()
-        mapDetailView.setupView()
-        sideSplitView = VerticalSplitView(topView: mapDetailView, bottomView: mapView)
-        sideSplitView.setupView()
-        mainSplitView = HorizontalSplitView(mainView: imageGridView, sideView: sideSplitView)
+        detailView = DetailView()
+        detailView.setupView()
+        let mainSplitView = HorizontalSplitView(mainView: imageGridView, sideView: detailView)
         mainSplitView.setupView()
         view.addSubviewBelow(mainSplitView, upperView: separator, insets: .zero)
             .connectToBottom(of: view, inset: .zero)
@@ -53,7 +48,7 @@ class MainViewController: ViewController {
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        mapView.setDefaultLocation()
+        detailView.mapView.setDefaultLocation()
         mapScrollView.updateItemLayerContent()
     }
     
@@ -70,7 +65,7 @@ class MainViewController: ViewController {
     
     func refreshMap() {
         showTrackOnMap(nil)
-        mapView.refreshMap()
+        detailView.mapView.refreshMap()
     }
     
     func updateMapLayersScale(){
@@ -79,26 +74,26 @@ class MainViewController: ViewController {
     }
     
     func zoomIn(){
-        mapView.zoomIn()
+        detailView.mapView.zoomIn()
         updateMapLayersScale()
     }
     
     func zoomOut(){
-        mapView.zoomOut()
+        detailView.mapView.zoomOut()
         updateMapLayersScale()
     }
     
     func toggleCross() {
-        mapView.toggleCross()
+        detailView.mapView.toggleCross()
     }
     
     func showItemOnMap(_ item: MapItem){
-        mapView.showLocationOnMap(coordinate: item.coordinate)
+        detailView.mapView.showLocationOnMap(coordinate: item.coordinate)
     }
     
     func showSearchResult(coordinate: CLLocationCoordinate2D, worldRect: CGRect?){
         if let worldRect = worldRect{
-            let zoom = World.getZoomToFit(worldRect: worldRect, scaledSize: mapView.bounds.size)
+            let zoom = World.getZoomToFit(worldRect: worldRect, scaledSize: detailView.mapView.bounds.size)
             mapScrollView.zoomAndScrollTo(zoom, coordinate)
         }
         else{
@@ -146,15 +141,49 @@ class MainViewController: ViewController {
                 item.track.updateCoordinateRegion()
             }
             if let coordinateRegion = item.coordinateRegion{
-                mapView.showMapRectOnMap(worldRect: coordinateRegion.worldRect)
+                detailView.mapView.showMapRectOnMap(worldRect: coordinateRegion.worldRect)
             }
             else{
-                mapView.showLocationOnMap(coordinate: item.coordinate)
+                detailView.mapView.showLocationOnMap(coordinate: item.coordinate)
             }
         }
         else{
             VisibleTrack.shared.reset()
             mapScrollView.updateTrackLayerContent()
+        }
+    }
+    
+    // menu
+    
+    func openHelp(at button: NSButton) {
+        let controller = HelpViewController()
+        controller.popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+    }
+    
+    func openViewSettings(at button: NSButton) {
+        let controller = ViewSettingsViewController()
+        controller.popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+    }
+    
+    func openPreferences(at button: NSButton) {
+        let controller = PreferencesViewController()
+        controller.popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+    }
+    
+    func openFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = FileManager.imagesURL
+        if panel.runModal() == .OK{
+            if let url = panel.urls.first{
+                if AppData.shared.setFolderUrl(url){
+                    AppData.shared.setBookmark()
+                    itemsChanged()
+                    imageGridView.updateData()
+                }
+            }
         }
     }
     

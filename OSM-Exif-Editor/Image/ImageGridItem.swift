@@ -50,12 +50,8 @@ class ImageGridItem: GridItem, ImageGridItemViewDelegate{
         let showOnMapButton = NSButton(image: NSImage(systemSymbolName: "map", accessibilityDescription: nil)!, target: itemView, action: #selector(itemView.showImageOnMap))
         showOnMapButton.bezelStyle = .smallSquare
         iconView.addSubviewToRight(showOnMapButton, leftView: showFullSizeButton, insets: OSInsets.flatInsets)
-        showOnMapButton.isHidden = !imageItem.hasValidCoordinate
-        let showDetailButton = NSButton(image: NSImage(systemSymbolName: "list.bullet", accessibilityDescription: nil)!, target: itemView, action: #selector(itemView.showImageDetail))
-        showDetailButton.bezelStyle = .smallSquare
-        iconView.addSubviewToRight(showDetailButton, leftView: showOnMapButton, insets: OSInsets.flatInsets)
             .connectToRight(of: iconView)
-        
+        showOnMapButton.isHidden = !imageItem.hasValidCoordinate
         setHighlightState()
     }
     
@@ -75,18 +71,12 @@ class ImageGridItem: GridItem, ImageGridItemViewDelegate{
     func showImageOnMap(){
         MainViewController.shared.showItemOnMap(imageItem)
     }
-    
-    func showImageDetail(){
-        let controller = ImageGridDetailViewController(image: imageItem)
-        controller.popover.show(relativeTo: view.bounds, of: view, preferredEdge: .minY)
-    }
 
 }
 
 fileprivate protocol ImageGridItemViewDelegate{
     func showImageFullSize()
     func showImageOnMap()
-    func showImageDetail()
 }
 
 fileprivate class ImageGridItemView: NSView{
@@ -99,10 +89,6 @@ fileprivate class ImageGridItemView: NSView{
     
     @objc func showImageOnMap(){
         delegate?.showImageOnMap()
-    }
-    
-    @objc func showImageDetail(){
-        delegate?.showImageDetail()
     }
     
 }

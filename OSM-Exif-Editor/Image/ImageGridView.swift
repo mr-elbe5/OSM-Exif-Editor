@@ -16,8 +16,8 @@ class ImageGridView: GridView{
     
     var menuView = ImageGridMenuView()
     
-    init(){
-        super.init(idx: 1)
+    override init(){
+        super.init()
     }
     
     required init(coder: NSCoder) {
@@ -81,13 +81,6 @@ extension ImageGridView: ImageGridMenuDelegate{
         let selected = getSelectedItems() as! ImageItemList
         if !selected.isEmpty{
             MainViewController.shared.showImages(selected)
-        }
-    }
-    
-    func importImagesFromFiles() {
-        MainViewController.shared.addImagesFromFiles(){
-            MainViewController.shared.itemsChanged()
-            self.updateData()
         }
     }
     

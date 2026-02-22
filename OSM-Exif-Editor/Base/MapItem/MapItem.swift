@@ -8,7 +8,7 @@ import Foundation
 import CoreLocation
 import CloudKit
 
-class MapItem: LocationData, Identifiable, Hashable {
+class MapItem: Mappoint, Identifiable, Hashable {
     
     static var recordType: CKRecord.RecordType = "item"
     
@@ -28,15 +28,15 @@ class MapItem: LocationData, Identifiable, Hashable {
         }
     }
     
-    override init(){
+    init(){
         id = UUID()
         let date = Date()
         creationDate = date
         changeDate = date
-        super.init()
+        super.init(coordinate: .zero)
     }
     
-    override init(coordinate: CLLocationCoordinate2D){
+    init(coordinate: CLLocationCoordinate2D){
         id = UUID()
         let date = Date()
         creationDate = date
@@ -57,7 +57,7 @@ class MapItem: LocationData, Identifiable, Hashable {
     
 }
 
-typealias MapItemList = LocationList<MapItem>
+typealias MapItemList = MappointList<MapItem>
 
 extension MapItemList{
     

@@ -17,7 +17,6 @@ class AppData : Codable{
     
     static func load(){
         if let data: AppData = StatusManager.shared.getCodable(key: storeKey){
-            
             shared = data
         }
         else{
@@ -77,22 +76,29 @@ class AppData : Codable{
             var stale: Bool = false
             let bookmarkURL = try? URL(resolvingBookmarkData: bookmark, options: [.withSecurityScope], relativeTo: nil, bookmarkDataIsStale: &stale)
             if bookmarkURL != nil, stale == false, FileManager.default.isDirectory(url: bookmarkURL!){
-                folderURL = bookmarkURL!
-                return true
+                return setFolderUrl(bookmarkURL!)
             }
         }
         return false
     }
     
-    func setBookmark() -> Bool{
+    func setFolderUrl(_ url:URL) -> Bool{
+        folderURL = url
+        if startSecurityScope(){
+            let result = scan()
+            stopSecurityScope()
+            return result
+        }
+        return false
+    }
+    
+    func setBookmark(){
         do{
             bookmark = try folderURL?.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
-            return true
         }
         catch{
             bookmark = nil
         }
-        return false
     }
     
     func startSecurityScope() -> Bool{
@@ -103,12 +109,7 @@ class AppData : Codable{
         folderURL?.stopAccessingSecurityScopedResource()
     }
     
-    func setFolderUrl(_ url:URL) -> Bool{
-        folderURL = url
-        return setBookmark()
-    }
-    
-    func scan(){
+    func scan() -> Bool{
         if let url = folderURL, startSecurityScope(){
             images.removeAll()
             var childURLs = Array<URL>()
@@ -116,7 +117,7 @@ class AppData : Codable{
                 childURLs = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: .skipsHiddenFiles)
             }
             catch{
-                return
+                return false
             }
             for childURL in childURLs{
                 do{
@@ -126,16 +127,18 @@ class AppData : Codable{
                     }
                     let item = ImageItem(url: childURL)
                     item.createPreview()
-                    //item.size = resourceValues.fileSize ?? -1
-                    //item.fileCreationDate = resourceValues.creationDate
-                    //item.fileModificationDate = resourceValues.contentModificationDate
+                    item.size = resourceValues.fileSize ?? -1
+                    item.fileCreationDate = resourceValues.creationDate
+                    item.fileModificationDate = resourceValues.contentModificationDate
                     images.append(item)
                 }
                 catch (let err){
                     Log.error(err.localizedDescription)
                 }
             }
+            return true
         }
+        return false
     }
     
     func getItem(at coordinate: CLLocationCoordinate2D) -> ImageItem?{

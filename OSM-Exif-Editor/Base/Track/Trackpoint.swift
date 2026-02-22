@@ -45,4 +45,4 @@ extension Trackpoint{
     
 }
 
-typealias TrackpointList = MapPointList<Trackpoint>
+typealias TrackpointList = MappointList<Trackpoint>

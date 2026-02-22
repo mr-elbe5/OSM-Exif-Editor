@@ -11,7 +11,7 @@ class VisibleTrack: NSObject{
     
     static var shared = VisibleTrack()
     
-    var trackpoints = MapPointList()
+    var trackpoints = MappointList()
     var startMapPoint: CGPoint?
     var points = [CGPoint]()
     var boundingRect: CGRect = .zero

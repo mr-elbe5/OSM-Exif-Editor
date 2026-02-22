@@ -23,6 +23,14 @@ class Mappoint: Equatable{
     //runtime
     var selected: Bool = false
     
+    var hasValidCoordinate: Bool{
+        latitude != 0 || longitude != 0
+    }
+    
+    var worldPoint: CGPoint{
+        CGPoint(coordinate)
+    }
+    
     var coordinate: CLLocationCoordinate2D{
         get{
             CLLocationCoordinate2D(latitude: latitude, longitude: longitude)

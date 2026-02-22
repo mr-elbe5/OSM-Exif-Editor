@@ -8,8 +8,10 @@ import AppKit
 
 class MainMenuView: NSView{
     
-    var centerMenu: NSSegmentedControl!
+    var leftMenu = NSView()
     var rightMenu = NSView()
+    
+    var openFolderButton: NSButton!
     
     var openViewSettingsButton: NSButton!
     var openPreferencesButton: NSButton!
@@ -19,19 +21,9 @@ class MainMenuView: NSView{
     
     init(){
         super.init(frame: .zero)
-        var centerImages = Array<NSImage>()
-        centerImages.append(NSImage(systemSymbolName: "map", accessibilityDescription: "map".localize())!)
-        centerImages.append(NSImage(systemSymbolName: "photo", accessibilityDescription: "images".localize())!)
-        centerImages.append(NSImage(systemSymbolName: "video", accessibilityDescription: "videos".localize())!)
-        centerImages.append(NSImage(systemSymbolName: "figure.walk", accessibilityDescription: "tracks".localize())!)
-        centerImages.append(NSImage(systemSymbolName: "point.topright.arrow.triangle.backward.to.point.bottomleft.scurvepath", accessibilityDescription: "routes".localize())!)
-        centerMenu = NSSegmentedControl(images: centerImages, trackingMode: NSSegmentedControl.SwitchTracking.selectOne, target: self, action: #selector(centerMenuChanged))
-        centerMenu.setLabel("map".localize(), forSegment: 0)
-        centerMenu.setLabel("images".localize(), forSegment: 1)
-        centerMenu.setLabel("videos".localize(), forSegment: 2)
-        centerMenu.setLabel("tracks".localize(), forSegment: 3)
-        centerMenu.setLabel("routes".localize(), forSegment: 4)
-        centerMenu.selectedSegment = 0
+        
+        openFolderButton = NSButton(icon: "folder", target: self, action: #selector(openFolder))
+        openFolderButton.toolTip = "openFolder".localize()
         
         openViewSettingsButton = NSButton(icon: "calendar", target: self, action: #selector(openViewSettings))
         openViewSettingsButton.toolTip = "viewSettings".localize()
@@ -47,7 +39,11 @@ class MainMenuView: NSView{
     
     override func setupView(){
         backgroundColor = .black
-        addSubviewWithAnchors(centerMenu, top: topAnchor, bottom: bottomAnchor, insets: OSInsets.smallInsets).centerX(centerXAnchor)
+        
+        addSubviewWithAnchors(leftMenu, top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: OSInsets.smallInsets)
+        leftMenu.addSubviewToRight(openFolderButton, insets: insets)
+            .connectToRight(of: leftMenu, inset: .zero)
+        
         addSubviewWithAnchors(rightMenu, top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: OSInsets.smallInsets)
         rightMenu.addSubviewToRight(openViewSettingsButton, insets: insets)
         rightMenu.addSubviewToRight(openPreferencesButton, leftView: openViewSettingsButton, insets: insets)
@@ -55,8 +51,8 @@ class MainMenuView: NSView{
             .connectToRight(of: rightMenu, inset: .zero)
     }
     
-    @objc func centerMenuChanged(){
-        
+    @objc func openFolder(){
+        MainViewController.shared.openFolder()
     }
     
     @objc func openViewSettings(){

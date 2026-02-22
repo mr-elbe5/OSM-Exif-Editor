@@ -7,9 +7,9 @@
 import AppKit
 import CoreLocation
 
-typealias MapPointList<T: Mappoint> = [T]
+typealias MappointList<T: Mappoint> = [T]
 
-extension MapPointList{
+extension MappointList{
     
     var allSelected: Bool{
         get{

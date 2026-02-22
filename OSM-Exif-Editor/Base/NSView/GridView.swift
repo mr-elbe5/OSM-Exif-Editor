@@ -14,15 +14,13 @@ class GridView: NSView, GridMenuDelegate{
     static var gridSizeFactors : Array<CGFloat> = [0.5, 0.75, 1.0, 1.5, 2.0]
     
     var items = Array<MapItem>()
-    var idx: Int = 0
     let scrollView = NSScrollView()
     let collectionView = NSCollectionView()
     let layout = NSCollectionViewGridLayout()
     
     var delegate: GridMenuDelegate?
     
-    init(idx: Int){
-        self.idx = idx
+    init(){
         super.init(frame: .zero)
     }
     

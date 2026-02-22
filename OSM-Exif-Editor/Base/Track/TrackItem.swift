@@ -118,7 +118,7 @@ extension TrackItem: Transferable {
     }
 }
 
-typealias TrackItemList = LocationList<TrackItem>
+typealias TrackItemList = MappointList<TrackItem>
 
 extension TrackItemList{
     

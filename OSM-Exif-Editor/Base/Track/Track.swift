@@ -200,7 +200,7 @@ class Track: NSObject{
     
     func setMinimalTrackpointDistances(minDistance: CGFloat){
         if !trackpoints.isEmpty{
-            var removables = MapPointList()
+            var removables = MappointList()
             var last : Mappoint = trackpoints.first!
             for idx in 1..<trackpoints.count - 1{
                 let tp = trackpoints[idx]
