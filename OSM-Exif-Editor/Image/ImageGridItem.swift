@@ -38,7 +38,7 @@ class ImageGridItem: GridItem, ImageGridItemViewDelegate{
         let dateView = NSTextField(labelWithString: imageItem.creationDate.dateTimeString())
         view.addSubviewWithAnchors(dateView, top: view.topAnchor, insets: OSInsets.smallInsets).centerX(view.centerXAnchor)
         
-        let imgView = NSImageView(image: imageItem.preview ?? NSImage(named: "gear.grey")!)
+        let imgView = NSImageView(image: imageItem.preview)
         view.addSubviewFilling(imgView, insets: NSEdgeInsets(top: 25, left: 5, bottom: 25, right: 5))
         
         let iconView = NSView()

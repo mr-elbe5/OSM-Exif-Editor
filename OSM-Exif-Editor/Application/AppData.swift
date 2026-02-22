@@ -4,10 +4,10 @@
  Copyright: Michael Rönnau mr@elbe5.de
  */
 
-import Foundation
+import AppKit
 import CoreLocation
 
-class AppData : Codable{
+class AppData : NSObject, Codable{
     
     static var storeKey = "appData"
     
@@ -15,7 +15,7 @@ class AppData : Codable{
     
     static var shared = AppData()
     
-    static func load(){
+    static func loadData(){
         if let data: AppData = StatusManager.shared.getCodable(key: storeKey){
             shared = data
         }
@@ -41,6 +41,12 @@ class AppData : Codable{
     var folderURL: URL? = nil
     var images = ImageItemList()
     var track: TrackItem? = nil
+    var sortType: SortType = .byFileCreation
+    var ascending = true
+    
+    var name: String{
+        folderURL?.lastPathComponent ?? ""
+    }
     
     var selectedImages: ImageItemList{
         get{
@@ -50,17 +56,19 @@ class AppData : Codable{
                     items.append(item)
                 }
             }
-            items.sortByDate(ascending: ViewFilter.shared.defaultSortAscending)
+            items.sort(by: sortType, ascending: ascending)
             return items
         }
     }
     
-    init(){
+    override init(){
+        super.init()
     }
     
     required init(from decoder: Decoder) throws {
         let values: KeyedDecodingContainer<CodingKeys> = try decoder.container(keyedBy: CodingKeys.self)
         bookmark = try values.decodeIfPresent(Data.self, forKey: .bookmark)
+        super.init()
         if setFolderURL(), let url = folderURL{
             Log.info("folder url is \(url.path())")
         }
@@ -126,7 +134,6 @@ class AppData : Codable{
                         continue
                     }
                     let item = ImageItem(url: childURL)
-                    item.createPreview()
                     item.size = resourceValues.fileSize ?? -1
                     item.fileCreationDate = resourceValues.creationDate
                     item.fileModificationDate = resourceValues.contentModificationDate
@@ -136,6 +143,7 @@ class AppData : Codable{
                     Log.error(err.localizedDescription)
                 }
             }
+            sortImages()
             return true
         }
         return false
@@ -150,13 +158,8 @@ class AppData : Codable{
         return nil
     }
     
-    func sortItemsByDate(ascending: Bool){
-        if ascending{
-            images.sort(by: { $0.creationDate < $1.creationDate})
-        }
-        else{
-            images.sort(by: { $0.creationDate > $1.creationDate})
-        }
+    func sortImages(){
+        images.sort(by: sortType, ascending: ascending)
     }
     
     func getImagesOfTrack(item: TrackItem, maxDistance: Double = 20) -> ImageItemList{
@@ -185,6 +188,25 @@ class AppData : Codable{
             }
         }
         return list
+    }
+    
+}
+
+extension AppData: NSCollectionViewDataSource{
+    
+    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+        images.count
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
+        let image = images[indexPath.item]
+        if image.selected{
+            collectionView.selectionIndexPaths.insert(indexPath)
+        }
+        let item = ImageCell(image: image)
+        item.isSelected = image.selected
+        item.setHighlightState()
+        return item
     }
     
 }

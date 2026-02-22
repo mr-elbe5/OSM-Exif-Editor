@@ -180,11 +180,19 @@ class MainViewController: ViewController {
             if let url = panel.urls.first{
                 if AppData.shared.setFolderUrl(url){
                     AppData.shared.setBookmark()
-                    itemsChanged()
-                    imageGridView.updateData()
+                    imageGridView.updateHeaderView()
+                    imageGridView.updateView()
                 }
             }
         }
+    }
+    
+    func setDetailImage(image: ImageItem?) {
+        detailView.setImage(image)
+    }
+    
+    func updateDetailImage(image: ImageItem?) {
+        detailView.updateImage(image)
     }
     
 }

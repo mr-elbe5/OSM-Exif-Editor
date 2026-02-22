@@ -35,8 +35,12 @@ class DetailView: VerticalSplitView{
         updateViews()
     }
     
+    func updateImage(_ image: ImageItem?){
+        imageDetailView.update()
+    }
+    
     func updateViews(){
-        imageDetailView.updateView()
+        imageDetailView.update()
     }
     
 }

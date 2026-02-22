@@ -100,5 +100,27 @@ extension String {
         }
         return self
     }
+    
+    func truncateStart(to num: Int) -> String{
+        if count < num || num < 4{
+            return self
+        }
+        return "...\(self.substr(num + 3))"
+    }
+    
+    func truncateStart(to width: CGFloat, charWidth: Int) -> String{
+        let num = (Int(width) / charWidth)
+        if count < num + 4{
+            return self
+        }
+        return truncateStart(to: num)
+    }
+    
+    func truncateEnd(to num: Int) -> String{
+        if count < num || num < 4{
+            return self
+        }
+        return "\(self.substr(0,num))..."
+    }
 
 }

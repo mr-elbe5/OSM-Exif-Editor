@@ -65,6 +65,25 @@ extension NSView{
     
     @objc func setupView(){
     }
+    
+    func addLabeledView(name: String, view: NSView, upperView: NSView? = nil, insets: OSInsets = .zero) -> NSView{
+        let line = NSView()
+        let label = NSTextField(labelWithString: name.localize() + ": ")
+        label.textColor = .white
+        line.addSubviewWithAnchors(label, leading: line.leadingAnchor, insets: .smallInsets)
+        line.addSubviewWithAnchors(view, top: line.topAnchor, leading: label.trailingAnchor, trailing: line.trailingAnchor, bottom: line.bottomAnchor, insets: .smallInsets)
+        label.centerY(view.centerYAnchor)
+        addSubviewBelow(line, upperView: upperView, insets: insets)
+        return line
+    }
+    
+    func addHorizontalDivider(upperView: NSView? = nil, color: NSColor = .lightGray, insets: OSInsets = .narrowInsets) -> NSView{
+        let divider = NSView()
+        divider.backgroundColor = color
+        addSubviewBelow(divider, upperView: upperView, insets: insets)
+            .height(1)
+        return divider
+    }
 
 }
 
