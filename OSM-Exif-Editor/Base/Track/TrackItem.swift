@@ -4,17 +4,12 @@
  Copyright: Michael Rönnau mr@elbe5.de
  */
 
-import Foundation
+import AppKit
 import CoreLocation
-import CloudKit
-import SwiftUI
 
 class TrackItem: MapItem{
     
     static var itemType: String = "track"
-    
-    static var previewSize: CGFloat = 512
-    static var imageSize: CGFloat = 2048
     
     static func == (lhs: TrackItem, rhs: TrackItem) -> Bool {
         lhs.id == rhs.id
@@ -44,14 +39,6 @@ class TrackItem: MapItem{
         return reg
     }
     
-    var fileName: String{
-        "track_\(id).jpg"
-    }
-    
-    var previewURL: URL{
-        BasePaths.previewDirURL.appendingPathComponent(fileName)
-    }
-    
     override init(){
         track = Track()
         super.init()
@@ -62,60 +49,6 @@ class TrackItem: MapItem{
         super.init()
     }
     
-    func getPreviewFile() -> Data?{
-        FileManager.default.readFile(url: previewURL)
-    }
-    
-    func trackpointsChanged(){
-        if FileManager.default.fileExists(url: previewURL){
-            FileManager.default.deleteFile(url: previewURL)
-        }
-    }
-    
-    @discardableResult
-    func deleteFiles() -> Bool{
-        if FileManager.default.fileExists(dirPath: BasePaths.previewDirURL.path, fileName: fileName){
-            if !FileManager.default.deleteFile(url: BasePaths.previewDirURL.appendingPathComponent(fileName)){
-                Log.error("Track could not delete preview: \(fileName)")
-                return false
-            }
-        }
-        return true
-    }
-    
-    func assertPreview(){
-        if !FileManager.default.fileExists(url: previewURL){
-            TrackImageCreator.createPreview(item: self)
-        }
-    }
-    
-    func getPreview() -> OSImage?{
-        if let data = getPreviewFile(){
-            return OSImage(data: data)
-        } else{
-            return TrackImageCreator.createPreview(item: self)
-        }
-    }
-    
-    override func prepareToDelete(){
-        deleteFiles()
-    }
-    
-}
-
-extension TrackItem: Transferable {
-    
-    public static var transferRepresentation: some TransferRepresentation {
-        
-        DataRepresentation(exportedContentType: .gpx) { item in
-            let gpx = item.track.gpxString()
-            return Data(gpx.utf8)
-        }
-    }
-    
-    enum ConversionError: Error {
-        case failedToConvertToGPX
-    }
 }
 
 typealias TrackItemList = MappointList<TrackItem>

@@ -6,6 +6,7 @@
 
 import AppKit
 import CoreLocation
+import UniformTypeIdentifiers
 
 class AppData : NSObject, Codable{
     
@@ -128,19 +129,25 @@ class AppData : NSObject, Codable{
                 return false
             }
             for childURL in childURLs{
-                do{
-                    let resourceValues = try childURL.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey, .fileSizeKey, .isRegularFileKey])
-                    if !(resourceValues.isRegularFile ?? false), !Self.imageExtensions.contains(childURL.pathExtension.lowercased()){
-                        continue
+                if let utType = childURL.utType{
+                    let isImage = utType.isSubtype(of: .image) || utType.isSubtype(of: .rawImage)
+                    Log.info("uttype of \(childURL) is image: \(isImage)")
+                    do{
+                        if isImage{
+                            let resourceValues = try childURL.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey, .fileSizeKey, .isRegularFileKey])
+                            if !(resourceValues.isRegularFile ?? false), !Self.imageExtensions.contains(childURL.pathExtension.lowercased()){
+                                continue
+                            }
+                            let item = ImageItem(url: childURL)
+                            item.size = resourceValues.fileSize ?? -1
+                            item.fileCreationDate = resourceValues.creationDate
+                            item.fileModificationDate = resourceValues.contentModificationDate
+                            images.append(item)
+                        }
                     }
-                    let item = ImageItem(url: childURL)
-                    item.size = resourceValues.fileSize ?? -1
-                    item.fileCreationDate = resourceValues.creationDate
-                    item.fileModificationDate = resourceValues.contentModificationDate
-                    images.append(item)
-                }
-                catch (let err){
-                    Log.error(err.localizedDescription)
+                    catch (let err){
+                        Log.error(err.localizedDescription)
+                    }
                 }
             }
             sortImages()

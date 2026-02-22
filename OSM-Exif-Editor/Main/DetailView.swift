@@ -32,15 +32,9 @@ class DetailView: VerticalSplitView{
     func setImage(_ image: ImageItem?){
         self.image = image
         imageDetailView.setImage(image)
-        updateViews()
-    }
-    
-    func updateImage(_ image: ImageItem?){
-        imageDetailView.update()
-    }
-    
-    func updateViews(){
-        imageDetailView.update()
+        if let coordinate = image?.coordinate, coordinate != .zero{
+            mapView.showLocationOnMap(coordinate: coordinate)
+        }
     }
     
 }

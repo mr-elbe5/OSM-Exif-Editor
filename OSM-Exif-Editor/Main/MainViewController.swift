@@ -133,6 +133,23 @@ class MainViewController: ViewController {
     
     // tracks
     
+    func loadTrack(){
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = BasePaths.homeDirURL
+        panel.allowedContentTypes = [.gpx]
+        if panel.runModal() == .OK{
+            if let url = panel.urls.first, let track = Track.loadFromFile(gpxUrl: url){
+                track.updateFromTrackpoints()
+                let item = TrackItem(track: track)
+                AppData.shared.track = item
+                showTrackOnMap(item)
+            }
+        }
+    }
+    
     func showTrackOnMap(_ item: TrackItem?){
         if let item = item{
             VisibleTrack.shared.setTrack(item.track)
@@ -151,6 +168,10 @@ class MainViewController: ViewController {
             VisibleTrack.shared.reset()
             mapScrollView.updateTrackLayerContent()
         }
+    }
+    
+    func compareWithTrack(){
+        
     }
     
     // menu
@@ -189,10 +210,6 @@ class MainViewController: ViewController {
     
     func setDetailImage(image: ImageItem?) {
         detailView.setImage(image)
-    }
-    
-    func updateDetailImage(image: ImageItem?) {
-        detailView.updateImage(image)
     }
     
 }

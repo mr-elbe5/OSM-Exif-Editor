@@ -749,6 +749,23 @@
         }
       }
     },
+    "compareWithTrack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit Routendaten vergleichen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compare with Track Data"
+          }
+        }
+      }
+    },
     "confirmDelete" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2449,6 +2466,23 @@
         }
       }
     },
+    "loadTrack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Route laden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Load Track"
+          }
+        }
+      }
+    },
     "locationDetails" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2938,6 +2972,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Camera"
+          }
+        }
+      }
+    },
+    "openFolder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verzeichnis öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Folder"
           }
         }
       }

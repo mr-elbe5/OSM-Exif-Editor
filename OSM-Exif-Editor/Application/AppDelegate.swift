@@ -10,8 +10,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         BasePaths.initializeDirs()
-        AppStatus.load()
-        AppStatus.shared.updateVersion()
         World.setMaxZoom(18)
         World.scrollWidthFactor = 1
         MapDefaults.startZoom = 8
@@ -27,7 +25,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
         Preferences.shared.save()
-        AppStatus.shared.save()
         MapStatus.shared.save()
         AppData.shared.save()
         let count = FileManager.default.deleteTemporaryFiles()

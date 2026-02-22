@@ -157,7 +157,7 @@ class ImageGridView: NSView {
     }
     
     func selectedImageChanged(image: ImageItem){
-        MainViewController.shared.updateDetailImage(image: image)
+        MainViewController.shared.setDetailImage(image: image)
     }
     
     func showImageFullSize(image: ImageItem){
