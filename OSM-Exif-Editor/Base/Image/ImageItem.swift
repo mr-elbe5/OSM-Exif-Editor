@@ -10,16 +10,8 @@ import Photos
 
 class ImageItem: MapItem{
     
-    static var itemType: String = "image"
-    
     static var previewSize: CGFloat = 512
     static var imageSize: CGFloat = 2048
-    
-    override var itemType: String{
-        get{
-            ImageItem.itemType
-        }
-    }
     
     var url: URL
     var fileCreationDate: Date? = nil
@@ -92,6 +84,10 @@ class ImageItem: MapItem{
             return false
         }
         return true
+    }
+    
+    var creationDate: Date{
+        exifCreationDate ?? fileCreationDate ?? Date()
     }
     
     private var imageData: Data?{

@@ -1,0 +1,151 @@
+/*
+ Image Companion - a photo organizer and map based exif editor
+ Copyright (C) 2023 Michael Roennau
+*/
+
+import Foundation
+import Cocoa
+
+protocol ImageGridViewItemDelegate{
+    func setDetailImage(image: ImageItem?)
+    func updateDetailImage(image: ImageItem?)
+}
+
+class ImageGridViewItem: NSCollectionViewItem{
+    
+    static let fontSize: CGFloat = 12
+    static let font = NSFont.systemFont(ofSize: fontSize, weight: .regular)
+    
+    static let centerInsets = OSInsets(top: 25, left: 5, bottom: 25, right: 5)
+    static let topInsets = OSInsets(top: 5, left: 5, bottom: 0, right: 5)
+    static let bottomInsets = OSInsets(top: 0, left: 5, bottom: 5, right: 5)
+    
+    static let noLocImage = NSImage(systemSymbolName: "circle", accessibilityDescription: nil)!
+    static let hasLocImage = NSImage(systemSymbolName: "map.circle", accessibilityDescription: nil)!
+    
+    var topView = NSView()
+    var centerView = NSView()
+    var bottomView = NSView()
+    
+    var nameView = NSTextField(labelWithString: "")
+    var image: ImageItem
+    
+    init(image: ImageItem) {
+        self.image = image
+        super.init(nibName: "", bundle: nil)
+        setHighlightState()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        let cellView = CellView()
+        cellView.imageGridItem = self
+        view = cellView
+        view.backgroundColor = .yellow
+        view.setGrayRoundedBorders()
+        view.addSubviewWithAnchors(centerView, top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, bottom: view.bottomAnchor, insets: Self.centerInsets)
+        view.addSubviewWithAnchors(topView, top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, insets: Self.topInsets)
+            .height(20)
+        view.addSubviewWithAnchors(bottomView, leading: view.leadingAnchor, trailing: view.trailingAnchor, bottom: view.bottomAnchor, insets: Self.bottomInsets)
+            .height(20)
+        nameView.font = Self.font
+        topView.addSubviewCentered(nameView, centerX: topView.centerXAnchor, centerY: topView.centerYAnchor)
+        image.completeData(){
+            self.showFile()
+        }
+    }
+    
+    func showFile(){
+        centerView.removeAllSubviews()
+        let imageView = NSImageView(image: image.preview)
+        imageView.imageScaling = .scaleProportionallyUpOrDown
+        centerView.addSubviewFilling(imageView, insets: OSInsets.smallInsets)
+        updateNameView()
+        updateBottomView()
+        setHighlightState()
+    }
+    
+    func updateNameView(){
+        nameView.stringValue = image.url.lastPathComponent.truncateStart(to: view.bounds.width, charWidth: 10)
+    }
+    
+    func updateBottomView(){
+        bottomView.removeAllSubviews()
+        let sortString = sortString
+        if !sortString.isEmpty{
+            let label = NSTextField(labelWithString: sortString)
+            label.font = Self.font
+            bottomView.addSubviewCentered(label, centerY: bottomView.centerYAnchor)
+                .leading(bottomView.leadingAnchor, inset: 5)
+        }
+        if image.hasGPSData{
+            let iconView = NSImageView(icon: "map")
+            bottomView.addSubviewCentered(iconView, centerY: bottomView.centerYAnchor)
+                .trailing(bottomView.trailingAnchor, inset: -5)
+        }
+    }
+    
+    var sortString: String{
+        switch AppData.shared.sortType{
+        case .byName:
+            return image.url.lastPathComponent.truncateEnd(to: 10)
+        case .byExtension:
+            return image.url.pathExtension.lowercased()
+        case .byFileCreation:
+            return image.fileCreationDate?.dateTimeString() ?? ""
+        case .byFileModification:
+            return image.fileModificationDate?.dateTimeString() ?? ""
+        case .byExifCreation:
+            return image.exifCreationDate?.dateTimeString() ?? ""
+        case .byLatitude:
+            return image.exifLatitude?.coordinateString ?? ""
+        case .byLongitude:
+            return image.exifLongitude?.coordinateString ?? ""
+        case .byAltitude:
+            if let altitude = image.exifAltitude{
+                return "\(altitude) m"
+            }
+            return ""
+        }
+    }
+    
+    func sizeChanged(){
+        updateNameView()
+    }
+    
+    @objc func openFileWithApp(sender: AnyObject?){
+        openURLWithApp(url: image.url)
+    }
+    
+    private func openURLWithApp(url: URL?){
+        if let url = url{
+            let process = Process()
+            process.executableURL = URL(string: "file:///usr/bin/open")
+            process.arguments = [url.absoluteString]
+            do{
+                try process.run()
+            }
+            catch (let err){
+                print(err)
+            }
+        }
+    }
+    
+    class CellView: NSView{
+        
+        var imageGridItem: ImageGridViewItem?
+        
+        override func viewDidEndLiveResize() {
+            imageGridItem?.sizeChanged()
+        }
+        
+    }
+    
+    func setHighlightState() {
+        view.backgroundColor = isSelected ? .selectedControlColor : .windowBackgroundColor
+    }
+    
+}

@@ -58,43 +58,6 @@ class ViewFilter: Identifiable, Codable{
         //Log.debug("Date filter saved")
     }
     
-    func isInFilter(item: MapItem) -> Bool{
-        if let date = dateFilterMinDate, item.creationDate < date{
-            return false
-        }
-        if let date = dateFilterMaxDate, item.creationDate > date{
-            return false
-        }
-        return true
-    }
-    
-    func filteredItems(items: MapItemList) -> MapItemList{
-        if !isActive{
-            return items
-        }
-        return items.filter(){ item in
-            return isInFilter(item: item)
-        }
-    }
-    
-    func filteredImages(images: ImageItemList) -> ImageItemList{
-        if !isActive{
-            return images
-        }
-        return images.filter(){ item in
-            return isInFilter(item: item)
-        }
-    }
-    
-    func filteredTracks(tracks: TrackItemList) -> TrackItemList{
-        if !isActive{
-            return tracks
-        }
-        return tracks.filter(){ item in
-            return isInFilter(item: item)
-        }
-    }
-    
 }
 
 

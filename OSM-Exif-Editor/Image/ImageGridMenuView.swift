@@ -6,14 +6,14 @@
 
 import AppKit
 
-protocol GridMenuDelegate{
+protocol ImageGridMenuDelegate{
     func increasePreviewSize()
     func decreasePreviewSize()
     func selectAll()
     func deselectAll()
 }
 
-class GridMenuView: NSView{
+class ImageGridMenuView: NSView{
     
     var selectButton: NSButton!
     var increaseSizeButton: NSButton!
@@ -21,7 +21,7 @@ class GridMenuView: NSView{
     
     var selectMenu: NSMenu!
     
-    var delegate: GridMenuDelegate? = nil
+    var delegate: ImageGridMenuDelegate? = nil
     
     var insets = OSInsets(top: 10, left: 5, bottom: 10, right: 5)
     

@@ -171,18 +171,15 @@ class MainViewController: ViewController {
     }
     
     func compareWithTrack(){
-        
+        if AppData.shared.selectImagesWithCloseCreationDate(){
+            imageGridView.updateView()
+        }
     }
     
     // menu
     
     func openHelp(at button: NSButton) {
         let controller = HelpViewController()
-        controller.popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-    }
-    
-    func openViewSettings(at button: NSButton) {
-        let controller = ViewSettingsViewController()
         controller.popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
     }
     

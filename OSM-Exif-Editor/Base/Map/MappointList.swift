@@ -116,7 +116,7 @@ extension MappointList{
         var minTimeDiff: TimeInterval?
         for point in self {
             if let timestamp = point.timestamp {
-                let diff = timestamp.distance(to: date)
+                let diff = abs(timestamp.distance(to: date))
                 if minTimeDiff == nil || diff < minTimeDiff! {
                     closestPoint = point
                     minTimeDiff = diff

@@ -15,7 +15,6 @@ class MainMenuView: NSView{
     var loadTrackButton: NSButton!
     var compareTrackButton: NSButton!
     
-    var openViewSettingsButton: NSButton!
     var openPreferencesButton: NSButton!
     var openHelpButton: NSButton!
     
@@ -28,8 +27,6 @@ class MainMenuView: NSView{
         loadTrackButton = NSButton(title: "loadTrack".localize(), image: NSImage(iconName: "figure.walk")!, target: self, action: #selector(loadTrack))
         compareTrackButton = NSButton(title: "compareWithTrack".localize(), image: NSImage(iconName: "point.bottomleft.forward.to.point.topright.scurvepath")!, target: self, action: #selector(compareWithTrack))
         
-        openViewSettingsButton = NSButton(icon: "calendar", target: self, action: #selector(openViewSettings))
-        openViewSettingsButton.toolTip = "viewSettings".localize()
         openPreferencesButton = NSButton(icon: "gearshape", target: self, action: #selector(openPreferences))
         openPreferencesButton.toolTip = "settings".localize()
         openHelpButton = NSButton(icon: "questionmark", target: self, action: #selector(openHelp))
@@ -50,8 +47,7 @@ class MainMenuView: NSView{
             .connectToRight(of: leftMenu, inset: .zero)
         
         addSubviewWithAnchors(rightMenu, top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: OSInsets.smallInsets)
-        rightMenu.addSubviewToRight(openViewSettingsButton, insets: insets)
-        rightMenu.addSubviewToRight(openPreferencesButton, leftView: openViewSettingsButton, insets: insets)
+        rightMenu.addSubviewToRight(openPreferencesButton, insets: insets)
         rightMenu.addSubviewToRight(openHelpButton, leftView: openPreferencesButton, insets: insets)
             .connectToRight(of: rightMenu, inset: .zero)
         
@@ -73,10 +69,6 @@ class MainMenuView: NSView{
     
     @objc func compareWithTrack(){
         MainViewController.shared.compareWithTrack()
-    }
-    
-    @objc func openViewSettings(){
-        MainViewController.shared.openViewSettings(at: openViewSettingsButton)
     }
     
     @objc func openPreferences(){

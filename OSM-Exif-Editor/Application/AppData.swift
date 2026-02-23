@@ -156,20 +156,26 @@ class AppData : NSObject, Codable{
         return false
     }
     
-    func getItem(at coordinate: CLLocationCoordinate2D) -> ImageItem?{
-        for item in images{
-            if item.coordinate == coordinate || item.coordinate.distance(to: coordinate) < MapItem.mergeDistance{
-                return item
-            }
-        }
-        return nil
-    }
-    
     func sortImages(){
         images.sort(by: sortType, ascending: ascending)
     }
     
-    func getImagesOfTrack(item: TrackItem, maxDistance: Double = 20) -> ImageItemList{
+    func selectImagesWithCloseCreationDate() -> Bool{
+        var hasResult = false
+        if let item = track{
+            images.deselectAll()
+            for image in images{
+                if !image.hasValidCoordinate, let result = item.track.findClosestTrackpoint(at: image.creationDate, maxSecDiff: 10){
+                    image.coordinate = result.0.coordinate
+                    image.selected = true
+                    hasResult = true
+                }
+            }
+        }
+        return hasResult
+    }
+    
+    func getImagesOfTrackByDistance(item: TrackItem, maxDistance: Double = 20) -> ImageItemList{
         var list = ImageItemList()
         let track = item.track
         for image in images{
@@ -185,7 +191,7 @@ class AppData : NSObject, Codable{
         return list
     }
     
-    func getImagesOfTrackTime(item: TrackItem) -> ImageItemList{
+    func getImagesOfTrackByTime(item: TrackItem) -> ImageItemList{
         var list = ImageItemList()
         let startDate = item.track.startTime
         let endDate = item.track.endTime
@@ -210,7 +216,7 @@ extension AppData: NSCollectionViewDataSource{
         if image.selected{
             collectionView.selectionIndexPaths.insert(indexPath)
         }
-        let item = ImageCell(image: image)
+        let item = ImageGridViewItem(image: image)
         item.isSelected = image.selected
         item.setHighlightState()
         return item

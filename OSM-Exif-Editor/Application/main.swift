@@ -7,7 +7,7 @@
 import AppKit
 
 let app = NSApplication.shared
-//app.appearance = NSAppearance(named: .darkAqua)
+app.appearance = NSAppearance(named: .darkAqua)
 NSApp.setActivationPolicy(.regular)
 let delegate = AppDelegate()
 app.delegate = delegate

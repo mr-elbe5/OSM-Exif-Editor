@@ -221,6 +221,33 @@ class Track: NSObject{
         updateFromTrackpoints()
     }
     
+    func findNearestTrackpoint(to coordinate: CLLocationCoordinate2D, maxMeterDiff: Double = 100) -> (Mappoint, Double)? {
+        var result: (Mappoint, Double)?
+        if let closests = trackpoints.findNearestPoint(to: coordinate){
+            if closests.1 < (result?.1 ?? Double.greatestFiniteMagnitude){
+                result = closests
+            }
+        }
+        if let result = result, result.1 > maxMeterDiff{
+            return nil
+        }
+        return result
+    }
+    
+    func findClosestTrackpoint(at date: Date, maxSecDiff: Double = 60) -> (Mappoint, TimeInterval)?{
+        var result: (Mappoint, Double)?
+        if let closests = trackpoints.findClosestPoint(to: date){
+            if closests.1 < (result?.1 ?? Double.greatestFiniteMagnitude){
+                result = closests
+            }
+        }
+        // distance must be less than 1h
+        if let result = result, result.1 > maxSecDiff*60{
+            return nil
+        }
+        return result
+    }
+    
     func updateCoordinateRegion(){
         coordinateRegion = trackpoints.coordinateRegion
         centerCoordinate = coordinateRegion?.center

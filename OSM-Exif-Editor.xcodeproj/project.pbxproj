@@ -10,9 +10,22 @@
 		4E9912E62F49DDFB00968A7C /* OSM-Exif-Editor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OSM-Exif-Editor.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4E991D1C2F4C5AA100968A7C /* Exceptions for "OSM-Exif-Editor" folder in "OSM-Exif-Editor" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Image/ImageGridMenuView.swift,
+			);
+			target = 4E9912E52F49DDFB00968A7C /* OSM-Exif-Editor */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4E9912E82F49DDFB00968A7C /* OSM-Exif-Editor */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4E991D1C2F4C5AA100968A7C /* Exceptions for "OSM-Exif-Editor" folder in "OSM-Exif-Editor" target */,
+			);
 			path = "OSM-Exif-Editor";
 			sourceTree = "<group>";
 		};
