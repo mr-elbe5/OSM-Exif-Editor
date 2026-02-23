@@ -18,7 +18,7 @@ class MainMenuView: NSView{
     var openPreferencesButton: NSButton!
     var openHelpButton: NSButton!
     
-    var insets = OSInsets(top: 0, left: 5, bottom: 0, right: 5)
+    var insets = NSEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     
     init(){
         super.init(frame: .zero)
@@ -40,13 +40,13 @@ class MainMenuView: NSView{
     override func setupView(){
         backgroundColor = .black
         
-        addSubviewWithAnchors(leftMenu, top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: OSInsets.smallInsets)
+        addSubviewWithAnchors(leftMenu, top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.smallInsets)
         leftMenu.addSubviewToRight(openFolderButton, insets: insets)
         leftMenu.addSubviewToRight(loadTrackButton, leftView: openFolderButton, insets: insets)
         leftMenu.addSubviewToRight(compareTrackButton, leftView: loadTrackButton, insets: insets)
             .connectToRight(of: leftMenu, inset: .zero)
         
-        addSubviewWithAnchors(rightMenu, top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: OSInsets.smallInsets)
+        addSubviewWithAnchors(rightMenu, top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.smallInsets)
         rightMenu.addSubviewToRight(openPreferencesButton, insets: insets)
         rightMenu.addSubviewToRight(openHelpButton, leftView: openPreferencesButton, insets: insets)
             .connectToRight(of: rightMenu, inset: .zero)

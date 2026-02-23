@@ -19,5 +19,6 @@ extension NSMenuItem {
         self.submenu = NSMenu()
         self.submenu?.items = submenuItems
     }
+    
 }
 

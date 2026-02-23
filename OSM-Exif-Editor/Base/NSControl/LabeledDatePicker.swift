@@ -46,8 +46,8 @@ class LabeledDatePicker : NSView{
         datePicker.target = self
         datePicker.action = #selector(dateValueDidChange)
         addSubview(datePicker)
-        label.setAnchors(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: OSInsets.defaultInsets)
-        datePicker.setAnchors(top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: OSInsets.defaultInsets)
+        label.setAnchors(top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.defaultInsets)
+        datePicker.setAnchors(top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.defaultInsets)
     }
     
     @objc func dateValueDidChange(){

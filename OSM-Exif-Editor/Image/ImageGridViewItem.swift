@@ -16,9 +16,9 @@ class ImageGridViewItem: NSCollectionViewItem{
     static let fontSize: CGFloat = 12
     static let font = NSFont.systemFont(ofSize: fontSize, weight: .regular)
     
-    static let centerInsets = OSInsets(top: 25, left: 5, bottom: 25, right: 5)
-    static let topInsets = OSInsets(top: 5, left: 5, bottom: 0, right: 5)
-    static let bottomInsets = OSInsets(top: 0, left: 5, bottom: 5, right: 5)
+    static let centerInsets = NSEdgeInsets(top: 25, left: 5, bottom: 25, right: 5)
+    static let topInsets = NSEdgeInsets(top: 5, left: 5, bottom: 0, right: 5)
+    static let bottomInsets = NSEdgeInsets(top: 0, left: 5, bottom: 5, right: 5)
     
     static let noLocImage = NSImage(systemSymbolName: "circle", accessibilityDescription: nil)!
     static let hasLocImage = NSImage(systemSymbolName: "map.circle", accessibilityDescription: nil)!
@@ -62,7 +62,7 @@ class ImageGridViewItem: NSCollectionViewItem{
         centerView.removeAllSubviews()
         let imageView = NSImageView(image: image.preview)
         imageView.imageScaling = .scaleProportionallyUpOrDown
-        centerView.addSubviewFilling(imageView, insets: OSInsets.smallInsets)
+        centerView.addSubviewFilling(imageView, insets: NSEdgeInsets.smallInsets)
         updateNameView()
         updateBottomView()
         setHighlightState()

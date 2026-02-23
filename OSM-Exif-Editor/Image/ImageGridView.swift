@@ -40,7 +40,7 @@ class ImageGridView: NSView {
         ImageGridView.defaultGridSize * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
     }
     
-    var insets = OSInsets(top: 10, left: 5, bottom: 10, right: 5)
+    var insets = NSEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
     
     override func setupView(){
         backgroundColor = .black

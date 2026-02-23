@@ -26,22 +26,22 @@ class MapItemCell: NSView{
         backgroundColor = .black
         cellBody.setRoundedBorders()
         cellBody.backgroundColor = .darkColor
-        addSubviewFilling(cellBody, insets: OSInsets.smallInsets)
+        addSubviewFilling(cellBody, insets: NSEdgeInsets.smallInsets)
         setupCellBody()
     }
     
     func setupCellBody(){
         dateTimeView.setBackground(.clear)
-        cellBody.addSubviewWithAnchors(dateTimeView, top: cellBody.topAnchor, leading: cellBody.leadingAnchor, insets: OSInsets.smallInsets)
+        cellBody.addSubviewWithAnchors(dateTimeView, top: cellBody.topAnchor, leading: cellBody.leadingAnchor, insets: NSEdgeInsets.smallInsets)
         timeLabel.textColor = .lightColor
-        dateTimeView.addSubviewFilling(timeLabel, insets: OSInsets.smallInsets)
+        dateTimeView.addSubviewFilling(timeLabel, insets: NSEdgeInsets.smallInsets)
         mapIconView.setBackground(.clear)
         cellBody.addSubviewWithAnchors(mapIconView, leading: dateTimeView.trailingAnchor, insets: .zero)
             .centerY(dateTimeView.centerYAnchor)
         iconView.setBackground(.clear)
-        cellBody.addSubviewWithAnchors(iconView, top: cellBody.topAnchor, trailing: cellBody.trailingAnchor, insets: OSInsets.smallInsets)
+        cellBody.addSubviewWithAnchors(iconView, top: cellBody.topAnchor, trailing: cellBody.trailingAnchor, insets: NSEdgeInsets.smallInsets)
         cellBody.addSubviewBelow(itemView, upperView: iconView, insets: .smallInsets)
-            .connectToBottom(of: cellBody, inset: OSInsets.smallInset)
+            .connectToBottom(of: cellBody, inset: NSEdgeInsets.smallInset)
         itemView.setBackground(.black).setRoundedBorders()
         setupTimeLabel()
         setupMapIcon()

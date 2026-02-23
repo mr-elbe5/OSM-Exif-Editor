@@ -65,7 +65,7 @@ class DateFilterView : NSView{
             .centerY(minDatePicker.centerYAnchor)
         
         let bottomLine = NSView()
-        addSubviewBelow(bottomLine, upperView: topLine, insets: NSEdgeInsets(top: OSInsets.defaultInset, left: 0, bottom: 0, right: 0))
+        addSubviewBelow(bottomLine, upperView: topLine, insets: NSEdgeInsets(top: NSEdgeInsets.defaultInset, left: 0, bottom: 0, right: 0))
             .connectToBottom(of: self, inset: .zero)
         
         maxDatePicker.timeZone = .none

@@ -13,9 +13,9 @@ class DrawTileData: Identifiable{
     var tile: MapTile
     var complete = false
     
-    var image: OSImage?{
+    var image: NSImage?{
         if let imageData = tile.imageData{
-            return OSImage(data: imageData)
+            return NSImage(data: imageData)
         }
         return nil
     }
@@ -39,7 +39,7 @@ class DrawTileData: Identifiable{
     }
     
     func draw(){
-        if let imageData = tile.imageData, let image = OSImage(data: imageData){
+        if let imageData = tile.imageData, let image = NSImage(data: imageData){
             image.draw(in: drawRect)
         }
     }

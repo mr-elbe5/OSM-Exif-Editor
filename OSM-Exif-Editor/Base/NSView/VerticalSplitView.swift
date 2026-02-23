@@ -35,7 +35,7 @@ class VerticalSplitView: NSView{
     }
     
     override func setupView() {
-        addSubviewBelow(topView, insets: OSInsets(top: 0, left: 2, bottom: 0, right: 0))
+        addSubviewBelow(topView, insets: NSEdgeInsets(top: 0, left: 2, bottom: 0, right: 0))
         separator.delegate = self
         addSubviewBelow(separator, upperView: topView, insets: .zero)
             .height(6)

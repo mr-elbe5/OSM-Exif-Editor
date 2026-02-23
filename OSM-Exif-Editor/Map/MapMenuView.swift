@@ -14,7 +14,7 @@ class MapMenuView: NSView{
     var centerButton: NSButton!
     var refreshButton: NSButton!
     
-    var insets = OSInsets(top: OSInsets.defaultInset, left: OSInsets.smallInset, bottom: OSInsets.defaultInset, right: OSInsets.smallInset)
+    var insets = NSEdgeInsets(top: NSEdgeInsets.defaultInset, left: NSEdgeInsets.smallInset, bottom: NSEdgeInsets.defaultInset, right: NSEdgeInsets.smallInset)
     
     init(){
         super.init(frame: .zero)

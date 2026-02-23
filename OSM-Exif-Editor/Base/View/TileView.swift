@@ -16,7 +16,7 @@ struct TileView: View {
     
     var body: some View {
         if let image = getImage(){
-            Image(osImage: image)
+            Image(nsImage: image)
                 .resizable()
         }
         else{
@@ -25,9 +25,9 @@ struct TileView: View {
         }
     }
     
-    func getImage() -> OSImage?{
+    func getImage() -> NSImage?{
         if let imageData = mapTile.imageData{
-            return OSImage(data: imageData)
+            return NSImage(data: imageData)
         }
         return nil
     }

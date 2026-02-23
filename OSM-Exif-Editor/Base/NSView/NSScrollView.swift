@@ -77,7 +77,7 @@ extension NSScrollView{
         CGPoint(x: bounds.width/2, y: bounds.height/2)
     }
     
-    func asVerticalScrollView(contentView: NSView, insets : OSInsets = .defaultInsets){
+    func asVerticalScrollView(contentView: NSView, insets : NSEdgeInsets = .defaultInsets){
         self.hasVerticalScroller = true
         self.hasHorizontalScroller = false
         let clipView = FlippedClipView()
@@ -86,7 +86,7 @@ extension NSScrollView{
         contentView.setAnchors(top:clipView.topAnchor, leading: clipView.leadingAnchor, trailing: clipView.trailingAnchor)
     }
     
-    func asScrollView(contentView: NSView, insets : OSInsets = .defaultInsets){
+    func asScrollView(contentView: NSView, insets : NSEdgeInsets = .defaultInsets){
         self.hasVerticalScroller = true
         self.hasHorizontalScroller = true
         let clipView = FlippedClipView()

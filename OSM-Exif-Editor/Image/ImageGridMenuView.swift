@@ -23,7 +23,7 @@ class ImageGridMenuView: NSView{
     
     var delegate: ImageGridMenuDelegate? = nil
     
-    var insets = OSInsets(top: 10, left: 5, bottom: 10, right: 5)
+    var insets = NSEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
     
     init(){
         super.init(frame: .zero)

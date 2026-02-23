@@ -35,7 +35,7 @@ class HorizontalSplitView: NSView{
     }
     
     override func setupView() {
-        addSubviewToRight(mainView, insets: OSInsets(top: 2, left: 0, bottom: 0, right: 0))
+        addSubviewToRight(mainView, insets: NSEdgeInsets(top: 2, left: 0, bottom: 0, right: 0))
         separator.delegate = self
         addSubviewToRight(separator, leftView: mainView, insets: .zero)
             .width(6)

@@ -22,7 +22,7 @@ class ImageExifView: NSView {
     let fileCreationDateView = NSTextField(wrappingLabelWithString: " ")
     let fileModificationDateView = NSTextField(wrappingLabelWithString: " ")
     
-    let insets = OSInsets.zero
+    let insets = NSEdgeInsets.zero
     
     override func setupView() {
         header.font = NSFont.boldSystemFont(ofSize: NSFont.systemFontSize)

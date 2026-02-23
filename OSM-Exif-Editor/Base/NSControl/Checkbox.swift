@@ -43,7 +43,7 @@ class Checkbox: NSView{
         checkboxIcon.delegate = self
         addSubviewToRight(checkboxIcon)
         addSubviewToRight(label,leftView: checkboxIcon)
-            .connectToRight(of: self, inset: OSInsets.defaultInset)
+            .connectToRight(of: self, inset: NSEdgeInsets.defaultInset)
     }
     
     @discardableResult

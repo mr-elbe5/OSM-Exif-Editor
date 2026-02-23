@@ -18,7 +18,7 @@ class ImageEditView: NSView {
     var longitudeField = NSTextField(string: " ")
     var altitudeField = NSTextField(string: " ")
     
-    let insets = OSInsets.zero
+    let insets = NSEdgeInsets.zero
     
     override func setupView() {
         header.font = NSFont.boldSystemFont(ofSize: NSFont.systemFontSize)
@@ -55,7 +55,7 @@ class ImageEditView: NSView {
     func update(){
         if let image = image{
             nameView.stringValue = image.url.lastPathComponent
-            dateView.dateValue = image.creationDate ?? Date()
+            dateView.dateValue = image.creationDate
             latitudeField.stringValue = image.exifLatitude?.coordinateString ?? ""
             longitudeField.stringValue = image.exifLongitude?.coordinateString ?? ""
             altitudeField.stringValue = image.exifAltitude?.formatted(.number) ?? ""
