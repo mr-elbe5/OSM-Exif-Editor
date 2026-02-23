@@ -14,7 +14,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         World.scrollWidthFactor = 1
         MapDefaults.startZoom = 8
         Preferences.load()
-        ViewFilter.load()
         MapStatus.load()
         AppData.loadData()
         MapDefaults.startZoom = 14
