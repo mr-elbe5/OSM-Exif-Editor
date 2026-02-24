@@ -256,6 +256,40 @@
         }
       }
     },
+    "copyExifCreation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EXIF-Datum kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy EXIF Date"
+          }
+        }
+      }
+    },
+    "copyFileCreation" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateidatum kopieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy File Creation"
+          }
+        }
+      }
+    },
     "copyMapLocation" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -409,6 +443,23 @@
         }
       }
     },
+    "exifCreationDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EXIF-Datum"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EXIF Date"
+          }
+        }
+      }
+    },
     "exifData" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -432,13 +483,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datei-Erstellungsdatum"
+            "value" : "Datei-Erstellung"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "File Creation Date"
+            "value" : "File Creation"
           }
         }
       }
@@ -449,13 +500,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datei-Änderungsdatum"
+            "value" : "Datei-Änderung"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "File Modification Date"
+            "value" : "File Modification"
           }
         }
       }

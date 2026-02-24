@@ -158,16 +158,38 @@ class ImageItem: MapItem{
         }
     }
     
-    @discardableResult
-    func deleteFile() -> Bool{
-        var success = true
-        if FileManager.default.fileExists(url: url){
-            if !FileManager.default.deleteFile(url: url){
-                Log.error("ImageItem could not delete file: \(fileName)")
-                success = false
+    func resetExifData(){
+        exifWidth = nil
+        exifHeight = nil
+        exifOrientation = nil
+        exifAperture = nil
+        exifBrightness = nil
+        exifCreationDate = nil
+        exifOffsetTime = nil
+        exifCameraModel = nil
+        exifAltitude = nil
+        exifLatitude = nil
+        exifLongitude = nil
+    }
+    
+    func reloadData(){
+        resetExifData()
+        if AppData.shared.startSecurityScope(){
+            do{
+                let resourceValues = try url.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey, .fileSizeKey])
+                size = resourceValues.fileSize ?? -1
+                fileCreationDate = resourceValues.creationDate
+                fileModificationDate = resourceValues.contentModificationDate
+                if let data = FileManager.default.readFile(url: self.url){
+                    readExifData(data: data)
+                }
+                isModified = false
+                AppData.shared.stopSecurityScope()
+            }
+            catch{
+                
             }
         }
-        return success
     }
     
     @discardableResult

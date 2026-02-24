@@ -43,6 +43,7 @@ class ImageDetailView: NSView {
             .height(1)
         exifView.setupView()
         editView.setupView()
+        editView.delegate = self
         scrollView.asVerticalScrollView(contentView: containerView)
         addSubviewBelow(scrollView, upperView: divider, insets: .zero)
             .connectToBottom(of: self)
@@ -54,7 +55,7 @@ class ImageDetailView: NSView {
         setContainedView(.exif)
     }
     
-    func updateView(){
+    func updateButtons(){
         if let image = image{
             switch currentType {
             case .exif:
@@ -73,6 +74,10 @@ class ImageDetailView: NSView {
             saveButton.isHidden = true
             modifiedLabel.isHidden = true
         }
+    }
+    
+    func updateView(){
+        updateButtons()
         switch currentType {
         case .exif:
             exifView.update()
@@ -100,11 +105,20 @@ class ImageDetailView: NSView {
     }
     
     @objc func cancelEditing(){
+        image?.reloadData()
         setContainedView(.exif)
     }
     
     @objc func saveImage(){
         setContainedView(.exif)
+    }
+    
+}
+
+extension ImageDetailView: ImageEditViewDelegate{
+    
+    func imageIsModified() {
+        updateButtons()
     }
     
 }
