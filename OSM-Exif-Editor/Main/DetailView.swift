@@ -10,8 +10,6 @@ import CoreLocation
 
 class DetailView: VerticalSplitView{
     
-    var image: ImageItem? = nil
-    
     var imageDetailView = ImageDetailView()
     var mapView = MapView()
     
@@ -29,10 +27,9 @@ class DetailView: VerticalSplitView{
         super.setupView()
     }
     
-    func setImage(_ image: ImageItem?){
-        self.image = image
-        imageDetailView.setImage(image)
-        if let coordinate = image?.coordinate, coordinate != .zero{
+    func updateView(){
+        imageDetailView.updateView()
+        if let coordinate = AppData.shared.detailImage?.coordinate, coordinate != .zero{
             mapView.showLocationOnMap(coordinate: coordinate)
         }
     }

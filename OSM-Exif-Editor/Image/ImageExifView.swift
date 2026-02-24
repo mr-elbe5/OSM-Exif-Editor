@@ -7,7 +7,9 @@ import Cocoa
 
 class ImageExifView: NSView {
     
-    private var image: ImageItem? = nil
+    private var image: ImageItem?{
+        AppData.shared.detailImage
+    }
     
     var header = NSTextField(labelWithString: "imageDetails".localize())
     
@@ -39,11 +41,6 @@ class ImageExifView: NSView {
         lastView = addLabeledView(name: "fileCreationDate".localize(), view: fileCreationDateView, upperView: lastView, insets: insets)
         lastView = addLabeledView(name: "fileModificationDate".localize(), view: fileModificationDateView, upperView: lastView, insets: insets)
         lastView?.connectToBottom(of: self, inset: insets.bottom)
-    }
-    
-    func setImage(_ image: ImageItem? = nil){
-        self.image = image
-        update()
     }
     
     func update(){

@@ -42,7 +42,8 @@ class AppData : NSObject, Codable{
     var folderURL: URL? = nil
     var images = ImageItemList()
     var track: TrackItem? = nil
-    var sortType: SortType = .byFileCreation
+    var detailImage: ImageItem? = nil
+    var sortType: ImageSortType = .byFileCreation
     var ascending = true
     
     var name: String{
@@ -131,7 +132,7 @@ class AppData : NSObject, Codable{
             for childURL in childURLs{
                 if let utType = childURL.utType{
                     let isImage = utType.isSubtype(of: .image) || utType.isSubtype(of: .rawImage)
-                    Log.info("uttype of \(childURL) is image: \(isImage)")
+                    //Log.info("uttype of \(childURL) is image: \(isImage)")
                     do{
                         if isImage{
                             let resourceValues = try childURL.resourceValues(forKeys: [.creationDateKey, .contentModificationDateKey, .fileSizeKey, .isRegularFileKey])

@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum SortType: String, Codable, CaseIterable{
+enum ImageSortType: String, Codable, CaseIterable{
     
     case byName
     case byExtension

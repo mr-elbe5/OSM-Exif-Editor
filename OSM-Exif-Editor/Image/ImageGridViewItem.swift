@@ -6,11 +6,6 @@
 import Foundation
 import Cocoa
 
-protocol ImageGridViewItemDelegate{
-    func setDetailImage(image: ImageItem?)
-    func updateDetailImage(image: ImageItem?)
-}
-
 class ImageGridViewItem: NSCollectionViewItem{
     
     static let fontSize: CGFloat = 12

@@ -22,6 +22,12 @@ extension NSButton{
         self.backgroundColor = backgroundColor
     }
     
+    convenience init(text: String, target: NSView, action: Selector){
+        self.init(frame: .zero)
+        asTextButton(text)
+        setAction(target: target, action: action)
+    }
+    
     @discardableResult
     func withStyle(_ style: BezelStyle) -> NSButton{
         self.bezelStyle = style

@@ -52,6 +52,11 @@ class MainViewController: ViewController {
         mapScrollView.updateItemLayerContent()
     }
     
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        imageGridView.setupNotifications()
+    }
+    
     func showItemDetails(item: MapItem){
         
     }
@@ -122,13 +127,27 @@ class MainViewController: ViewController {
         presenterView.setImages(images)
     }
     
-    func showFilteredImageGrid(selectedImages: [ImageItem]){
-        //AppData.shared.select
-        
-    }
-    
     func updateImageGrid(){
         imageGridView.updateData()
+    }
+    
+    func updateDetailView(){
+        detailView.updateView()
+    }
+    
+    func setDetailImage(_ image: ImageItem?){
+        AppData.shared.detailImage = image
+        updateDetailView()
+    }
+    
+    func openEditView(){
+        if AppData.shared.detailImage != nil{
+            let controller = ImageEditViewController()
+            if ModalWindow.run(title: "editImage".localize(), viewController: controller, outerWindow: MainWindowController.instance.window!, minSize: CGSize(width: 600, height: 400)) == .OK{
+                updateDetailView()
+                updateImageGrid()
+            }
+        }
     }
     
     // tracks
@@ -172,7 +191,9 @@ class MainViewController: ViewController {
     
     func compareWithTrack(){
         if AppData.shared.selectImagesWithCloseCreationDate(){
+            AppData.shared.detailImage = nil
             imageGridView.updateView()
+            detailView.updateView()
         }
     }
     
@@ -198,15 +219,13 @@ class MainViewController: ViewController {
             if let url = panel.urls.first{
                 if AppData.shared.setFolderUrl(url){
                     AppData.shared.setBookmark()
+                    AppData.shared.detailImage = nil
                     imageGridView.updateHeaderView()
                     imageGridView.updateView()
+                    detailView.updateView()
                 }
             }
         }
-    }
-    
-    func setDetailImage(image: ImageItem?) {
-        detailView.setImage(image)
     }
     
 }

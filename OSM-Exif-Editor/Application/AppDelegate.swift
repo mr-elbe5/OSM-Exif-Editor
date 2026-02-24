@@ -17,8 +17,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         MapStatus.load()
         AppData.loadData()
         MapDefaults.startZoom = 14
-        //FileManager.default.logFileInfo()
-        NSApp.appearance = NSAppearance(named: .darkAqua)
         MainWindowController.instance.showWindow(nil)
     }
 

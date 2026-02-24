@@ -29,16 +29,20 @@ class ImageGridView: NSView {
     
     let scrollView = NSScrollView()
     let collectionView = NSCollectionView()
-    let layout = NSCollectionViewGridLayout()
+    let layout = NSCollectionViewFlowLayout()
+    var minSize: CGFloat = ImageGridView.defaultGridSize
     let gridSpace: CGFloat = 10
     
+    var cellSize = NSSize(width: ImageGridView.defaultGridSize, height: ImageGridView.defaultGridSize)
+    
+    //var testView = GridView()
+    
     var hasSelection: Bool{
-        !collectionView.selectionIndexPaths.isEmpty
+        false
+        //!collectionView.selectionIndexPaths.isEmpty
     }
     
-    var gridSize: CGFloat{
-        ImageGridView.defaultGridSize * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
-    }
+    var gridSize: CGFloat = ImageGridView.defaultGridSize * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
     
     var insets = NSEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
     
@@ -52,6 +56,21 @@ class ImageGridView: NSView {
         addSubviewWithAnchors(scrollView, top: headerView.bottomAnchor, leading: menuView.trailingAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: .narrowInsets)
     }
     
+    func setupNotifications(){
+        NotificationCenter.default.addObserver(forName:  NSView.frameDidChangeNotification, object: nil, queue: nil) { notification in
+            self.updateCellSize()
+            self.layout.invalidateLayout()
+            
+        }
+    }
+    
+    func updateCellSize(){
+        minSize = ImageGridView.defaultGridSize * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
+        let cnt = Int(floor(collectionView.frame.width/minSize))
+        let size = (collectionView.frame.width - (CGFloat(cnt + 1)) * gridSpace)/CGFloat(cnt)
+        cellSize = cnt == 0 ? .zero : NSSize(width: size, height: size)
+    }
+    
     func setupHeaderView() {
         headerView.addSubviewToRight(headerLabel)
         let bufferView = NSView()
@@ -63,14 +82,14 @@ class ImageGridView: NSView {
     
     func updateHeaderView() {
         headerLabel.stringValue = AppData.shared.name
-        sortLabel.stringValue = "\("sorting".localize()): \(AppData.shared.sortType.localizedName)"
+        sortLabel.stringValue = "\("sorting".localize()):\(AppData.shared.sortType.localizedName)"
     }
     
     func setupMenuView() {
         sortButton = NSButton(image: NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: nil)!, target: self, action: #selector(openSortMenu)).asMenuButton()
         sortButton.toolTip = "sort".localize()
         sortMenu = NSMenu(title: "selection".localize())
-        for sortType in SortType.allCases{
+        for sortType in ImageSortType.allCases{
             let item = NSMenuItem(title: sortType.localizedName, target: self, action: #selector(sort), keyEquivalent: "")
             item.representedObject = sortType
             sortMenu.items.append(item)
@@ -111,15 +130,11 @@ class ImageGridView: NSView {
         collectionView.dataSource = AppData.shared
     }
     
-    override func viewDidEndLiveResize() {
-        updateItemSize()
-    }
-    
     func updateItemSize(){
-        let gridSize = gridSize
-        layout.minimumItemSize = CGSize(width: gridSize * 0.75, height: gridSize * 0.75)
-        layout.maximumItemSize = CGSize(width: gridSize * 1.25, height: gridSize * 1.25)
-        needsDisplay = true
+        //let gridSize = gridSize
+        //layout.minimumItemSize = CGSize(width: gridSize * 0.75, height: gridSize * 0.75)
+        //layout.maximumItemSize = CGSize(width: gridSize * 1.25, height: gridSize * 1.25)
+        //needsDisplay = true
     }
     
     @objc func increaseCellSize() {
@@ -137,7 +152,6 @@ class ImageGridView: NSView {
     }
     
     func updateView(){
-        MainViewController.shared.setDetailImage(image: nil)
         collectionView.removeAllSubviews()
         updateData()
         updateItemSize()
@@ -156,14 +170,6 @@ class ImageGridView: NSView {
         return arr
     }
     
-    func selectedImageChanged(image: ImageItem){
-        MainViewController.shared.setDetailImage(image: image)
-    }
-    
-    func showImageFullSize(image: ImageItem){
-        
-    }
-    
     @objc func openDirectory(){
         MainViewController.shared.openFolder()
     }
@@ -179,7 +185,7 @@ class ImageGridView: NSView {
     }
     
     @objc func sort(sender: Any?){
-        if let sender = sender as? NSMenuItem, let sortType = sender.representedObject as? SortType {
+        if let sender = sender as? NSMenuItem, let sortType = sender.representedObject as? ImageSortType {
             if sortType == AppData.shared.sortType{
                 AppData.shared.ascending = !AppData.shared.ascending
             }
@@ -211,14 +217,14 @@ class ImageGridView: NSView {
     
 }
 
-extension ImageGridView: NSCollectionViewDelegate{
+extension ImageGridView: NSCollectionViewDelegate, NSCollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
         if collectionView.selectionIndexPaths.count == 1, let idx = collectionView.selectionIndexPaths.first?.item{
-            MainViewController.shared.setDetailImage(image: AppData.shared.images[idx])
+            MainViewController.shared.setDetailImage(AppData.shared.images[idx])
         }
         else{
-            MainViewController.shared.setDetailImage(image: nil)
+            MainViewController.shared.setDetailImage(nil)
         }
         for indexPath in indexPaths{
             if let item = collectionView.item(at: indexPath) as? ImageGridViewItem{
@@ -231,10 +237,10 @@ extension ImageGridView: NSCollectionViewDelegate{
     
     func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
         if collectionView.selectionIndexPaths.count == 1, let idx = collectionView.selectionIndexPaths.first?.item{
-            MainViewController.shared.setDetailImage(image: AppData.shared.images[idx])
+            MainViewController.shared.setDetailImage(AppData.shared.images[idx])
         }
         else{
-            MainViewController.shared.setDetailImage(image: nil)
+            MainViewController.shared.setDetailImage(nil)
         }
         for indexPath in indexPaths{
             if let item = collectionView.item(at: indexPath) as? ImageGridViewItem{
@@ -243,6 +249,23 @@ extension ImageGridView: NSCollectionViewDelegate{
                 item.setHighlightState()
             }
         }
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath
+    ) -> NSSize{
+        return cellSize
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, layout: NSCollectionViewLayout, insetForSectionAt: Int) -> NSEdgeInsets{
+        NSEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, layout: NSCollectionViewLayout, minimumLineSpacingForSectionAt: Int) -> CGFloat{
+        10
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, layout: NSCollectionViewLayout, minimumInteritemSpacingForSectionAt: Int) -> CGFloat{
+        10
     }
     
 }

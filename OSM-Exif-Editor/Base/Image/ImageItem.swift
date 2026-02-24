@@ -11,7 +11,6 @@ import Photos
 class ImageItem: MapItem{
     
     static var previewSize: CGFloat = 512
-    static var imageSize: CGFloat = 2048
     
     var url: URL
     var fileCreationDate: Date? = nil
@@ -29,6 +28,8 @@ class ImageItem: MapItem{
     var exifLatitude: Double?
     var exifLongitude: Double?
     var exifLoaded: Bool = false
+    
+    var isModified: Bool = false
     
     private var previewData: Data?
     var preview: NSImage{
@@ -306,7 +307,7 @@ typealias ImageItemList = MappointList<ImageItem>
 
 extension ImageItemList{
     
-    mutating func sort(by sortType: SortType, ascending: Bool){
+    mutating func sort(by sortType: ImageSortType, ascending: Bool){
         switch sortType{
         case .byName:
             self.sort(by: { $0.url.lastPathComponent < $1.url.lastPathComponent})
