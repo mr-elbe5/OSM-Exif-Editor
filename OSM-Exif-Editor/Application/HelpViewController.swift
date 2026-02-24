@@ -16,7 +16,7 @@ class HelpViewController: PopoverViewController {
     override func loadView() {
         view = HelpView(controller: self)
         view.frame = CGRect(origin: .zero, size: CGSize(width: 500, height: 0))
-        contentView.setupView(height: MainViewController.shared.view.frame.height - 100)
+        contentView.setupView(height: MainViewController.shared.view.frame.height/2)
     }
     
 }
@@ -29,21 +29,9 @@ class HelpView: PopoverView{
         scrollView.asVerticalScrollView(contentView: contentView)
         addSubviewFilling(scrollView)
             .height(height)
-        var header = NSTextField(labelWithString: "helpGeneral".localize(table: "Help")).asHeadline()
+        var header = NSTextField(labelWithString: "help".localize()).asHeadline()
         contentView.addSubviewBelow(header)
-        var text = NSTextField(wrappingLabelWithString: "helpGeneralText".localize(table: "Help"))
-        contentView.addSubviewBelow(text, upperView: header)
-        header = NSTextField(labelWithString: "helpMap".localize(table: "Help")).asHeadline()
-        contentView.addSubviewBelow(header, upperView: text)
-        text = NSTextField(wrappingLabelWithString: "helpMapText".localize(table: "Help"))
-        contentView.addSubviewBelow(text, upperView: header)
-        header = NSTextField(labelWithString: "helpImageGrid".localize(table: "Help")).asHeadline()
-        contentView.addSubviewBelow(header, upperView: text)
-        text = NSTextField(wrappingLabelWithString: "helpImageGridText".localize(table: "Help"))
-        contentView.addSubviewBelow(text, upperView: header)
-        header = NSTextField(labelWithString: "helpTrackGrid".localize(table: "Help")).asHeadline()
-        contentView.addSubviewBelow(header, upperView: text)
-        text = NSTextField(wrappingLabelWithString: "helpTrackGridText".localize(table: "Help"))
+        var text = NSTextField(wrappingLabelWithString: "helpText".localize())
         contentView.addSubviewBelow(text, upperView: header)
             .connectToBottom(of: contentView)
     }

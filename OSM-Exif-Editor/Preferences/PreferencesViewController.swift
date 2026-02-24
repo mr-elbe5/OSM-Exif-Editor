@@ -20,7 +20,7 @@ class PreferencesViewController: PopoverViewController {
     }
     
     func clearTiles(){
-        showDestructiveApprove(title: "deleteAllTiles".localize(), text: "deleteAllTilesHint".localize(table: "Hints")){
+        showDestructiveApprove(title: "deleteAllTiles".localize(), text: "deleteAllTilesHint".localize()){
             TileProvider.shared.deleteAllTiles()
             MainViewController.shared.refreshMap()
         }
@@ -44,7 +44,7 @@ class PreferencesView: PopoverView{
         mapSourceControl.selectedSegment = MapSourceList.shared.indexOf(source: Preferences.shared.mapSource)
         addSubviewBelow(mapSourceControl, upperView: header)
         
-        let hint = NSTextField(wrappingLabelWithString: "mapServerHint".localize(table: "Hints")).asSmallLabel()
+        let hint = NSTextField(wrappingLabelWithString: "mapServerHint".localize()).asSmallLabel()
         addSubviewBelow(hint, upperView: mapSourceControl)
         
         let clearTileCacheButton = NSButton(title: "clearMapCache".localize(), target: self, action: #selector(clearTiles))
