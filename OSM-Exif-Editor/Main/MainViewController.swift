@@ -132,22 +132,12 @@ class MainViewController: ViewController {
     }
     
     func updateDetailView(){
-        detailView.updateView()
+        detailView.detailImageDidChange()
     }
     
     func setDetailImage(_ image: ImageItem?){
-        AppData.shared.detailImage = image
+        AppData.shared.setDetailImage(image)
         updateDetailView()
-    }
-    
-    func openEditView(){
-        if AppData.shared.detailImage != nil{
-            let controller = ImageEditViewController()
-            if ModalWindow.run(title: "editImage".localize(), viewController: controller, outerWindow: MainWindowController.instance.window!, minSize: CGSize(width: 600, height: 400)) == .OK{
-                updateDetailView()
-                updateImageGrid()
-            }
-        }
     }
     
     // tracks
@@ -191,9 +181,9 @@ class MainViewController: ViewController {
     
     func compareWithTrack(){
         if AppData.shared.selectImagesWithCloseCreationDate(){
-            AppData.shared.detailImage = nil
+            AppData.shared.setDetailImage(nil)
             imageGridView.updateView()
-            detailView.updateView()
+            detailView.detailImageDidChange()
         }
     }
     
@@ -219,10 +209,10 @@ class MainViewController: ViewController {
             if let url = panel.urls.first{
                 if AppData.shared.setFolderUrl(url){
                     AppData.shared.setBookmark()
-                    AppData.shared.detailImage = nil
+                    AppData.shared.setDetailImage(nil)
                     imageGridView.updateHeaderView()
                     imageGridView.updateView()
-                    detailView.updateView()
+                    detailView.detailImageDidChange()
                 }
             }
         }

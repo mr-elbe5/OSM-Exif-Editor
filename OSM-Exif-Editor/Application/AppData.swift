@@ -204,6 +204,10 @@ class AppData : NSObject, Codable{
         return list
     }
     
+    func setDetailImage(_ image: ImageItem?){
+        detailImage = image
+    }
+    
 }
 
 extension AppData: NSCollectionViewDataSource{

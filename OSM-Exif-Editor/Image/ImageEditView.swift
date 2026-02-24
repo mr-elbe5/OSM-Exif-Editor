@@ -6,11 +6,9 @@
 import Cocoa
 import CoreLocation
 
-class ImageEditViewController: ModalViewController {
+class ImageEditView: NSView {
     
-    private var image: ImageItem?{
-        AppData.shared.detailImage
-    }
+    private var image: ImageItem? = nil
     
     var header = NSTextField(labelWithString: "editExifData".localize())
     
@@ -22,31 +20,35 @@ class ImageEditViewController: ModalViewController {
     
     let insets = NSEdgeInsets.zero
     
-    override func loadView() {
-        super.loadView()
+    override func setupView() {
         header.font = NSFont.boldSystemFont(ofSize: NSFont.systemFontSize)
-        view.addSubviewCenteredBelow(header, insets: .defaultInsets)
+        addSubviewCenteredBelow(header, insets: .defaultInsets)
         var lastView: NSView? = header
-        lastView = view.addLabeledView(name: "name", view: nameView, upperView: lastView, insets: insets)
-        lastView = view.addHorizontalDivider(upperView: lastView, color: .lightGray)
+        lastView = addLabeledView(name: "name", view: nameView, upperView: lastView, insets: insets)
+        lastView = addHorizontalDivider(upperView: lastView, color: .lightGray)
         dateView.dateValue = image?.creationDate ?? Date()
-        lastView = view.addLabeledView(name: "creationDate", view: dateView, upperView: lastView)
+        lastView = addLabeledView(name: "creationDate", view: dateView, upperView: lastView)
         var button = NSButton(title: "setNow".localize(), target: self, action: #selector(setNow))
-        lastView = view.addSubviewBelow(button, upperView: lastView)
+        lastView = addSubviewBelow(button, upperView: lastView)
         button = NSButton(title: "saveCreationDate".localize(), target: self, action: #selector(saveCreationDate))
-        lastView = view.addSubviewBelow(button, upperView: lastView)
-        lastView = view.addHorizontalDivider(upperView: lastView, color: .lightGray)
+        lastView = addSubviewBelow(button, upperView: lastView)
+        lastView = addHorizontalDivider(upperView: lastView, color: .lightGray)
         dateView.dateValue = image?.creationDate ?? Date()
-        lastView = view.addLabeledView(name: "latitude", view: latitudeField, upperView: lastView)
-        lastView = view.addLabeledView(name: "longitude", view: longitudeField, upperView: lastView)
-        lastView = view.addLabeledView(name: "altitude", view: altitudeField, upperView: lastView)
+        lastView = addLabeledView(name: "latitude", view: latitudeField, upperView: lastView)
+        lastView = addLabeledView(name: "longitude", view: longitudeField, upperView: lastView)
+        lastView = addLabeledView(name: "altitude", view: altitudeField, upperView: lastView)
         button = NSButton(title: "copyMapLocation".localize(), target: self, action: #selector(copyMapLocation))
-        lastView = view.addSubviewBelow(button, upperView: lastView)
+        lastView = addSubviewBelow(button, upperView: lastView)
         button = NSButton(title: "getAltitude".localize(), target: self, action: #selector(getAltitude))
-        lastView = view.addSubviewBelow(button, upperView: lastView)
+        lastView = addSubviewBelow(button, upperView: lastView)
         button = NSButton(title: "saveLocation".localize(), target: self, action: #selector(saveLocation))
-        lastView = view.addSubviewBelow(button, upperView: lastView)
-        lastView?.connectToBottom(of: view, inset: insets.bottom)
+        lastView = addSubviewBelow(button, upperView: lastView)
+        lastView?.connectToBottom(of: self, inset: insets.bottom)
+        update()
+    }
+    
+    func setImage(_ image: ImageItem? = nil){
+        self.image = image
         update()
     }
     
@@ -74,18 +76,17 @@ class ImageEditViewController: ModalViewController {
     @objc func saveCreationDate(){
         if let image = image{
             image.exifCreationDate = dateView.dateValue
-            image.isModified = true
+            image.saveModifiedFile()
         }
     }
     
     @objc func copyMapLocation(){
         let coordinate = MapStatus.shared.centerCoordinate
-        if let image = image, coordinate != .zero{
+        if let image = image{
             image.exifLatitude = coordinate.latitude
             image.exifLongitude = coordinate.longitude
             self.latitudeField.stringValue = coordinate.latitude.coordinateString
             self.longitudeField.stringValue = coordinate.longitude.coordinateString
-            image.isModified = true
         }
     }
     
@@ -105,12 +106,6 @@ class ImageEditViewController: ModalViewController {
             image.exifLatitude = latitudeField.doubleValue
             image.exifLongitude = longitudeField.doubleValue
             image.exifAltitude = altitudeField.doubleValue
-            image.isModified = true
-        }
-    }
-    
-    @objc func saveChanges(){
-        if let image = image{
             image.saveModifiedFile()
         }
     }
