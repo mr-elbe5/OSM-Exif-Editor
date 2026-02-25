@@ -74,6 +74,25 @@ class ImageGridView: NSView {
         cellSize = cnt == 0 ? .zero : NSSize(width: size, height: size)
     }
     
+    func updateImageStatus(){
+        for i in 0..<AppData.shared.images.count{
+            if let gridItem = collectionView.item(at: i) as? ImageGridViewItem{
+                gridItem.updateBottomView()
+            }
+        }
+    }
+    
+    func updateDetailImageStatus(){
+        if let detailImage = AppData.shared.detailImage{
+            for i in 0..<AppData.shared.images.count{
+                if let gridItem = collectionView.item(at: i) as? ImageGridViewItem, gridItem.image == detailImage{
+                    gridItem.updateBottomView()
+                    break
+                }
+            }
+        }
+    }
+    
     func setupHeaderView() {
         headerView.addSubviewToRight(headerLabel)
         let bufferView = NSView()

@@ -21,6 +21,10 @@ class ImageGridViewItem: NSCollectionViewItem{
     var topView = NSView()
     var centerView = NSView()
     var bottomView = NSView()
+    var nameLabel = NSTextField(labelWithString: "")
+    var sortLabel = NSTextField(labelWithString: "")
+    var modifiedIcon = NSImageView(image: NSImage(systemSymbolName: "pencil", accessibilityDescription: nil)!)
+    var mapIcon = NSImageView(image: NSImage(systemSymbolName: "map", accessibilityDescription: nil)!)
     
     var nameView = NSTextField(labelWithString: "")
     var image: ImageItem
@@ -46,14 +50,23 @@ class ImageGridViewItem: NSCollectionViewItem{
             .height(20)
         view.addSubviewWithAnchors(bottomView, leading: view.leadingAnchor, trailing: view.trailingAnchor, bottom: view.bottomAnchor, insets: Self.bottomInsets)
             .height(20)
+        sortLabel.font = Self.font
+        bottomView.addSubviewCentered(sortLabel, centerY: bottomView.centerYAnchor)
+            .leading(bottomView.leadingAnchor, inset: 5)
+        bottomView.addSubviewCentered(modifiedIcon, centerY: bottomView.centerYAnchor)
+            .trailing(bottomView.trailingAnchor, inset: -25)
+        bottomView.addSubviewCentered(mapIcon, centerY: bottomView.centerYAnchor)
+            .trailing(bottomView.trailingAnchor, inset: -5)
         nameView.font = Self.font
         topView.addSubviewCentered(nameView, centerX: topView.centerXAnchor, centerY: topView.centerYAnchor)
+        updateBottomView()
         image.completeData(){
-            self.showFile()
+            self.updateCenterView()
+            self.updateBottomView()
         }
     }
     
-    func showFile(){
+    func updateCenterView(){
         centerView.removeAllSubviews()
         let imageView = NSImageView(image: image.preview)
         imageView.imageScaling = .scaleProportionallyUpOrDown
@@ -68,19 +81,15 @@ class ImageGridViewItem: NSCollectionViewItem{
     }
     
     func updateBottomView(){
-        bottomView.removeAllSubviews()
-        let sortString = sortString
         if !sortString.isEmpty{
-            let label = NSTextField(labelWithString: sortString)
-            label.font = Self.font
-            bottomView.addSubviewCentered(label, centerY: bottomView.centerYAnchor)
-                .leading(bottomView.leadingAnchor, inset: 5)
+            sortLabel.stringValue = sortString
+            sortLabel.isHidden = false
         }
-        if image.hasGPSData{
-            let iconView = NSImageView(icon: "map")
-            bottomView.addSubviewCentered(iconView, centerY: bottomView.centerYAnchor)
-                .trailing(bottomView.trailingAnchor, inset: -5)
+        else{
+            sortLabel.isHidden = true
         }
+        modifiedIcon.isHidden = !image.isModified
+        mapIcon.isHidden = !image.hasGPSData
     }
     
     var sortString: String{

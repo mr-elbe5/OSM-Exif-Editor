@@ -103,10 +103,14 @@ class ImageDetailView: NSView {
     @objc func cancelEditing(){
         image?.reloadData()
         setImageView(.exif)
+        MainViewController.shared.updateDetailGridItem()
     }
     
     @objc func saveImage(){
+        image?.saveModifiedFile()
+        image?.isModified = false
         setImageView(.exif)
+        MainViewController.shared.updateDetailGridItem()
     }
     
 }
@@ -115,6 +119,7 @@ extension ImageDetailView: ImageEditViewDelegate{
     
     func imageIsModified() {
         updateButtons()
+        MainViewController.shared.updateDetailGridItem()
     }
     
 }

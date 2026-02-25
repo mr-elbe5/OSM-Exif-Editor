@@ -136,6 +136,10 @@ class MainViewController: ViewController {
         updateDetailView()
     }
     
+    func updateDetailGridItem(){
+        imageGridView.updateDetailImageStatus()
+    }
+    
     // tracks
     
     func loadTrack(){

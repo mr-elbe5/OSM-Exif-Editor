@@ -226,10 +226,7 @@ class ImageItem: MapItem{
                         CGImageDestinationAddImageFromSource(destination, imageSource, 0, (newMetaData as CFDictionary))
                         CGImageDestinationFinalize(destination)
                         success = FileManager.default.saveFile(data: newData as Data, url: url)
-                        if let creationDate = exifCreationDate{
-                            fileCreationDate = creationDate
-                            url.creation = fileCreationDate
-                        }
+                        url.creation = fileCreationDate
                     }
                 }
             }
