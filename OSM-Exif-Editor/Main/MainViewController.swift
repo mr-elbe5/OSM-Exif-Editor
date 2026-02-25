@@ -88,10 +88,6 @@ class MainViewController: ViewController {
         updateMapLayersScale()
     }
     
-    func toggleCross() {
-        detailView.mapView.toggleCross()
-    }
-    
     func showItemOnMap(_ item: MapItem){
         detailView.mapView.showLocationOnMap(coordinate: item.coordinate)
     }

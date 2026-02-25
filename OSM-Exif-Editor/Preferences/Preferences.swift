@@ -24,15 +24,11 @@ class Preferences: Identifiable, Codable{
     
     enum CodingKeys: String, CodingKey {
         case mapSource
-        case showCenterButton
-        case sortAscending
         case gridSizeFactorIndex
     }
     
-    var mapSource : MapSource = .elbe5
-    var showCenterButton: Bool = false
-    var sortAscending: Bool = true
-    var gridSizeFactorIndex: Int = 2
+    var mapSource : MapSource = .osm
+    var gridSizeFactorIndex: Int = 1
     
     init(){
     }
@@ -42,16 +38,12 @@ class Preferences: Identifiable, Codable{
         if let mapSourceString = try? values.decodeIfPresent(String.self, forKey: .mapSource){
             mapSource = MapSource(rawValue: mapSourceString) ?? .osm
         }
-        showCenterButton = try values.decodeIfPresent(Bool.self, forKey: .showCenterButton) ?? false
-        sortAscending = try values.decodeIfPresent(Bool.self, forKey: .sortAscending) ?? true
-        gridSizeFactorIndex = try values.decodeIfPresent(Int.self, forKey: .gridSizeFactorIndex) ?? 2
+        gridSizeFactorIndex = try values.decodeIfPresent(Int.self, forKey: .gridSizeFactorIndex) ?? 1
     }
     
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(mapSource.rawValue, forKey: .mapSource)
-        try container.encode(showCenterButton, forKey: .showCenterButton)
-        try container.encode(sortAscending, forKey: .sortAscending)
         try container.encode(gridSizeFactorIndex, forKey: .gridSizeFactorIndex)
     }
     

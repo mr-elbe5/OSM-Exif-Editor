@@ -239,6 +239,23 @@
         }
       }
     },
+    "coordinateFromMap" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koordinaten von Kartenmitte setzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set coordinate from map Center"
+          }
+        }
+      }
+    },
     "copy" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -398,7 +415,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ändern"
+            "value" : "Bearbeiten"
           }
         },
         "en" : {
@@ -517,13 +534,13 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geogr. Höhe aus Karte abrufen"
+            "value" : "Geogr. Höhe abrufen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get Altitude from Map"
+            "value" : "Request Altitude"
           }
         }
       }
@@ -562,7 +579,24 @@
         }
       }
     },
-    "helpText" : {
+    "helpApp" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über diese App"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About this App"
+          }
+        }
+      }
+    },
+    "helpAppText" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
@@ -575,6 +609,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "This app is for all photographers who have cameras without a GPS module or who have photos with a wrong creation date.\nIt can set or change exif date and location of your images.\nFirst you choose one or more files from your device. This can be done in one or two columns with equal or different images (see Preferences)\nThe previews show the exif creation date and a map icon, if there is an exif location. \nThen you select each image by clicking on it. The selected image has a light background.  Now you can change date and location either manually or by using the map.\nIf the images contains a location, it is shown on the map.\nFurther, you can set the file creation date to the image creation date.\nOn saving, the respective data is written to the original image. So if you want to keep the original, please make a copy first.\nCurrently Jpeg, Png and Tiff files are supported."
+          }
+        }
+      }
+    },
+    "helpTrack" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutzung einer Route"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Using a track"
+          }
+        }
+      }
+    },
+    "helpTrackText" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eine Route kann genutzt werden, um Bildern ohne GPS-Daten eine GPS-Position zuzuweisen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can use a track to set the GPS location of images without GPS data."
           }
         }
       }

@@ -24,9 +24,27 @@ class ImageItem: MapItem{
     var exifCreationDate: Date?
     var exifOffsetTime: String?
     var exifCameraModel: String?
-    var exifAltitude: Double?
-    var exifLatitude: Double?
-    var exifLongitude: Double?
+    var exifAltitude: Double?{
+        didSet{
+            if let altitude = exifAltitude{
+                self.altitude = altitude
+            }
+        }
+    }
+    var exifLatitude: Double?{
+        didSet{
+            if let latitude = exifLatitude{
+                self.latitude = latitude
+            }
+        }
+    }
+    var exifLongitude: Double?{
+        didSet{
+            if let longitude = exifLongitude{
+                self.longitude = longitude
+            }
+        }
+    }
     var exifLoaded: Bool = false
     
     var isModified: Bool = false
@@ -87,8 +105,8 @@ class ImageItem: MapItem{
         return true
     }
     
-    var creationDate: Date{
-        exifCreationDate ?? fileCreationDate ?? Date()
+    var creationDate: Date?{
+        exifCreationDate ?? fileCreationDate
     }
     
     private var imageData: Data?{

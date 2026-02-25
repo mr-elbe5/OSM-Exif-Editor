@@ -166,7 +166,7 @@ class AppData : NSObject, Codable{
         if let item = track{
             images.deselectAll()
             for image in images{
-                if !image.hasValidCoordinate, let result = item.track.findClosestTrackpoint(at: image.creationDate, maxSecDiff: 10){
+                if !image.hasValidCoordinate, let date = image.creationDate, let result = item.track.findClosestTrackpoint(at: date, maxSecDiff: 10){
                     image.coordinate = result.0.coordinate
                     image.selected = true
                     hasResult = true
@@ -197,7 +197,7 @@ class AppData : NSObject, Codable{
         let startDate = item.track.startTime
         let endDate = item.track.endTime
         for image in images{
-            if image.creationDate >= startDate && image.creationDate <= endDate{
+            if let date = image.creationDate, date >= startDate && date <= endDate{
                 list.append(image)
             }
         }

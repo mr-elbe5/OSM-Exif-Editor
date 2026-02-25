@@ -17,7 +17,6 @@ class ImageDetailView: NSView {
     var editButton: NSButton!
     var cancelButton: NSButton!
     var saveButton: NSButton!
-    var modifiedLabel = NSTextField(labelWithString: "modified".localize())
     var containerView = NSView()
     var scrollView = NSScrollView()
     var exifView = ImageExifView()
@@ -34,8 +33,7 @@ class ImageDetailView: NSView {
         saveButton = NSButton(text: "save".localize(), target: self, action: #selector(saveImage))
         menuView.addSubviewToRight(editButton)
         menuView.addSubviewToRight(cancelButton)
-        menuView.addSubviewToLeft(modifiedLabel)
-        menuView.addSubviewToLeft(saveButton, rightView: modifiedLabel)
+        menuView.addSubviewToLeft(saveButton)
         addSubviewBelow(menuView, insets: .zero)
         let divider = NSView()
         divider.backgroundColor = .lightGray
@@ -47,12 +45,12 @@ class ImageDetailView: NSView {
         scrollView.asVerticalScrollView(contentView: containerView)
         addSubviewBelow(scrollView, upperView: divider, insets: .zero)
             .connectToBottom(of: self)
-        setContainedView(currentType)
+        setImageView(currentType)
         updateView()
     }
     
     func detailImageDidChange(){
-        setContainedView(.exif)
+        setImageView(.exif)
     }
     
     func updateButtons(){
@@ -66,13 +64,11 @@ class ImageDetailView: NSView {
                 cancelButton.isHidden = false
             }
             saveButton.isHidden = !image.isModified
-            modifiedLabel.isHidden = !image.isModified
         }
         else{
             editButton.isHidden = true
             cancelButton.isHidden = true
             saveButton.isHidden = true
-            modifiedLabel.isHidden = true
         }
     }
     
@@ -86,7 +82,7 @@ class ImageDetailView: NSView {
         }
     }
     
-    func setContainedView(_ type: ViewType){
+    func setImageView(_ type: ViewType){
         currentType = type
         containerView.removeAllSubviews()
         switch(type){
@@ -101,16 +97,16 @@ class ImageDetailView: NSView {
     }
             
     @objc func openEditView(){
-        setContainedView(.edit)
+        setImageView(.edit)
     }
     
     @objc func cancelEditing(){
         image?.reloadData()
-        setContainedView(.exif)
+        setImageView(.exif)
     }
     
     @objc func saveImage(){
-        setContainedView(.exif)
+        setImageView(.exif)
     }
     
 }

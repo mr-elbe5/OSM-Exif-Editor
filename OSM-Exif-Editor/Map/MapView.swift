@@ -28,8 +28,6 @@ class MapView: NSView {
         crossLocationView.target = self
         crossLocationView.action = #selector(showCrossLocationMenu)
         addSubviewCentered(crossLocationView, centerX: scrollView.centerXAnchor, centerY: scrollView.centerYAnchor)
-        crossLocationView.isHidden = !Preferences.shared.showCenterButton
-        
     }
     
     func setDefaultLocation(){
@@ -49,8 +47,6 @@ class MapView: NSView {
         let viewSize = bounds.scaleBy(0.9).size
         scrollView.zoomTo(zoom: World.getZoomToFit(worldRect: worldRect, scaledSize: viewSize))
         scrollView.scrollToScreenCenter(coordinate: worldRect.centerCoordinate)
-        //Log.info("scrollZoom = \(MapStatus.shared.zoom)")
-        //Log.info("scrollScale = \(scrollView.zoomScale)")
         scrollView.updateLayerPositions()
     }
     
@@ -65,12 +61,6 @@ class MapView: NSView {
     
     func zoomOut() {
         scrollView.zoomOut()
-    }
-    
-    func toggleCross() {
-        crossLocationView.isHidden = !crossLocationView.isHidden
-        Preferences.shared.showCenterButton = !crossLocationView.isHidden
-        Preferences.shared.save()
     }
     
     func refreshMap() {

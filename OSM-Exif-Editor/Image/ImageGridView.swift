@@ -7,7 +7,7 @@ import Cocoa
 
 class ImageGridView: NSView {
     
-    static var defaultGridSize: CGFloat = 200
+    static var defaultGridSize: CGFloat = 300
     static var gridSizeFactors : Array<CGFloat> = [0.5, 0.75, 1.0, 1.5, 2.0]
     
     var active = false
@@ -58,10 +58,13 @@ class ImageGridView: NSView {
     
     func setupNotifications(){
         NotificationCenter.default.addObserver(forName:  NSView.frameDidChangeNotification, object: nil, queue: nil) { notification in
-            self.updateCellSize()
-            self.layout.invalidateLayout()
-            
+            self.updateItemSize()
         }
+    }
+    
+    func updateItemSize(){
+        updateCellSize()
+        layout.invalidateLayout()
     }
     
     func updateCellSize(){
@@ -130,13 +133,6 @@ class ImageGridView: NSView {
         collectionView.dataSource = AppData.shared
     }
     
-    func updateItemSize(){
-        //let gridSize = gridSize
-        //layout.minimumItemSize = CGSize(width: gridSize * 0.75, height: gridSize * 0.75)
-        //layout.maximumItemSize = CGSize(width: gridSize * 1.25, height: gridSize * 1.25)
-        //needsDisplay = true
-    }
-    
     @objc func increaseCellSize() {
         if Preferences.shared.gridSizeFactorIndex < ImageGridView.gridSizeFactors.count - 1{
             Preferences.shared.gridSizeFactorIndex += 1
@@ -153,8 +149,8 @@ class ImageGridView: NSView {
     
     func updateView(){
         collectionView.removeAllSubviews()
+        updateCellSize()
         updateData()
-        updateItemSize()
     }
     
     func updateData(){
