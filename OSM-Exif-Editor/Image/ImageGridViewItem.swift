@@ -27,9 +27,9 @@ class ImageGridViewItem: NSCollectionViewItem{
     var mapIcon = NSImageView(image: NSImage(systemSymbolName: "map", accessibilityDescription: nil)!)
     
     var nameView = NSTextField(labelWithString: "")
-    var image: ImageItem
+    var image: ImageData
     
-    init(image: ImageItem) {
+    init(image: ImageData) {
         self.image = image
         super.init(nibName: "", bundle: nil)
         setHighlightState()

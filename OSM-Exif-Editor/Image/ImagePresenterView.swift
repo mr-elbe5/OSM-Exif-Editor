@@ -8,7 +8,7 @@ import AppKit
 
 class ImagePresenterView: PresenterView {
     
-    var items = ImageItemList()
+    var items = ImageList()
     
     var imageView = NSImageView()
     
@@ -26,31 +26,31 @@ class ImagePresenterView: PresenterView {
     
     }
     
-    func setImages(_ items: ImageItemList){
-        self.items = items
-        setImageView(item: items.first)
+    func setImages(_ images: ImageList){
+        self.items = images
+        setImageView(image: images.first)
         currentIdx = 0
         checkButtons()
     }
     
-    func setImage(item: ImageItem){
-        var arr = ImageItemList()
-        arr.append(item)
+    func setImage(image: ImageData){
+        var arr = ImageList()
+        arr.append(image)
         setImages(arr)
         checkButtons()
     }
     
-    func setImageView(item: ImageItem?){
+    func setImageView(image: ImageData?){
         imageView.image = nil
         imageView.isHidden = true
-        if let item = item, let img = item.image{
+        if let image = image, let img = image.image{
             imageView.isHidden = false
             imageView.image = img
         }
     }
     
     override func setCurrentItem(){
-        setImageView(item: items[currentIdx])
+        setImageView(image: items[currentIdx])
     }
     
 }

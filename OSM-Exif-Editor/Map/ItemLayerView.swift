@@ -37,9 +37,10 @@ class ItemLayerView: LayerView {
     override func updatePosition(scale: CGFloat){
         self.scale = scale
         for subview in subviews{
-            if let marker = subview as? ItemMarkerView{
-                let mapPoint = marker.item.worldPoint
-                marker.updatePosition(to: CGPoint(x: mapPoint.x*scale , y: mapPoint.y*scale))
+            if let marker = subview as? ImageMarkerView{
+                if let mapPoint = marker.imageData.worldPoint{
+                    marker.updatePosition(to: CGPoint(x: mapPoint.x*scale , y: mapPoint.y*scale))
+                }
             }
         }
         needsDisplay = true
@@ -52,33 +53,27 @@ class ItemLayerView: LayerView {
             subview.removeFromSuperview()
         }
         for item in AppData.shared.images{
-            if !item.hasValidCoordinate{
+            if item.coordinate == nil{
                 continue
             }
-            let marker = ItemMarkerView(item: item, target: self, action: #selector(showItemDetails))
+            let marker = ImageMarkerView(image: item, target: self, action: #selector(showItemDetails))
             addSubview(marker)
         }
         updatePosition(scale: scale)
     }
     
-    func getMarker(item: MapItem) -> MarkerView?{
+    func getMarker(item: ImageData) -> ImageMarkerView?{
         for subview in subviews{
-            if let marker = subview as? ItemMarkerView, marker.item.id == item.id{
+            if let marker = subview as? ImageMarkerView, marker.imageData == item{
                 return marker
             }
         }
         return nil
     }
     
-    func updateItemStatus(_ item: MapItem){
-        if let marker = getMarker(item: item){
-            marker.updateImage()
-        }
-    }
-    
     @objc func showItemDetails(sender: AnyObject?){
-        if let marker = sender as? ItemMarkerView{
-            MainViewController.shared.showItemDetails(item: marker.item)
+        if let marker = sender as? ImageMarkerView{
+            MainViewController.shared.showImageDetails(image: marker.imageData)
         }
     }
     

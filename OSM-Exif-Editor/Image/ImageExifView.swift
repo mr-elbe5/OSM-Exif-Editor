@@ -7,7 +7,7 @@ import Cocoa
 
 class ImageExifView: NSView {
     
-    private var image: ImageItem?{
+    private var image: ImageData?{
         AppData.shared.detailImage
     }
     

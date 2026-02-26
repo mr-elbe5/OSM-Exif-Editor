@@ -8,9 +8,13 @@ import AppKit
 import CoreLocation
 import Photos
 
-class ImageItem: MapItem{
+class ImageData: Equatable{
     
     static var previewSize: CGFloat = 512
+    
+    static func == (lhs: ImageData, rhs: ImageData) -> Bool {
+        lhs.url == rhs.url
+    }
     
     var url: URL
     var fileCreationDate: Date? = nil
@@ -24,30 +28,22 @@ class ImageItem: MapItem{
     var exifCreationDate: Date?
     var exifOffsetTime: String?
     var exifCameraModel: String?
-    var exifAltitude: Double?{
-        didSet{
-            if let altitude = exifAltitude{
-                self.altitude = altitude
-            }
+    var exifAltitude: Double?
+    var exifLatitude: Double?
+    var exifLongitude: Double?
+    
+    var worldPoint: CGPoint?{
+        if let coordinate = coordinate{
+            return CGPoint(coordinate)
         }
+        return nil
     }
-    var exifLatitude: Double?{
-        didSet{
-            if let latitude = exifLatitude{
-                self.latitude = latitude
-            }
-        }
-    }
-    var exifLongitude: Double?{
-        didSet{
-            if let longitude = exifLongitude{
-                self.longitude = longitude
-            }
-        }
-    }
+    
     var exifLoaded: Bool = false
     
     var isModified: Bool = false
+    
+    var selected: Bool = false
     
     private var previewData: Data?
     var preview: NSImage{
@@ -57,13 +53,22 @@ class ImageItem: MapItem{
         return NSImage(named: "placeholder")!
     }
     
-    override var coordinate: CLLocationCoordinate2D{
+    var coordinate: CLLocationCoordinate2D?{
         get{
-            CLLocationCoordinate2D(latitude: exifLatitude ?? 0, longitude: exifLongitude ?? 0)
+            if let latitude = exifLatitude, let longitude = exifLongitude{
+                return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            }
+            return nil
         }
         set{
-            exifLatitude = newValue.latitude
-            exifLongitude = newValue.longitude
+            if let coordinate = newValue{
+                exifLatitude = coordinate.latitude
+                exifLongitude = coordinate.longitude
+            }
+            else{
+                exifLatitude = nil
+                exifLongitude = nil
+            }
         }
     }
     
@@ -124,7 +129,7 @@ class ImageItem: MapItem{
         return nil
     }
     
-    var isReadyForViewing: Bool{
+    var isComplete: Bool{
         previewData != nil && exifLoaded
     }
     
@@ -134,11 +139,10 @@ class ImageItem: MapItem{
             self.fileCreationDate = values.creationDate
             self.fileModificationDate = values.contentModificationDate
         }
-        super.init()
     }
     
     func completeData(completed: @escaping ()->()){
-        if isReadyForViewing{
+        if isComplete{
             completed()
             return
         }
@@ -171,9 +175,7 @@ class ImageItem: MapItem{
     }
     
     func createPreviewData(original: NSImage){
-        if let preview = NSImage.createResizedImage(of: original, size: ImageItem.previewSize){
-            previewData = NSImage.getJpegData(from: preview)
-        }
+        previewData = ImageFactory.shared.createResizedJpegData(original: original, maxSide: ImageData.previewSize)
     }
     
     func resetExifData(){
@@ -340,81 +342,3 @@ class ImageItem: MapItem{
     
 }
 
-typealias ImageItemList = MappointList<ImageItem>
-
-extension ImageItemList{
-    
-    mutating func sort(by sortType: ImageSortType, ascending: Bool){
-        switch sortType{
-        case .byName:
-            self.sort(by: { $0.url.lastPathComponent < $1.url.lastPathComponent})
-        case .byExtension:
-            self.sort(by: { $0.url.pathExtension.lowercased() < $1.url.pathExtension.lowercased()})
-        case .byExifCreation:
-            self.sort(by: {
-                if let dateLeft = $0.exifCreationDate{
-                    if let dateRight = $1.exifCreationDate{
-                        return dateLeft < dateRight
-                    }
-                    return false
-                }
-                return true
-            })
-        case .byFileCreation:
-            self.sort(by: {
-                if let dateLeft = $0.fileCreationDate{
-                    if let dateRight = $1.fileCreationDate{
-                        return dateLeft < dateRight
-                    }
-                    return false
-                }
-                return true
-            })
-            
-        case .byFileModification:
-            self.sort(by: {
-                if let dateLeft = $0.fileModificationDate{
-                    if let dateRight = $1.fileModificationDate{
-                        return dateLeft < dateRight
-                    }
-                    return false
-                }
-                return true
-            })
-        case .byLatitude:
-            self.sort(by: {
-                if let latitudeLeft = $0.exifLatitude{
-                    if let latitudeRight = $1.exifLatitude{
-                        return latitudeLeft < latitudeRight
-                    }
-                    return false
-                }
-                return true
-            })
-        case .byLongitude:
-            self.sort(by: {
-                if let longitudeLeft = $0.exifLongitude{
-                    if let longitudeRight = $1.exifLongitude{
-                        return longitudeLeft < longitudeRight
-                    }
-                    return false
-                }
-                return true
-            })
-        case .byAltitude:
-            self.sort(by: {
-                if let altitudeLeft = $0.exifAltitude{
-                    if let altitudeRight = $1.exifAltitude{
-                        return altitudeLeft < altitudeRight
-                    }
-                    return false
-                }
-                return true
-            })
-        }
-        if !ascending{
-            self.reverse()
-        }
-    }
-    
-}

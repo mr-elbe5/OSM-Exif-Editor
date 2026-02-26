@@ -177,8 +177,8 @@ class ImageGridView: NSView {
         collectionView.reloadData()
     }
     
-    func getSelectedImages() -> Array<ImageItem>{
-        var arr = Array<ImageItem>()
+    func getSelectedImages() -> Array<ImageData>{
+        var arr = Array<ImageData>()
         for path in collectionView.selectionIndexPaths{
             arr.append(AppData.shared.images[path.item])
         }

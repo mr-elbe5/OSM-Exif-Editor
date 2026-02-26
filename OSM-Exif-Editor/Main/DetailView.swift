@@ -34,5 +34,10 @@ class DetailView: VerticalSplitView{
         }
     }
     
+    func detailImagesDidChangeByTrack(){
+        imageDetailView.detailImageDidChange()
+        mapView.scrollView.updateItemLayerContent()
+    }
+    
 }
     

@@ -40,9 +40,9 @@ class AppData : NSObject, Codable{
     
     var bookmark: Data? = nil
     var folderURL: URL? = nil
-    var images = ImageItemList()
-    var track: TrackItem? = nil
-    var detailImage: ImageItem? = nil
+    var images = ImageList()
+    var track: Track? = nil
+    var detailImage: ImageData? = nil
     var sortType: ImageSortType = .byFileCreation
     var ascending = true
     
@@ -50,16 +50,16 @@ class AppData : NSObject, Codable{
         folderURL?.lastPathComponent ?? ""
     }
     
-    var selectedImages: ImageItemList{
+    var selectedImages: ImageList{
         get{
-            var items = ImageItemList()
-            for item in self.images{
-                if item.selected{
-                    items.append(item)
+            var images = ImageList()
+            for image in self.images{
+                if image.selected{
+                    images.append(image)
                 }
             }
-            items.sort(by: sortType, ascending: ascending)
-            return items
+            images.sort(by: sortType, ascending: ascending)
+            return images
         }
     }
     
@@ -139,11 +139,11 @@ class AppData : NSObject, Codable{
                             if !(resourceValues.isRegularFile ?? false), !Self.imageExtensions.contains(childURL.pathExtension.lowercased()){
                                 continue
                             }
-                            let item = ImageItem(url: childURL)
-                            item.size = resourceValues.fileSize ?? -1
-                            item.fileCreationDate = resourceValues.creationDate
-                            item.fileModificationDate = resourceValues.contentModificationDate
-                            images.append(item)
+                            let image = ImageData(url: childURL)
+                            image.size = resourceValues.fileSize ?? -1
+                            image.fileCreationDate = resourceValues.creationDate
+                            image.fileModificationDate = resourceValues.contentModificationDate
+                            images.append(image)
                         }
                     }
                     catch (let err){
@@ -163,12 +163,15 @@ class AppData : NSObject, Codable{
     
     func selectImagesWithCloseCreationDate() -> Bool{
         var hasResult = false
-        if let item = track{
+        if let track = track{
             images.deselectAll()
             for image in images{
-                if !image.hasValidCoordinate, let date = image.creationDate, let result = item.track.findClosestTrackpoint(at: date, maxSecDiff: 10){
-                    image.coordinate = result.0.coordinate
+                if image.coordinate == nil, let date = image.creationDate, let result = track.findClosestTrackpoint(at: date, maxSecDiff: 10){
+                    image.exifLatitude = result.0.coordinate.latitude
+                    image.exifLongitude = result.0.coordinate.longitude
+                    image.exifAltitude = result.0.altitude
                     image.selected = true
+                    image.isModified = true
                     hasResult = true
                 }
             }
@@ -176,12 +179,11 @@ class AppData : NSObject, Codable{
         return hasResult
     }
     
-    func getImagesOfTrackByDistance(item: TrackItem, maxDistance: Double = 20) -> ImageItemList{
-        var list = ImageItemList()
-        let track = item.track
+    func getImagesOfTrackByDistance(track: Track, maxDistance: Double = 20) -> ImageList{
+        var list = ImageList()
         for image in images{
-            if image.hasValidCoordinate{
-                if let result = track.trackpoints.findNearestPoint(to: image.coordinate){
+            if let coordinate = image.coordinate{
+                if let result = track.trackpoints.findNearestPoint(to: coordinate){
                     let distance = result.1
                     if distance < maxDistance{
                         list.append(image)
@@ -192,10 +194,10 @@ class AppData : NSObject, Codable{
         return list
     }
     
-    func getImagesOfTrackByTime(item: TrackItem) -> ImageItemList{
-        var list = ImageItemList()
-        let startDate = item.track.startTime
-        let endDate = item.track.endTime
+    func getImagesOfTrackByTime(track: Track) -> ImageList{
+        var list = ImageList()
+        let startDate = track.startTime
+        let endDate = track.endTime
         for image in images{
             if let date = image.creationDate, date >= startDate && date <= endDate{
                 list.append(image)
@@ -204,7 +206,7 @@ class AppData : NSObject, Codable{
         return list
     }
     
-    func setDetailImage(_ image: ImageItem?){
+    func setDetailImage(_ image: ImageData?){
         detailImage = image
     }
     

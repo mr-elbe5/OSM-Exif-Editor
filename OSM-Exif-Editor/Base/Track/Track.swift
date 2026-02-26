@@ -124,35 +124,6 @@ class Track: NSObject{
         }
     }
     
-    func trackpointIndex(of tp: Mappoint) -> Int {
-        if let index = trackpoints.firstIndex(where: { $0 == tp }) {
-            return index
-        }
-        return -1
-    }
-    
-    func  getSingleSelectedTrackpointIndex() -> Int?{
-        var idx: Int?
-        for i in 0..<trackpoints.count{
-            let tp = trackpoints[i]
-            if tp.selected{
-                if idx == nil {
-                    idx = i
-                }
-                else{
-                    idx = nil
-                    break
-                }
-            }
-        }
-        return idx
-    }
-    
-    func  selectSingleTrackpoint(at idx: Int){
-        trackpoints.deselectAll()
-        trackpoints[idx].selected = true
-    }
-    
     func addTrackpoint(_ tp: Trackpoint){
         trackpoints.append(tp)
         updateFromTrackpoints()
@@ -178,7 +149,7 @@ class Track: NSObject{
             distance = 0
             upDistance = 0
             downDistance = 0
-            var last : Mappoint? = nil
+            var last : Trackpoint? = nil
             for tp in trackpoints{
                 if let last = last{
                     distance += last.coordinate.distance(to: tp.coordinate)
@@ -200,8 +171,8 @@ class Track: NSObject{
     
     func setMinimalTrackpointDistances(minDistance: CGFloat){
         if !trackpoints.isEmpty{
-            var removables = MappointList()
-            var last : Mappoint = trackpoints.first!
+            var removables = TrackpointList()
+            var last : Trackpoint = trackpoints.first!
             for idx in 1..<trackpoints.count - 1{
                 let tp = trackpoints[idx]
                 let distance = last.coordinate.distance(to: tp.coordinate)
@@ -214,15 +185,15 @@ class Track: NSObject{
             }
             trackpoints.removeAll(where: { tp1 in
                 removables.contains(where: { tp2 in
-                    tp1 == tp2
+                    tp1.coordinate == tp2.coordinate
                 })
             })
         }
         updateFromTrackpoints()
     }
     
-    func findNearestTrackpoint(to coordinate: CLLocationCoordinate2D, maxMeterDiff: Double = 100) -> (Mappoint, Double)? {
-        var result: (Mappoint, Double)?
+    func findNearestTrackpoint(to coordinate: CLLocationCoordinate2D, maxMeterDiff: Double = 100) -> (Trackpoint, Double)? {
+        var result: (Trackpoint, Double)?
         if let closests = trackpoints.findNearestPoint(to: coordinate){
             if closests.1 < (result?.1 ?? Double.greatestFiniteMagnitude){
                 result = closests
@@ -234,8 +205,8 @@ class Track: NSObject{
         return result
     }
     
-    func findClosestTrackpoint(at date: Date, maxSecDiff: Double = 60) -> (Mappoint, TimeInterval)?{
-        var result: (Mappoint, Double)?
+    func findClosestTrackpoint(at date: Date, maxSecDiff: Double = 60) -> (Trackpoint, TimeInterval)?{
+        var result: (Trackpoint, Double)?
         if let closests = trackpoints.findClosestPoint(to: date){
             if closests.1 < (result?.1 ?? Double.greatestFiniteMagnitude){
                 result = closests

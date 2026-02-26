@@ -57,10 +57,6 @@ class MainViewController: ViewController {
         imageGridView.setupNotifications()
     }
     
-    func showItemDetails(item: MapItem){
-        
-    }
-    
     func setViewer(_ viewer: PresenterView){
         viewer.setupView()
         view.addSubviewFilling(viewer, insets: .zero)
@@ -88,8 +84,14 @@ class MainViewController: ViewController {
         updateMapLayersScale()
     }
     
-    func showItemOnMap(_ item: MapItem){
-        detailView.mapView.showLocationOnMap(coordinate: item.coordinate)
+    func showImageOnMap(_ image: ImageData){
+        if let coordinate = image.coordinate{
+            detailView.mapView.showLocationOnMap(coordinate: coordinate)
+        }
+    }
+    
+    func showImageDetails(image: ImageData){
+        
     }
     
     func showSearchResult(coordinate: CLLocationCoordinate2D, worldRect: CGRect?){
@@ -111,13 +113,13 @@ class MainViewController: ViewController {
     
     // images
     
-    func showImage(_ image: ImageItem){
+    func showImage(_ image: ImageData){
         let presenterView = ImagePresenterView()
         setViewer(presenterView)
-        presenterView.setImage(item: image)
+        presenterView.setImage(image: image)
     }
     
-    func showImages(_ images: [ImageItem]){
+    func showImages(_ images: [ImageData]){
         let presenterView = ImagePresenterView()
         setViewer(presenterView)
         presenterView.setImages(images)
@@ -131,7 +133,7 @@ class MainViewController: ViewController {
         detailView.detailImageDidChange()
     }
     
-    func setDetailImage(_ image: ImageItem?){
+    func setDetailImage(_ image: ImageData?){
         AppData.shared.setDetailImage(image)
         updateDetailView()
     }
@@ -152,25 +154,24 @@ class MainViewController: ViewController {
         if panel.runModal() == .OK{
             if let url = panel.urls.first, let track = Track.loadFromFile(gpxUrl: url){
                 track.updateFromTrackpoints()
-                let item = TrackItem(track: track)
-                AppData.shared.track = item
-                showTrackOnMap(item)
+                AppData.shared.track = track
+                showTrackOnMap(track)
             }
         }
     }
     
-    func showTrackOnMap(_ item: TrackItem?){
-        if let item = item{
-            VisibleTrack.shared.setTrack(item.track)
+    func showTrackOnMap(_ track: Track?){
+        if let track = track{
+            VisibleTrack.shared.setTrack(track)
             mapScrollView.updateTrackLayerContent()
-            if item.track.coordinateRegion == nil{
-                item.track.updateCoordinateRegion()
+            if track.coordinateRegion == nil{
+                track.updateCoordinateRegion()
             }
-            if let coordinateRegion = item.coordinateRegion{
+            if let coordinateRegion = track.coordinateRegion{
                 detailView.mapView.showMapRectOnMap(worldRect: coordinateRegion.worldRect)
             }
-            else{
-                detailView.mapView.showLocationOnMap(coordinate: item.coordinate)
+            else if let coordinate = track.startCoordinate{
+                detailView.mapView.showLocationOnMap(coordinate: coordinate)
             }
         }
         else{
@@ -183,7 +184,7 @@ class MainViewController: ViewController {
         if AppData.shared.selectImagesWithCloseCreationDate(){
             AppData.shared.setDetailImage(nil)
             imageGridView.updateView()
-            detailView.detailImageDidChange()
+            detailView.detailImagesDidChangeByTrack()
         }
     }
     

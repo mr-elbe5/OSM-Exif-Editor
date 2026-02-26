@@ -12,7 +12,7 @@ protocol ImageEditViewDelegate{
 
 class ImageEditView: NSView {
     
-    private var image: ImageItem?{
+    private var image: ImageData?{
         AppData.shared.detailImage
     }
     
@@ -100,7 +100,7 @@ class ImageEditView: NSView {
             case longitudeField:
                 image.exifLongitude = longitudeField.doubleValue
             case altitudeField:
-                image.altitude = altitudeField.doubleValue
+                image.exifAltitude = altitudeField.doubleValue
             default:
                 break
             }
@@ -136,8 +136,8 @@ class ImageEditView: NSView {
     }
     
     @objc func getAltitude(){
-        if let image = image, image.coordinate != .zero{
-            ElevationProvider.shared.getElevation(for: image.coordinate){ altitude in
+        if let image = image, let coordinate = image.coordinate{
+            ElevationProvider.shared.getElevation(for: coordinate){ altitude in
                 self.image?.exifAltitude = altitude
                 DispatchQueue.main.async{
                     self.altitudeField.stringValue = altitude.formatted(.number)

@@ -23,7 +23,7 @@ class ImageDetailView: NSView {
     var editView = ImageEditView()
     var currentType: ViewType = .exif
     
-    var image: ImageItem?{
+    var image: ImageData?{
         AppData.shared.detailImage
     }
     
