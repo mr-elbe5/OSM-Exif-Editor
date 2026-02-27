@@ -12,12 +12,6 @@ extension Date{
     
     static var utcZone = TimeZone(abbreviation: "UTC")
     
-    static var localDate: Date{
-        get{
-            Date().toLocalDate()
-        }
-    }
-    
     init(year: Int, month: Int, day: Int){
         var components = DateComponents()
         components.year = year
@@ -39,11 +33,11 @@ extension Date{
         return Date(timeIntervalSince1970: ti.rounded())
     }
     
-    func toLocalDate() -> Date{
+    /*func toLocalDate() -> Date{
         var secs = self.timeIntervalSince1970
         secs += Double(TimeZone.current.secondsFromGMT())
         return Date(timeIntervalSince1970: secs)
-    }
+    }*/
     
     func toUTCDate() -> Date{
         var secs = self.timeIntervalSince1970

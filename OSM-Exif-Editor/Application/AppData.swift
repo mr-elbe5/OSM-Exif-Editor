@@ -12,7 +12,7 @@ class AppData : NSObject, Codable{
     
     static var storeKey = "appData"
     
-    static var imageExtensions = ["jpg", "jpeg", "png", "gif", "dng"]
+    static var imageExtensions = ["jpg", "jpeg", "heif", "png", "gif", "dng"]
     
     static var shared = AppData()
     
@@ -41,8 +41,6 @@ class AppData : NSObject, Codable{
     var bookmark: Data? = nil
     var folderURL: URL? = nil
     var images = ImageList()
-    var track: Track? = nil
-    var detailImage: ImageData? = nil
     var sortType: ImageSortType = .byFileCreation
     var ascending = true
     
@@ -159,55 +157,6 @@ class AppData : NSObject, Codable{
     
     func sortImages(){
         images.sort(by: sortType, ascending: ascending)
-    }
-    
-    func selectImagesWithCloseCreationDate() -> Bool{
-        var hasResult = false
-        if let track = track{
-            images.deselectAll()
-            for image in images{
-                if image.coordinate == nil, let date = image.creationDate, let result = track.findClosestTrackpoint(at: date, maxSecDiff: 10){
-                    image.exifLatitude = result.0.coordinate.latitude
-                    image.exifLongitude = result.0.coordinate.longitude
-                    image.exifAltitude = result.0.altitude
-                    image.selected = true
-                    image.isModified = true
-                    hasResult = true
-                }
-            }
-        }
-        return hasResult
-    }
-    
-    func getImagesOfTrackByDistance(track: Track, maxDistance: Double = 20) -> ImageList{
-        var list = ImageList()
-        for image in images{
-            if let coordinate = image.coordinate{
-                if let result = track.trackpoints.findNearestPoint(to: coordinate){
-                    let distance = result.1
-                    if distance < maxDistance{
-                        list.append(image)
-                    }
-                }
-            }
-        }
-        return list
-    }
-    
-    func getImagesOfTrackByTime(track: Track) -> ImageList{
-        var list = ImageList()
-        let startDate = track.startTime
-        let endDate = track.endTime
-        for image in images{
-            if let date = image.creationDate, date >= startDate && date <= endDate{
-                list.append(image)
-            }
-        }
-        return list
-    }
-    
-    func setDetailImage(_ image: ImageData?){
-        detailImage = image
     }
     
 }

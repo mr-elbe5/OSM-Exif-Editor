@@ -40,7 +40,7 @@ class ImageGridViewItem: NSCollectionViewItem{
     }
     
     override func loadView() {
-        let cellView = CellView()
+        let cellView = CellView(frame: NSRect(x: 0, y: 0, width: 200, height: 200))
         cellView.imageGridItem = self
         view = cellView
         view.backgroundColor = .yellow

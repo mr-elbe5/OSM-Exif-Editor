@@ -7,7 +7,8 @@ import Cocoa
 
 class ImageGridView: NSView {
     
-    static var defaultGridSize: CGFloat = 300
+    static var defaultGridWidth: CGFloat = 300
+    static var defaultGridSize = NSSize(width: defaultGridWidth, height: defaultGridWidth)
     static var gridSizeFactors : Array<CGFloat> = [0.5, 0.75, 1.0, 1.5, 2.0]
     
     var active = false
@@ -30,19 +31,12 @@ class ImageGridView: NSView {
     let scrollView = NSScrollView()
     let collectionView = NSCollectionView()
     let layout = NSCollectionViewFlowLayout()
-    var minSize: CGFloat = ImageGridView.defaultGridSize
+    var minSize: CGFloat = ImageGridView.defaultGridWidth
     let gridSpace: CGFloat = 10
     
-    var cellSize = NSSize(width: ImageGridView.defaultGridSize, height: ImageGridView.defaultGridSize)
+    var cellSize = NSSize(width: ImageGridView.defaultGridWidth, height: ImageGridView.defaultGridWidth)
     
-    //var testView = GridView()
-    
-    var hasSelection: Bool{
-        false
-        //!collectionView.selectionIndexPaths.isEmpty
-    }
-    
-    var gridSize: CGFloat = ImageGridView.defaultGridSize * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
+    var gridSize: CGFloat = ImageGridView.defaultGridWidth * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
     
     var insets = NSEdgeInsets(top: 10, left: 5, bottom: 10, right: 5)
     
@@ -68,10 +62,10 @@ class ImageGridView: NSView {
     }
     
     func updateCellSize(){
-        minSize = ImageGridView.defaultGridSize * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
+        minSize = ImageGridView.defaultGridWidth * ImageGridView.gridSizeFactors[Preferences.shared.gridSizeFactorIndex]
         let cnt = Int(floor(collectionView.frame.width/minSize))
         let size = (collectionView.frame.width - (CGFloat(cnt + 1)) * gridSpace)/CGFloat(cnt)
-        cellSize = cnt == 0 ? .zero : NSSize(width: size, height: size)
+        cellSize = cnt == 0 ? Self.defaultGridSize : NSSize(width: size, height: size)
     }
     
     func updateImageStatus(){
@@ -83,7 +77,7 @@ class ImageGridView: NSView {
     }
     
     func updateDetailImageStatus(){
-        if let detailImage = AppData.shared.detailImage{
+        if let detailImage = ImageEditContext.shared.detailImage{
             for i in 0..<AppData.shared.images.count{
                 if let gridItem = collectionView.item(at: i) as? ImageGridViewItem, gridItem.image == detailImage{
                     gridItem.updateBottomView()
@@ -236,15 +230,15 @@ extension ImageGridView: NSCollectionViewDelegate, NSCollectionViewDelegateFlowL
     
     func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
         if collectionView.selectionIndexPaths.count == 1, let idx = collectionView.selectionIndexPaths.first?.item{
-            MainViewController.shared.setDetailImage(AppData.shared.images[idx])
+            ImageEditContext.shared.setDetailImage(AppData.shared.images[idx])
         }
         else{
-            MainViewController.shared.setDetailImage(nil)
+            ImageEditContext.shared.setDetailImage(nil)
         }
         for indexPath in indexPaths{
             if let item = collectionView.item(at: indexPath) as? ImageGridViewItem{
                 item.image.selected = true
-                print("selected \(item.image.fileName)")
+                //print("selected \(item.image.fileName)")
                 item.setHighlightState()
             }
         }
@@ -252,15 +246,15 @@ extension ImageGridView: NSCollectionViewDelegate, NSCollectionViewDelegateFlowL
     
     func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
         if collectionView.selectionIndexPaths.count == 1, let idx = collectionView.selectionIndexPaths.first?.item{
-            MainViewController.shared.setDetailImage(AppData.shared.images[idx])
+            ImageEditContext.shared.setDetailImage(AppData.shared.images[idx])
         }
         else{
-            MainViewController.shared.setDetailImage(nil)
+            ImageEditContext.shared.setDetailImage(nil)
         }
         for indexPath in indexPaths{
             if let item = collectionView.item(at: indexPath) as? ImageGridViewItem{
                 item.image.selected = false
-                print("deselected \(item.image.fileName)")
+                //print("deselected \(item.image.fileName)")
                 item.setHighlightState()
             }
         }

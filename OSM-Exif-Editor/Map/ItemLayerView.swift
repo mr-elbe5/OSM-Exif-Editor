@@ -73,7 +73,7 @@ class ItemLayerView: LayerView {
     
     @objc func showItemDetails(sender: AnyObject?){
         if let marker = sender as? ImageMarkerView{
-            MainViewController.shared.showImageDetails(image: marker.imageData)
+            ImageEditContext.shared.setDetailImage(marker.imageData)
         }
     }
     

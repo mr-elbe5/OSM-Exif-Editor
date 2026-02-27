@@ -12,8 +12,6 @@ class MainMenuView: NSView{
     var rightMenu = NSView()
     
     var openFolderButton: NSButton!
-    var loadTrackButton: NSButton!
-    var compareTrackButton: NSButton!
     
     var openPreferencesButton: NSButton!
     var openHelpButton: NSButton!
@@ -24,8 +22,6 @@ class MainMenuView: NSView{
         super.init(frame: .zero)
         
         openFolderButton = NSButton(title: "openFolder".localize(), image: NSImage(iconName: "folder")!, target: self, action: #selector(openFolder))
-        loadTrackButton = NSButton(title: "loadTrack".localize(), image: NSImage(iconName: "figure.walk")!, target: self, action: #selector(loadTrack))
-        compareTrackButton = NSButton(title: "compareWithTrack".localize(), image: NSImage(iconName: "point.bottomleft.forward.to.point.topright.scurvepath")!, target: self, action: #selector(compareWithTrack))
         
         openPreferencesButton = NSButton(icon: "gearshape", target: self, action: #selector(openPreferences))
         openPreferencesButton.toolTip = "settings".localize()
@@ -42,33 +38,16 @@ class MainMenuView: NSView{
         
         addSubviewWithAnchors(leftMenu, top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.smallInsets)
         leftMenu.addSubviewToRight(openFolderButton, insets: insets)
-        leftMenu.addSubviewToRight(loadTrackButton, leftView: openFolderButton, insets: insets)
-        leftMenu.addSubviewToRight(compareTrackButton, leftView: loadTrackButton, insets: insets)
             .connectToRight(of: leftMenu, inset: .zero)
         
         addSubviewWithAnchors(rightMenu, top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.smallInsets)
         rightMenu.addSubviewToRight(openPreferencesButton, insets: insets)
         rightMenu.addSubviewToRight(openHelpButton, leftView: openPreferencesButton, insets: insets)
             .connectToRight(of: rightMenu, inset: .zero)
-        
-        checkButtons()
-    }
-    
-    func checkButtons(){
-        compareTrackButton.isHidden = AppData.shared.track == nil
     }
     
     @objc func openFolder(){
         MainViewController.shared.openFolder()
-    }
-    
-    @objc func loadTrack(){
-        MainViewController.shared.loadTrack()
-        checkButtons()
-    }
-    
-    @objc func compareWithTrack(){
-        MainViewController.shared.compareWithTrack()
     }
     
     @objc func openPreferences(){

@@ -72,6 +72,24 @@ class MapView: NSView {
         scrollView.updateItemLayerContent()
     }
     
+    func showTrackOnMap(){
+        if let track = ImageEditContext.shared.track{
+            scrollView.updateTrackLayerContent()
+            if track.coordinateRegion == nil{
+                track.updateCoordinateRegion()
+            }
+            if let coordinateRegion = track.coordinateRegion{
+                showMapRectOnMap(worldRect: coordinateRegion.worldRect)
+            }
+            else if let coordinate = track.startCoordinate{
+                showLocationOnMap(coordinate: coordinate)
+            }
+        }
+        else{
+            scrollView.updateTrackLayerContent()
+        }
+    }
+    
 }
 
 extension MapView : MapScrollViewDelegate{

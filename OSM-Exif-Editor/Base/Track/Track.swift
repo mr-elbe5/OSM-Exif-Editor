@@ -12,10 +12,12 @@ class Track: NSObject{
     
     static func loadFromFile(gpxUrl: URL) -> Track?{
         if let data = FileManager.default.readFile(url: gpxUrl){
+            Log.info("loading from gpx")
             let parser = XMLParser(data: data)
             let track = Track()
             parser.delegate = track
             guard parser.parse() else { return nil }
+            Log.info("trackpoints from \(track.startTime) to \(track.endTime)")
             return track
         }
         return nil
@@ -62,10 +64,10 @@ class Track: NSObject{
     }
     
     var startTime : Date{
-        trackpoints.first?.timestamp ?? Date()
+        trackpoints.first?.timestamp ?? .zero
     }
     var endTime :Date{
-        trackpoints.last?.timestamp ?? Date()
+        trackpoints.last?.timestamp ?? .zero
     }
     
     var durationString: String{
@@ -83,7 +85,7 @@ class Track: NSObject{
         if let pauseTime = pauseTime{
             return startTime.distance(to: pauseTime) - pauseLength
         }
-        return startTime.distance(to: Date.localDate) - pauseLength
+        return startTime.distance(to: Date.now) - pauseLength
     }
     
     var startCoordinate: CLLocationCoordinate2D?{
@@ -114,12 +116,12 @@ class Track: NSObject{
     }
     
     func pauseTracking(){
-        pauseTime = Date.localDate
+        pauseTime = Date.now
     }
     
     func resumeTracking(){
         if let pauseTime = pauseTime{
-            pauseLength += pauseTime.distance(to: Date.localDate)
+            pauseLength += pauseTime.distance(to: Date.now)
             self.pauseTime = nil
         }
     }

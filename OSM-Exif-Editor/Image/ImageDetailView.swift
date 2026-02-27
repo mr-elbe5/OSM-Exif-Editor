@@ -4,126 +4,80 @@
 */
 
 import Cocoa
-import CoreLocation
 
 class ImageDetailView: NSView {
     
-    enum ViewType {
-        case exif
-        case edit
+    private var image: ImageData?{
+        ImageEditContext.shared.detailImage
     }
     
-    var menuView = NSView()
-    var editButton: NSButton!
-    var cancelButton: NSButton!
-    var saveButton: NSButton!
-    var containerView = NSView()
-    var scrollView = NSScrollView()
-    var exifView = ImageExifView()
-    var editView = ImageEditView()
-    var currentType: ViewType = .exif
+    var header = NSTextField(labelWithString: "imageDetails".localize())
     
-    var image: ImageData?{
-        AppData.shared.detailImage
-    }
+    let nameView = NSTextField(wrappingLabelWithString: " ")
+    let lensModelView = NSTextField(wrappingLabelWithString: " ")
+    let widthView = NSTextField(wrappingLabelWithString: " ")
+    let heightView = NSTextField(wrappingLabelWithString: " ")
+    let latitudeView = NSTextField(wrappingLabelWithString: " ")
+    let longitudeView = NSTextField(wrappingLabelWithString: " ")
+    let altitudeView = NSTextField(wrappingLabelWithString: " ")
+    let exifCreationDateView = NSTextField(wrappingLabelWithString: " ")
+    let fileCreationDateView = NSTextField(wrappingLabelWithString: " ")
+    let fileModificationDateView = NSTextField(wrappingLabelWithString: " ")
+    let timeZoneView = NSTextField(wrappingLabelWithString: " ")
+    
+    let insets = NSEdgeInsets.zero
     
     override func setupView() {
-        editButton = NSButton(text: "edit".localize(), target: self, action: #selector(openEditView))
-        cancelButton = NSButton(text: "cancel".localize(), target: self, action: #selector(cancelEditing))
-        saveButton = NSButton(text: "save".localize(), target: self, action: #selector(saveImage))
-        menuView.addSubviewToRight(editButton)
-        menuView.addSubviewToRight(cancelButton)
-        menuView.addSubviewToLeft(saveButton)
-        addSubviewBelow(menuView, insets: .zero)
-        let divider = NSView()
-        divider.backgroundColor = .lightGray
-        addSubviewBelow(divider, upperView: menuView, insets: .zero)
-            .height(1)
-        exifView.setupView()
-        editView.setupView()
-        editView.delegate = self
-        scrollView.asVerticalScrollView(contentView: containerView)
-        addSubviewBelow(scrollView, upperView: divider, insets: .zero)
-            .connectToBottom(of: self)
-        setImageView(currentType)
-        updateView()
+        header.font = NSFont.boldSystemFont(ofSize: NSFont.systemFontSize)
+        addSubviewCenteredBelow(header, insets: .defaultInsets)
+        var lastView: NSView? = header
+        lastView = addLabeledView(name: "name", view: nameView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "lens", view: lensModelView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "width".localize(), view: widthView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "height".localize(), view: heightView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "latitude".localize(), view: latitudeView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "longitude".localize(), view: longitudeView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "altitude".localize(), view: altitudeView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "creationDate".localize(), view: exifCreationDateView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "fileCreationDate".localize(), view: fileCreationDateView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "fileModificationDate".localize(), view: fileModificationDateView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "timeZone".localize(), view: timeZoneView, upperView: lastView, insets: insets)
+        lastView?.connectToBottom(of: self, inset: insets.bottom)
+        update()
     }
     
-    func detailImageDidChange(){
-        setImageView(.exif)
-    }
-    
-    func updateButtons(){
+    func update(){
         if let image = image{
-            switch currentType {
-            case .exif:
-                editButton.isHidden = false
-                cancelButton.isHidden = true
-            case .edit:
-                editButton.isHidden = true
-                cancelButton.isHidden = false
-            }
-            saveButton.isHidden = !image.isModified
+            nameView.stringValue = image.url.lastPathComponent
+            lensModelView.stringValue = image.exifCameraModel ?? ""
+            widthView.stringValue = image.exifWidth?.formatted(.number) ?? ""
+            heightView.stringValue = image.exifHeight?.formatted(.number) ?? ""
+            latitudeView.stringValue = image.exifLatitude?.coordinateString ?? ""
+            longitudeView.stringValue = image.exifLongitude?.coordinateString ?? ""
+            altitudeView.stringValue = image.exifAltitude?.formatted(.number) ?? ""
+            exifCreationDateView.stringValue = image.exifCreationDate?.dateTimeString() ?? ""
+            fileCreationDateView.stringValue = image.fileCreationDate?.dateTimeString() ?? ""
+            fileModificationDateView.stringValue = image.fileModificationDate?.dateTimeString() ?? ""
+            timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone?.identifier ?? ""
         }
         else{
-            editButton.isHidden = true
-            cancelButton.isHidden = true
-            saveButton.isHidden = true
+            nameView.stringValue = ""
+            lensModelView.stringValue = ""
+            widthView.stringValue = ""
+            heightView.stringValue = ""
+            latitudeView.stringValue = ""
+            longitudeView.stringValue = ""
+            altitudeView.stringValue = ""
+            exifCreationDateView.stringValue = ""
+            fileCreationDateView.stringValue = ""
+            timeZoneView.stringValue = ""
         }
     }
     
-    func updateView(){
-        updateButtons()
-        switch currentType {
-        case .exif:
-            exifView.update()
-        case .edit:
-            editView.update()
-        }
-    }
-    
-    func setImageView(_ type: ViewType){
-        currentType = type
-        containerView.removeAllSubviews()
-        switch(type){
-        case .exif:
-            exifView.update()
-            containerView.addSubviewFilling(exifView, insets: .zero)
-        case .edit:
-            editView.update()
-            containerView.addSubviewFilling(editView, insets: .zero)
-        }
-        updateView()
-    }
-            
-    @objc func openEditView(){
-        setImageView(.edit)
-    }
-    
-    @objc func cancelEditing(){
-        image?.reloadData()
-        setImageView(.exif)
-        MainViewController.shared.updateDetailGridItem()
-    }
-    
-    @objc func saveImage(){
-        image?.saveModifiedFile()
-        image?.isModified = false
-        setImageView(.exif)
-        MainViewController.shared.updateDetailGridItem()
+    func updateTimeZone(){
+        timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone?.identifier ?? ""
     }
     
 }
-
-extension ImageDetailView: ImageEditViewDelegate{
-    
-    func imageIsModified() {
-        updateButtons()
-        MainViewController.shared.updateDetailGridItem()
-    }
-    
-}
-
-
 
 

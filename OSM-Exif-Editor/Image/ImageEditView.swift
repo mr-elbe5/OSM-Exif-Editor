@@ -13,17 +13,21 @@ protocol ImageEditViewDelegate{
 class ImageEditView: NSView {
     
     private var image: ImageData?{
-        AppData.shared.detailImage
+        ImageEditContext.shared.detailImage
     }
     
-    var header = NSTextField(labelWithString: "editExifData".localize())
+    var header = NSTextField(labelWithString: "editImageData".localize())
     
     let nameView = NSTextField(wrappingLabelWithString: " ")
-    var exifDateView = NSDatePicker()
-    var fileDateView = NSDatePicker()
-    var latitudeField = NSTextField(string: " ")
-    var longitudeField = NSTextField(string: " ")
-    var altitudeField = NSTextField(string: " ")
+    let exifDateView = NSDatePicker()
+    let fileDateView = NSDatePicker()
+    let timeZoneView = NSTextField(wrappingLabelWithString: " ")
+    let latitudeField = NSTextField(string: " ")
+    let longitudeField = NSTextField(string: " ")
+    let altitudeField = NSTextField(string: " ")
+    
+    var cancelButton: NSButton!
+    var saveButton: NSButton!
     
     let insets = NSEdgeInsets.zero
     
@@ -43,10 +47,12 @@ class ImageEditView: NSView {
         var button = NSButton(title: "copyFileCreation".localize(), target: self, action: #selector(copyFileCreation))
         lastView = addSubviewBelow(button, upperView: lastView)
         lastView = addLabeledView(name: "fileCreationDate", view: fileDateView, upperView: lastView)
+        
         button = NSButton(title: "copyExifCreation".localize(), target: self, action: #selector(copyExifCreation))
         lastView = addSubviewBelow(button, upperView: lastView)
         button = NSButton(title: "setNow".localize(), target: self, action: #selector(setNow))
         lastView = addSubviewBelow(button, upperView: lastView)
+        lastView = addLabeledView(name: "timeZone".localize(), view: timeZoneView, upperView: lastView, insets: insets)
         lastView = addHorizontalDivider(upperView: lastView, color: .lightGray)
         exifDateView.dateValue = image?.creationDate ?? .zero
         lastView = addLabeledView(name: "latitude", view: latitudeField, upperView: lastView)
@@ -59,6 +65,13 @@ class ImageEditView: NSView {
         lastView = addSubviewBelow(button, upperView: lastView)
         button = NSButton(title: "getAltitude".localize(), target: self, action: #selector(getAltitude))
         lastView = addSubviewBelow(button, upperView: lastView)
+        let menuView = NSView()
+        cancelButton = NSButton(text: "cancel".localize(), target: self, action: #selector(cancelEditing))
+        saveButton = NSButton(text: "save".localize(), target: self, action: #selector(saveImage))
+        menuView.addSubviewToRight(cancelButton)
+        menuView.addSubviewToLeft(saveButton)
+        addSubviewBelow(menuView, upperView: lastView, insets: .zero)
+        lastView = menuView
         lastView?.connectToBottom(of: self, inset: insets.bottom)
         update()
     }
@@ -67,6 +80,7 @@ class ImageEditView: NSView {
         if let image = image{
             nameView.stringValue = image.url.lastPathComponent
             exifDateView.dateValue = image.exifCreationDate ?? .zero
+            timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone?.identifier ?? ""
             latitudeField.stringValue = image.exifLatitude?.coordinateString ?? ""
             longitudeField.stringValue = image.exifLongitude?.coordinateString ?? ""
             altitudeField.stringValue = image.exifAltitude?.formatted(.number) ?? ""
@@ -74,9 +88,17 @@ class ImageEditView: NSView {
         else{
             nameView.stringValue = ""
             exifDateView.dateValue = .zero
+            timeZoneView.stringValue = ""
             latitudeField.stringValue = ""
             longitudeField.stringValue = ""
             altitudeField.stringValue = ""
+        }
+        updateButtons()
+    }
+    
+    func updateButtons(){
+        if let image = image{
+            saveButton.isHidden = !image.isModified
         }
     }
     
@@ -84,7 +106,21 @@ class ImageEditView: NSView {
         if let image = image, !image.isModified{
             image.isModified = true
             delegate?.imageIsModified()
+            updateButtons()
         }
+    }
+    
+    @objc func cancelEditing(){
+        image?.reloadData()
+        MainViewController.shared.updateDetailGridItem()
+        updateButtons()
+    }
+    
+    @objc func saveImage(){
+        image?.saveModifiedFile()
+        image?.isModified = false
+        MainViewController.shared.updateDetailGridItem()
+        updateButtons()
     }
     
     @objc func modified(sender: Any?){

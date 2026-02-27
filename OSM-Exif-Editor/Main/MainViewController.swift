@@ -19,14 +19,14 @@ class MainViewController: ViewController {
     let mainMenu = MainMenuView()
     let separator = NSView()
     var imageGridView = ImageGridView()
-    var detailView = DetailView()
+    var sideView = SideView()
     
     var mapScrollView: MapScrollView{
-        detailView.mapView.scrollView
+        sideView.mapView.scrollView
     }
     
     var mapMenuView: MapMenuView{
-        detailView.mapView.menuView
+        sideView.mapView.menuView
     }
     
     override func loadView(){
@@ -38,17 +38,18 @@ class MainViewController: ViewController {
         view.addSubviewBelow(separator, upperView: mainMenu, insets: .zero)
             .height(3)
         imageGridView.setupView()
-        detailView = DetailView()
-        detailView.setupView()
-        let mainSplitView = HorizontalSplitView(mainView: imageGridView, sideView: detailView)
+        sideView = SideView()
+        sideView.setupView()
+        let mainSplitView = HorizontalSplitView(mainView: imageGridView, sideView: sideView)
         mainSplitView.setupView()
         view.addSubviewBelow(mainSplitView, upperView: separator, insets: .zero)
             .connectToBottom(of: view, inset: .zero)
+        ImageEditContext.shared.delegate = sideView
     }
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        detailView.mapView.setDefaultLocation()
+        sideView.mapView.setDefaultLocation()
         mapScrollView.updateItemLayerContent()
     }
     
@@ -65,8 +66,7 @@ class MainViewController: ViewController {
     // map
     
     func refreshMap() {
-        showTrackOnMap(nil)
-        detailView.mapView.refreshMap()
+        sideView.mapView.refreshMap()
     }
     
     func updateMapLayersScale(){
@@ -75,33 +75,12 @@ class MainViewController: ViewController {
     }
     
     func zoomIn(){
-        detailView.mapView.zoomIn()
+        sideView.mapView.zoomIn()
         updateMapLayersScale()
     }
     
     func zoomOut(){
-        detailView.mapView.zoomOut()
-        updateMapLayersScale()
-    }
-    
-    func showImageOnMap(_ image: ImageData){
-        if let coordinate = image.coordinate{
-            detailView.mapView.showLocationOnMap(coordinate: coordinate)
-        }
-    }
-    
-    func showImageDetails(image: ImageData){
-        
-    }
-    
-    func showSearchResult(coordinate: CLLocationCoordinate2D, worldRect: CGRect?){
-        if let worldRect = worldRect{
-            let zoom = World.getZoomToFit(worldRect: worldRect, scaledSize: detailView.mapView.bounds.size)
-            mapScrollView.zoomAndScrollTo(zoom, coordinate)
-        }
-        else{
-            mapScrollView.scrollToScreenCenter(coordinate: coordinate)
-        }
+        sideView.mapView.zoomOut()
         updateMapLayersScale()
     }
     
@@ -129,66 +108,11 @@ class MainViewController: ViewController {
         imageGridView.updateData()
     }
     
-    func updateDetailView(){
-        detailView.detailImageDidChange()
-    }
-    
-    func setDetailImage(_ image: ImageData?){
-        AppData.shared.setDetailImage(image)
-        updateDetailView()
-    }
-    
     func updateDetailGridItem(){
         imageGridView.updateDetailImageStatus()
     }
     
-    // tracks
-    
-    func loadTrack(){
-        let panel = NSOpenPanel()
-        panel.canChooseFiles = true
-        panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.directoryURL = BasePaths.homeDirURL
-        panel.allowedContentTypes = [.gpx]
-        if panel.runModal() == .OK{
-            if let url = panel.urls.first, let track = Track.loadFromFile(gpxUrl: url){
-                track.updateFromTrackpoints()
-                AppData.shared.track = track
-                showTrackOnMap(track)
-            }
-        }
-    }
-    
-    func showTrackOnMap(_ track: Track?){
-        if let track = track{
-            VisibleTrack.shared.setTrack(track)
-            mapScrollView.updateTrackLayerContent()
-            if track.coordinateRegion == nil{
-                track.updateCoordinateRegion()
-            }
-            if let coordinateRegion = track.coordinateRegion{
-                detailView.mapView.showMapRectOnMap(worldRect: coordinateRegion.worldRect)
-            }
-            else if let coordinate = track.startCoordinate{
-                detailView.mapView.showLocationOnMap(coordinate: coordinate)
-            }
-        }
-        else{
-            VisibleTrack.shared.reset()
-            mapScrollView.updateTrackLayerContent()
-        }
-    }
-    
-    func compareWithTrack(){
-        if AppData.shared.selectImagesWithCloseCreationDate(){
-            AppData.shared.setDetailImage(nil)
-            imageGridView.updateView()
-            detailView.detailImagesDidChangeByTrack()
-        }
-    }
-    
-    // menu
+    /// menu
     
     func openHelp(at button: NSButton) {
         let controller = HelpViewController()
@@ -210,13 +134,21 @@ class MainViewController: ViewController {
             if let url = panel.urls.first{
                 if AppData.shared.setFolderUrl(url){
                     AppData.shared.setBookmark()
-                    AppData.shared.setDetailImage(nil)
+                    ImageEditContext.shared.setDetailImage(nil)
                     imageGridView.updateHeaderView()
                     imageGridView.updateView()
-                    detailView.detailImageDidChange()
+                    sideView.detailImageDidChange()
                 }
             }
         }
+    }
+    
+}
+
+extension MainViewController: SideViewDelegate{
+    
+    func imageStatesChanged(){
+        updateImageGrid()
     }
     
 }

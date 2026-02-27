@@ -28,6 +28,7 @@ class MainWindowController: NSWindowController {
         let window = NSWindow(contentRect: MainWindowController.defaultRect, styleMask: [.titled, .closable, .miniaturizable, .resizable], backing: .buffered, defer: true)
         window.title = "OSM Maps"
         window.minSize = CGSize(width: 800, height: 600)
+        window.setFrameAutosaveName(MainWindowController.windowId)
         super.init(window: window)
         window.delegate = self
         contentViewController = MainViewController()

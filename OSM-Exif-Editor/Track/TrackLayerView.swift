@@ -9,14 +9,14 @@ import AppKit
 class TrackLayerView: LayerView {
     
     var track: Track?{
-        AppData.shared.track
+        ImageEditContext.shared.track
     }
     
     override func draw(_ dirtyRect: NSRect) {
         if let track = track{
             var drawPoints = Array<CGPoint>()
             for idx in 0..<track.trackpoints.count{
-                let trackpoint = VisibleTrack.shared.trackpoints[idx]
+                let trackpoint = track.trackpoints[idx]
                 let mapPoint = CGPoint(trackpoint.coordinate)
                 let drawPoint = CGPoint(x: (mapPoint.x)*scale , y: (mapPoint.y)*scale)
                 drawPoints.append(drawPoint)

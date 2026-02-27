@@ -60,7 +60,7 @@ class MapScrollView : PlainMapScrollView{
     }
     
     func updateTrackLayerContent(){
-        if VisibleTrack.shared.isPresent{
+        if ImageEditContext.shared.track != nil{
             trackLayerView.updatePosition(scale: zoomScale)
         }
         else{
