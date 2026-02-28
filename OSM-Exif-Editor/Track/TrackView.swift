@@ -93,7 +93,7 @@ class TrackView: NSView {
     }
     
     func updateTimeZone(){
-        timeZoneView.stringValue = ImageEditContext.shared.trackTimeZone?.identifier ?? ""
+        timeZoneView.stringValue = ImageEditContext.shared.trackTimeZone.identifier
     }
 }
 

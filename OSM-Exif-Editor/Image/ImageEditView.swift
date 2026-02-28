@@ -80,7 +80,7 @@ class ImageEditView: NSView {
         if let image = image{
             nameView.stringValue = image.url.lastPathComponent
             exifDateView.dateValue = image.exifCreationDate ?? .zero
-            timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone?.identifier ?? ""
+            timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone.identifier
             latitudeField.stringValue = image.exifLatitude?.coordinateString ?? ""
             longitudeField.stringValue = image.exifLongitude?.coordinateString ?? ""
             altitudeField.stringValue = image.exifAltitude?.formatted(.number) ?? ""

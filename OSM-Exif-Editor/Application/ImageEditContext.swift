@@ -20,9 +20,9 @@ class ImageEditContext{
     static var shared = ImageEditContext()
     
     var detailImage: ImageData? = nil
-    var imageTimeZone: TimeZone? = nil
+    var imageTimeZone: TimeZone = .current
     var track: Track? = nil
-    var trackTimeZone: TimeZone? = nil
+    var trackTimeZone: TimeZone = .current
     
     var delegate: EditContextDelegate? = nil
     
@@ -33,14 +33,12 @@ class ImageEditContext{
     }
     
     func setImageTimeZone(){
-        imageTimeZone = nil
+        imageTimeZone = .current
         if let coordinate = detailImage?.coordinate{
-            TimeZone.getTimeZone(coordinate: coordinate){ result in
-                if let result = result{
-                    self.imageTimeZone = result
-                    Log.info("image timezone is \(result.identifier)")
-                    self.delegate?.imageTimeZoneChanged()
-                }
+            TimeZone.getTimeZoneAsync(coordinate: coordinate){ result in
+                self.imageTimeZone = result
+                Log.info("image timezone is \(result.identifier)")
+                self.delegate?.imageTimeZoneChanged()
             }
         }
     }
@@ -51,14 +49,12 @@ class ImageEditContext{
     }
     
     func setTrackTimeZone(){
-        trackTimeZone = nil
+        trackTimeZone = .current
         if let coordinate = track?.startCoordinate{
-            TimeZone.getTimeZone(coordinate: coordinate){ result in
-                if let result = result{
-                    self.trackTimeZone = result
-                    Log.info("track timezone is \(result.identifier)")
-                    self.delegate?.trackTimeZoneChanged()
-                }
+            TimeZone.getTimeZoneAsync(coordinate: coordinate){ result in
+                self.trackTimeZone = result
+                Log.info("track timezone is \(result.identifier)")
+                self.delegate?.trackTimeZoneChanged()
             }
         }
     }

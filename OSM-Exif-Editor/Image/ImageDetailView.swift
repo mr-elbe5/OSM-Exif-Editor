@@ -58,7 +58,7 @@ class ImageDetailView: NSView {
             exifCreationDateView.stringValue = image.exifCreationDate?.dateTimeString() ?? ""
             fileCreationDateView.stringValue = image.fileCreationDate?.dateTimeString() ?? ""
             fileModificationDateView.stringValue = image.fileModificationDate?.dateTimeString() ?? ""
-            timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone?.identifier ?? ""
+            timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone.identifier
         }
         else{
             nameView.stringValue = ""
@@ -75,7 +75,7 @@ class ImageDetailView: NSView {
     }
     
     func updateTimeZone(){
-        timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone?.identifier ?? ""
+        timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone.identifier
     }
     
 }
