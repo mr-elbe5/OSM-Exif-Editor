@@ -10,17 +10,19 @@ import CloudKit
 
 class Track: NSObject{
     
-    static func loadFromFile(gpxUrl: URL) -> Track?{
+    static func loadFromFile(gpxUrl: URL, result: @escaping (Track) -> Void){
         if let data = FileManager.default.readFile(url: gpxUrl){
-            Log.info("loading from gpx")
             let parser = XMLParser(data: data)
             let track = Track()
             parser.delegate = track
-            guard parser.parse() else { return nil }
-            Log.info("trackpoints from \(track.startTime) to \(track.endTime)")
-            return track
+            guard parser.parse() else { return }
+            if let tp = track.trackpoints.first{
+                UTCOffset.getUTCDiff(coordinate: tp.coordinate, for: tp.timestamp ?? Date.now){ utcOffset in
+                    track.convertTrackPointsFromUTC(offset: utcOffset)
+                    result(track)
+                }
+            }
         }
-        return nil
     }
     
     static var durationFormatter: DateComponentsFormatter = {
@@ -112,7 +114,7 @@ class Track: NSObject{
     }
     
     func setNameByDate(){
-        name = "tourOf".localize(s: startTime.dateTimeString())
+        name = "tourOf".localize(s: startTime.dateTimeString)
     }
     
     func pauseTracking(){
@@ -143,6 +145,12 @@ class Track: NSObject{
         if !trackpoints.isEmpty{
             self.trackpoints = trackpoints
             updateFromTrackpoints()
+        }
+    }
+    
+    func convertTrackPointsFromUTC(offset: UTCOffset){
+        for tp in trackpoints{
+            tp.timestamp = tp.timestamp?.fromUTCDate(offset: offset)
         }
     }
     
@@ -228,7 +236,7 @@ class Track: NSObject{
     
     func createGPXFile() -> URL?{
         let fileName = name.replacingOccurrences(of: " ", with: "_")
-        if let url = URL(string: "track_\(fileName)_\(startTime.fileDate()).gpx", relativeTo: URL.temporaryDirectory){
+        if let url = URL(string: "track_\(fileName)_\(startTime.fileNameString).gpx", relativeTo: URL.temporaryDirectory){
             let s = gpxString()
             if let data = s.data(using: .utf8){
                 return FileManager.default.saveFile(data : data, url: url) ? url : nil

@@ -55,9 +55,9 @@ class ImageDetailView: NSView {
             latitudeView.stringValue = image.exifLatitude?.coordinateString ?? ""
             longitudeView.stringValue = image.exifLongitude?.coordinateString ?? ""
             altitudeView.stringValue = image.exifAltitude?.formatted(.number) ?? ""
-            exifCreationDateView.stringValue = image.exifCreationDate?.dateTimeString() ?? ""
-            fileCreationDateView.stringValue = image.fileCreationDate?.dateTimeString() ?? ""
-            fileModificationDateView.stringValue = image.fileModificationDate?.dateTimeString() ?? ""
+            exifCreationDateView.stringValue = image.exifCreationDate?.dateTimeString ?? ""
+            fileCreationDateView.stringValue = image.fileCreationDate?.dateTimeString ?? ""
+            fileModificationDateView.stringValue = image.fileModificationDate?.dateTimeString ?? ""
             timeZoneView.stringValue = ImageEditContext.shared.imageTimeZone.identifier
         }
         else{

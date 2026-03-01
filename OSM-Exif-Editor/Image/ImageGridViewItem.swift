@@ -99,11 +99,11 @@ class ImageGridViewItem: NSCollectionViewItem{
         case .byExtension:
             return image.url.pathExtension.lowercased()
         case .byFileCreation:
-            return image.fileCreationDate?.dateTimeString() ?? ""
+            return image.fileCreationDate?.dateTimeString ?? ""
         case .byFileModification:
-            return image.fileModificationDate?.dateTimeString() ?? ""
+            return image.fileModificationDate?.dateTimeString ?? ""
         case .byExifCreation:
-            return image.exifCreationDate?.dateTimeString() ?? ""
+            return image.exifCreationDate?.dateTimeString ?? ""
         case .byLatitude:
             return image.exifLatitude?.coordinateString ?? ""
         case .byLongitude:

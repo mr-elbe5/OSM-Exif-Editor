@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         AppData.loadData()
         MapDefaults.startZoom = 14
         MainWindowController.instance.showWindow(nil)
+        print("current UTC offset: \(UTCOffset.current.value)")
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

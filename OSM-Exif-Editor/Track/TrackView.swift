@@ -75,11 +75,13 @@ class TrackView: NSView {
         panel.directoryURL = BasePaths.homeDirURL
         panel.allowedContentTypes = [.gpx]
         if panel.runModal() == .OK{
-            if let url = panel.urls.first, let track = Track.loadFromFile(gpxUrl: url){
-                track.updateFromTrackpoints()
-                ImageEditContext.shared.track = track
-                ImageEditContext.shared.setTrackTimeZone()
-                delegate?.showTrackOnMap()
+            if let url = panel.urls.first{
+                Track.loadFromFile(gpxUrl: url){ track in
+                    track.updateFromTrackpoints()
+                    ImageEditContext.shared.track = track
+                    ImageEditContext.shared.setTrackTimeZone()
+                    self.delegate?.showTrackOnMap()
+                }
             }
         }
     }
