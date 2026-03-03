@@ -23,6 +23,7 @@ class ImageEditContext{
     var imageTimeZone: TimeZone = .current
     var track: Track? = nil
     var trackTimeZone: TimeZone = .current
+    var trackUTCOffset: Int = 0
     
     var delegate: EditContextDelegate? = nil
     
@@ -32,13 +33,14 @@ class ImageEditContext{
         delegate?.imageChanged()
     }
     
-    func setImageTimeZone(){
+    func setImageTimeZone(completed: (()->())? = nil){
         imageTimeZone = .current
         if let coordinate = detailImage?.coordinate{
             TimeZone.getTimeZoneAsync(coordinate: coordinate){ result in
                 self.imageTimeZone = result
                 Log.info("image timezone is \(result.identifier)")
                 self.delegate?.imageTimeZoneChanged()
+                completed?()
             }
         }
     }
@@ -48,13 +50,21 @@ class ImageEditContext{
         delegate?.trackChanged()
     }
     
-    func setTrackTimeZone(){
+    func setTrackTimeZone(completed: (()->())? = nil){
         trackTimeZone = .current
         if let coordinate = track?.startCoordinate{
             TimeZone.getTimeZoneAsync(coordinate: coordinate){ result in
                 self.trackTimeZone = result
+                if let track = self.track{
+                    self.trackUTCOffset = UTCOffset(timeZone: self.trackTimeZone, for: track.startTime).value
+                }
+                else{
+                    self.trackUTCOffset = 0
+                }
                 Log.info("track timezone is \(result.identifier)")
+                Log.info("track utc offset is \(self.trackUTCOffset)")
                 self.delegate?.trackTimeZoneChanged()
+                completed?()
             }
         }
     }

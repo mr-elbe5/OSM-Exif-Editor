@@ -21,12 +21,12 @@ class MainViewController: ViewController {
     var imageGridView = ImageGridView()
     var sideView = SideView()
     
-    var mapScrollView: MapScrollView{
-        sideView.mapView.scrollView
+    var mapView: MapView{
+        sideView.mapView
     }
     
     var mapMenuView: MapMenuView{
-        sideView.mapView.menuView
+        mapView.menuView
     }
     
     override func loadView(){
@@ -50,7 +50,7 @@ class MainViewController: ViewController {
     override func viewWillAppear() {
         super.viewWillAppear()
         sideView.mapView.setDefaultLocation()
-        mapScrollView.updateItemLayerContent()
+        sideView.mapView.updateItemLayerContent()
     }
     
     override func viewDidAppear() {
@@ -70,8 +70,8 @@ class MainViewController: ViewController {
     }
     
     func updateMapLayersScale(){
-        mapScrollView.updateItemPositions()
-        mapScrollView.updateTrackPosition()
+        mapView.updateItemPositions()
+        mapView.updateTrackPosition()
     }
     
     func zoomIn(){
@@ -85,12 +85,17 @@ class MainViewController: ViewController {
     }
     
     func itemsChanged(){
-        mapScrollView.updateItemLayerContent()
-        mapScrollView.updateTrackLayerContent()
+        mapView.updateItemLayerContent()
+        mapView.updateTrackLayerContent()
         updateImageGrid()
     }
     
     // images
+    
+    func setDetailImage(_ image: ImageData){
+        ImageEditContext.shared.setDetailImage(image)
+        imageGridView.selectImage(image)
+    }
     
     func showImage(_ image: ImageData){
         let presenterView = ImagePresenterView()
@@ -110,6 +115,18 @@ class MainViewController: ViewController {
     
     func updateDetailGridItem(){
         imageGridView.updateDetailImageStatus()
+    }
+    
+    func saveSelectedImages(){
+        
+    }
+    
+    func exportSelectedImages(){
+        
+    }
+    
+    func deleteSelectedImages(){
+        
     }
     
     /// menu

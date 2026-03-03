@@ -19,7 +19,7 @@ class SideTopView: NSView {
     var scrollView = NSScrollView()
     var detailView = ImageDetailView()
     var editView = ImageEditView()
-    var trackView = TrackView()
+    var trackView = TrackEditView()
     var currentType: ViewType = .details
     
     var image: ImageData?{
@@ -50,24 +50,11 @@ class SideTopView: NSView {
         addSubviewBelow(scrollView, upperView: divider, insets: .zero)
             .connectToBottom(of: self)
         setImageView(currentType)
-        updateView()
     }
     
     @objc func changeView(){
         if let viewType = ViewType(rawValue: viewSelector.indexOfSelectedItem){
-            currentType = viewType
-            containerView.removeAllSubviews()
-            switch currentType {
-            case .details:
-                detailView.update()
-                containerView.addSubviewFilling(detailView, insets: .zero)
-            case .edit:
-                editView.update()
-                containerView.addSubviewFilling(editView, insets: .zero)
-            case .track:
-                trackView.update()
-                containerView.addSubviewFilling(trackView, insets: .zero)
-            }
+            setImageView(viewType)
         }
     }
     
@@ -75,32 +62,23 @@ class SideTopView: NSView {
         setImageView(.details)
     }
     
-    func updateView(){
-        switch currentType {
-        case .details:
-            detailView.update()
-        case .edit:
-            editView.update()
-        case .track:
-            trackView.update()
-        }
-    }
-    
     func setImageView(_ type: ViewType){
         currentType = type
         containerView.removeAllSubviews()
         switch(type){
         case .details:
+            viewSelector.selectedSegment = 0
             detailView.update()
             containerView.addSubviewFilling(detailView, insets: .zero)
         case .edit:
+            viewSelector.selectedSegment = 1
             editView.update()
             containerView.addSubviewFilling(editView, insets: .zero)
         case .track:
+            viewSelector.selectedSegment = 2
             trackView.update()
             containerView.addSubviewFilling(trackView, insets: .zero)
         }
-        updateView()
     }
     
 }

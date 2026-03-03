@@ -179,6 +179,12 @@ class ImageGridView: NSView {
         return arr
     }
     
+    func selectImage(_ image: ImageData){
+        AppData.shared.images.deselectAll()
+        image.selected = true
+        collectionView.reloadData()
+    }
+    
     @objc func openDirectory(){
         MainViewController.shared.openFolder()
     }

@@ -7,11 +7,10 @@ import AppKit
 import CoreLocation
 
 protocol TrackViewDelegate{
-    func detailImagesDidChangeByTrack()
     func showTrackOnMap()
 }
 
-class TrackView: NSView {
+class TrackEditView: NSView {
     
     private var track: Track?{
         ImageEditContext.shared.track
@@ -23,7 +22,10 @@ class TrackView: NSView {
     var header = NSTextField(labelWithString: "track".localize())
     
     let nameView = NSTextField(wrappingLabelWithString: " ")
+    let startDateView = NSTextField(wrappingLabelWithString: " ")
+    let endDateView = NSTextField(wrappingLabelWithString: " ")
     let timeZoneView = NSTextField(wrappingLabelWithString: " ")
+    let utcOffsetView = NSTextField(string: "0")
     
     let insets = NSEdgeInsets.zero
     
@@ -32,7 +34,7 @@ class TrackView: NSView {
     init(){
         super.init(frame: .zero)
         loadTrackButton = NSButton(title: "loadTrack".localize(), image: NSImage(iconName: "figure.walk")!, target: self, action: #selector(loadTrack))
-        compareTrackButton = NSButton(title: "compareWithTrack".localize(), image: NSImage(iconName: "point.bottomleft.forward.to.point.topright.scurvepath")!, target: self, action: #selector(compareWithTrack))
+        compareTrackButton = NSButton(title: "findRelatedImages".localize(), image: NSImage(iconName: "point.bottomleft.forward.to.point.topright.scurvepath")!, target: self, action: #selector(findRelatedImages))
     }
     
     required init?(coder: NSCoder) {
@@ -44,11 +46,12 @@ class TrackView: NSView {
         addSubviewCenteredBelow(header, insets: .defaultInsets)
         var lastView: NSView? = header
         lastView = addLabeledView(name: "name", view: nameView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "startTime", view: startDateView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "endTime", view: endDateView, upperView: lastView, insets: insets)
         lastView = addLabeledView(name: "timeZone".localize(), view: timeZoneView, upperView: lastView, insets: insets)
-        let menu = NSView()
-        menu.addSubviewToRight(loadTrackButton, insets: insets)
-        menu.addSubviewToLeft(compareTrackButton, insets: insets)
-        addSubviewBelow(menu, upperView: lastView)
+        lastView = addLabeledView(name: "utcOffset".localize(), view: utcOffsetView, upperView: lastView, insets: insets)
+        addSubviewBelow(loadTrackButton, upperView: lastView, insets: insets)
+        addSubviewBelow(compareTrackButton, upperView: loadTrackButton, insets: insets)
             .connectToBottom(of: self, inset: insets.bottom)
         update()
         checkButtons()
@@ -61,9 +64,17 @@ class TrackView: NSView {
     func update(){
         if let track = track{
             nameView.stringValue = track.name
+            startDateView.stringValue = track.startTime.dateTimeString
+            endDateView.stringValue = track.endTime.dateTimeString
+            timeZoneView.stringValue = ImageEditContext.shared.trackTimeZone.identifier
+            utcOffsetView.intValue = Int32(ImageEditContext.shared.trackUTCOffset)
         }
         else{
             nameView.stringValue = ""
+            startDateView.stringValue = ""
+            endDateView.stringValue = ""
+            timeZoneView.stringValue = ""
+            utcOffsetView.intValue = 0
         }
     }
     
@@ -79,17 +90,19 @@ class TrackView: NSView {
                 Track.loadFromFile(gpxUrl: url){ track in
                     track.updateFromTrackpoints()
                     ImageEditContext.shared.track = track
-                    ImageEditContext.shared.setTrackTimeZone()
+                    ImageEditContext.shared.setTrackTimeZone(){
+                        self.update()
+                        self.checkButtons()
+                    }
                     self.delegate?.showTrackOnMap()
                 }
             }
         }
     }
     
-    @objc func compareWithTrack(){
+    @objc func findRelatedImages(){
         if ImageEditContext.shared.selectImagesWithCloseCreationDate(){
-            ImageEditContext.shared.setDetailImage(nil)
-            delegate?.detailImagesDidChangeByTrack()
+            delegate?.showTrackOnMap()
             MainViewController.shared.updateImageGrid()
         }
     }

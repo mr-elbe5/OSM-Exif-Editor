@@ -392,6 +392,40 @@
         }
       }
     },
+    "deleteSelected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählte löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete selected"
+          }
+        }
+      }
+    },
+    "deleteSelectedHint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschen kann nicht rückgängig gemacht werden."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deleting cannot be undone. "
+          }
+        }
+      }
+    },
     "deselectAll" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -494,6 +528,23 @@
         }
       }
     },
+    "endTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zielzeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End Time"
+          }
+        }
+      }
+    },
     "exifCreationDate" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -528,6 +579,23 @@
         }
       }
     },
+    "exportSelected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählte exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export selected"
+          }
+        }
+      }
+    },
     "fileCreationDate" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -558,6 +626,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "File Modification"
+          }
+        }
+      }
+    },
+    "findRelatedImages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zugehörige Bilder finden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Find related Images"
           }
         }
       }
@@ -1021,6 +1106,23 @@
         }
       }
     },
+    "saveSelected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählte speichern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save selected"
+          }
+        }
+      }
+    },
     "saveToImage" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1236,6 +1338,23 @@
         }
       }
     },
+    "startTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Startzeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Time"
+          }
+        }
+      }
+    },
     "timeZone" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1283,6 +1402,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Track"
+          }
+        }
+      }
+    },
+    "utcOffset" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Differenz zu UTC"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Offset from UTC"
           }
         }
       }

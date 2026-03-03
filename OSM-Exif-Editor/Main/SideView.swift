@@ -43,11 +43,6 @@ class SideView: VerticalSplitView{
         }
     }
     
-    func detailImagesDidChangeByTrack(){
-        sideTopView.detailImageDidChange()
-        mapView.scrollView.updateItemLayerContent()
-    }
-    
 }
 
 extension SideView: EditContextDelegate{
@@ -77,6 +72,7 @@ extension SideView: TrackViewDelegate{
     
     func showTrackOnMap() {
         mapView.showTrackOnMap()
+        mapView.scrollView.updateItemLayerContent()
     }
     
 }

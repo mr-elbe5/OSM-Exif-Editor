@@ -68,8 +68,20 @@ class MapView: NSView {
         scrollView.updateLayerPositions()
     }
     
-    func importTrack() {
+    func updateItemLayerContent(){
         scrollView.updateItemLayerContent()
+    }
+    
+    func updateItemPositions(){
+        scrollView.updateItemPositions()
+    }
+    
+    func updateTrackLayerContent(){
+        scrollView.updateTrackPosition()
+    }
+    
+    func updateTrackPosition(){
+        scrollView.updateTrackPosition()
     }
     
     func showTrackOnMap(){
