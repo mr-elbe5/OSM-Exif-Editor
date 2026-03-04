@@ -118,7 +118,6 @@ class ImageEditView: NSView {
     
     @objc func saveImage(){
         image?.saveModifiedFile()
-        image?.isModified = false
         MainViewController.shared.updateDetailGridItem()
         updateButtons()
     }

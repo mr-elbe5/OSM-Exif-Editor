@@ -233,6 +233,33 @@ class ImageData: Equatable{
                 }
             }
             AppData.shared.stopSecurityScope()
+            isModified = false
+        }
+        return success
+    }
+    
+    @discardableResult
+    func exportFile(to exportUrl: URL) -> Bool{
+        var success = false
+        if AppData.shared.startSecurityScope(){
+            if let oldData = FileManager.default.readFile(url: url){
+                let options = [kCGImageSourceShouldCache as String: kCFBooleanFalse]
+                if let imageSource = CGImageSourceCreateWithData(oldData as CFData, options as CFDictionary) {
+                    let uti: CFString = CGImageSourceGetType(imageSource)!
+                    let newData: NSMutableData = NSMutableData(data: oldData)
+                    let destination: CGImageDestination = CGImageDestinationCreateWithData((newData as CFMutableData), uti, 1, nil)!
+                    if let oldMetaData: NSDictionary = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, options as CFDictionary){
+                        let newMetaData: NSMutableDictionary = oldMetaData.mutableCopy() as! NSMutableDictionary
+                        modifyExifDictionary(dict: newMetaData)
+                        CGImageDestinationAddImageFromSource(destination, imageSource, 0, (newMetaData as CFDictionary))
+                        CGImageDestinationFinalize(destination)
+                        var targetURL = exportUrl.appendingPathComponent(fileName)
+                        success = FileManager.default.saveFile(data: newData as Data, url: targetURL)
+                        targetURL.creation = fileCreationDate
+                    }
+                }
+            }
+            AppData.shared.stopSecurityScope()
         }
         return success
     }

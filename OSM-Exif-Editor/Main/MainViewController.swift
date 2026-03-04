@@ -118,15 +118,37 @@ class MainViewController: ViewController {
     }
     
     func saveSelectedImages(){
-        
+        for image in AppData.shared.selectedImages{
+            if image.isModified{
+                image.saveModifiedFile()
+            }
+        }
     }
     
     func exportSelectedImages(){
-        
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.directoryURL = FileManager.imagesURL
+        if panel.runModal() == .OK{
+            if let url = panel.urls.first{
+                for image in AppData.shared.selectedImages{
+                    image.exportFile(to: url)
+                }
+            }
+        }
     }
     
     func deleteSelectedImages(){
-        
+        if NSAlert.acceptWarning(title: "deleteSelected".localize(), message: "deleteSelectedHint".localize()){
+            for image in AppData.shared.selectedImages{
+                FileManager.default.deleteFile(url: image.url)
+                AppData.shared.images.remove(obj: image)
+            }
+            imageGridView.updateData()
+        }
+            
     }
     
     /// menu
