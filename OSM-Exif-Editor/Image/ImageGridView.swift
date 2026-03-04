@@ -13,20 +13,8 @@ class ImageGridView: NSView {
     
     var active = false
     
-    let headerView = NSView()
-    let headerLabel = NSTextField(labelWithString: "")
-    let sortLabel = NSTextField(labelWithString: "")
-    
-    let menuView = NSView()
-    var sortButton: NSButton!
-    var selectButton: NSButton!
-    var showPresenterButton: NSButton!
-    var increaseSizeButton: NSButton!
-    var decreaseSizeButton: NSButton!
-    var exportSelectedButton: NSButton!
-    
-    var sortMenu: NSMenu!
-    var selectMenu: NSMenu!
+    let headerView = ImageGridHeaderView()
+    let menuView = ImageGridMenuView()
     
     let scrollView = NSScrollView()
     let collectionView = NSCollectionView()
@@ -42,23 +30,22 @@ class ImageGridView: NSView {
     
     override func setupView(){
         backgroundColor = .black
-        setupHeaderView()
-        setupMenuView()
+        headerView.setupView()
+        headerView.delegate = self
+        setupNotifications()
+        menuView.setupView()
+        menuView.delegate = self
         setupCollectionView()
         addSubviewBelow(headerView)
         addSubviewWithAnchors(menuView, top: headerView.bottomAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: .narrowInsets)
         addSubviewWithAnchors(scrollView, top: headerView.bottomAnchor, leading: menuView.trailingAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: .narrowInsets)
+        headerView.updateView()
     }
     
     func setupNotifications(){
         NotificationCenter.default.addObserver(forName:  NSView.frameDidChangeNotification, object: nil, queue: nil) { notification in
             self.updateItemSize()
         }
-    }
-    
-    func updateItemSize(){
-        updateCellSize()
-        layout.invalidateLayout()
     }
     
     func updateCellSize(){
@@ -87,48 +74,6 @@ class ImageGridView: NSView {
         }
     }
     
-    func setupHeaderView() {
-        headerView.addSubviewToRight(headerLabel)
-        let bufferView = NSView()
-        headerView.addSubviewToRight(headerLabel)
-        headerView.addSubviewToRight(bufferView, leftView: headerLabel)
-        headerView.addSubviewToLeft(sortLabel)
-            .leading(bufferView.trailingAnchor)
-    }
-    
-    func updateHeaderView() {
-        headerLabel.stringValue = AppData.shared.name
-        sortLabel.stringValue = "\("sorting".localize()):\(AppData.shared.sortType.localizedName)"
-    }
-    
-    func setupMenuView() {
-        sortButton = NSButton(image: NSImage(systemSymbolName: "arrow.up.arrow.down", accessibilityDescription: nil)!, target: self, action: #selector(openSortMenu)).asMenuButton()
-        sortButton.toolTip = "sort".localize()
-        sortMenu = NSMenu(title: "selection".localize())
-        for sortType in ImageSortType.allCases{
-            let item = NSMenuItem(title: sortType.localizedName, target: self, action: #selector(sort), keyEquivalent: "")
-            item.representedObject = sortType
-            sortMenu.items.append(item)
-        }
-        selectButton = NSButton(icon: "checkmark.square", target: self, action: #selector(openSelectMenu)).asMenuButton()
-        selectButton.toolTip = "selection".localize()
-        selectMenu = NSMenu(title: "selection".localize())
-        selectMenu.items.append(NSMenuItem(title: "selectAll".localize(), target: self, action: #selector(selectAllItems), keyEquivalent: ""))
-        selectMenu.items.append(NSMenuItem(title: "deselectAll".localize(), target: self, action: #selector(deselectAllItems), keyEquivalent: ""))
-        showPresenterButton = NSButton(icon: "photo", target: self, action: #selector(showSelected)).asMenuButton()
-        showPresenterButton.toolTip = "showSelectedImages".localize()
-        increaseSizeButton = NSButton(icon: "plus", target: self, action: #selector(increaseCellSize)).asMenuButton()
-        increaseSizeButton.toolTip = "increaseImageSize".localize()
-        decreaseSizeButton = NSButton(icon: "minus", target: self, action: #selector(decreaseCellSize)).asMenuButton()
-        decreaseSizeButton.toolTip = "decreaseImageSize".localize()
-        
-        menuView.addSubviewBelow(sortButton, insets: insets)
-        menuView.addSubviewBelow(selectButton, upperView: sortButton, insets: insets)
-        menuView.addSubviewBelow(showPresenterButton, upperView: selectButton, insets: insets)
-        menuView.addSubviewBelow(increaseSizeButton, upperView: showPresenterButton, insets: insets)
-        menuView.addSubviewBelow(decreaseSizeButton, upperView: increaseSizeButton, insets: insets)
-    }
-    
     func setupCollectionView() {
         collectionView.backgroundColor = .black
         collectionView.allowsEmptySelection = true
@@ -142,22 +87,7 @@ class ImageGridView: NSView {
         layout.minimumLineSpacing = gridSpace
         updateItemSize()
         collectionView.collectionViewLayout = layout
-        updateHeaderView()
         collectionView.dataSource = AppData.shared
-    }
-    
-    @objc func increaseCellSize() {
-        if Preferences.shared.gridSizeFactorIndex < ImageGridView.gridSizeFactors.count - 1{
-            Preferences.shared.gridSizeFactorIndex += 1
-            updateItemSize()
-        }
-    }
-    
-    @objc func decreaseCellSize() {
-        if Preferences.shared.gridSizeFactorIndex > 0{
-            Preferences.shared.gridSizeFactorIndex -= 1
-            updateItemSize()
-        }
     }
     
     func updateView(){
@@ -189,45 +119,36 @@ class ImageGridView: NSView {
         MainViewController.shared.openFolder()
     }
     
-    @objc func openSortMenu(){
-        let location = NSPoint(x: sortButton.frame.width - 2, y: 10)
-        sortMenu.popUp(positioning: nil, at: location, in: sortButton)
-    }
+}
+
+extension ImageGridView: ImageGridMenuViewDelegate{
     
-    @objc func openSelectMenu(){
-        let location = NSPoint(x: selectButton.frame.width - 2, y: 10)
-        selectMenu.popUp(positioning: nil, at: location, in: selectButton)
-    }
-    
-    @objc func sort(sender: Any?){
-        if let sender = sender as? NSMenuItem, let sortType = sender.representedObject as? ImageSortType {
-            if sortType == AppData.shared.sortType{
-                AppData.shared.ascending = !AppData.shared.ascending
-            }
-            else{
-                AppData.shared.sortType = sortType
-                AppData.shared.ascending = true
-            }
-            AppData.shared.sortImages()
-            updateHeaderView()
-            updateView()
-        }
-        
-    }
-    
-    @objc func selectAllItems(){
+    func selectAllItems(){
         collectionView.selectAll(nil)
     }
     
-    @objc func deselectAllItems(){
+    func deselectAllItems(){
         collectionView.deselectAll(nil)
     }
     
-    @objc func showSelected(){
+    func updateItemSize(){
+        updateCellSize()
+        layout.invalidateLayout()
+    }
+    
+    func showSelectedItems(){
         let selected = getSelectedImages()
         if !selected.isEmpty{
             MainViewController.shared.showImages(selected)
         }
+    }
+    
+}
+
+extension ImageGridView: ImageGridHeaderViewDelegate{
+    
+    func didChangeSortType() {
+        collectionView.reloadData()
     }
     
 }
@@ -285,17 +206,6 @@ extension ImageGridView: NSCollectionViewDelegate, NSCollectionViewDelegateFlowL
     
 }
 
-extension NSButton{
-    
-    @discardableResult
-    func asMenuButton() -> NSButton{
-        self.symbolConfiguration = .init(pointSize: 16, weight: .regular)
-        self.bezelStyle = .smallSquare
-        self.width(24)
-        self.height(24)
-        return self
-    }
-    
-}
+
 
 

@@ -25,7 +25,7 @@ class TrackEditView: NSView {
     let startDateView = NSTextField(wrappingLabelWithString: " ")
     let endDateView = NSTextField(wrappingLabelWithString: " ")
     let timeZoneView = NSTextField(wrappingLabelWithString: " ")
-    let utcOffsetView = NSTextField(string: "0")
+    let utcOffsetLabel = NSTextField(labelWithString: "0")
     
     let insets = NSEdgeInsets.zero
     
@@ -49,7 +49,7 @@ class TrackEditView: NSView {
         lastView = addLabeledView(name: "startTime", view: startDateView, upperView: lastView, insets: insets)
         lastView = addLabeledView(name: "endTime", view: endDateView, upperView: lastView, insets: insets)
         lastView = addLabeledView(name: "timeZone".localize(), view: timeZoneView, upperView: lastView, insets: insets)
-        lastView = addLabeledView(name: "utcOffset".localize(), view: utcOffsetView, upperView: lastView, insets: insets)
+        lastView = addLabeledView(name: "utcOffset".localize(), view: utcOffsetLabel, upperView: lastView, insets: insets)
         addSubviewBelow(loadTrackButton, upperView: lastView, insets: insets)
         addSubviewBelow(compareTrackButton, upperView: loadTrackButton, insets: insets)
             .connectToBottom(of: self, inset: insets.bottom)
@@ -67,14 +67,14 @@ class TrackEditView: NSView {
             startDateView.stringValue = track.startTime.dateTimeString
             endDateView.stringValue = track.endTime.dateTimeString
             timeZoneView.stringValue = ImageEditContext.shared.trackTimeZone.identifier
-            utcOffsetView.intValue = Int32(ImageEditContext.shared.trackUTCOffset)
+            utcOffsetLabel.intValue = Int32(ImageEditContext.shared.trackUTCOffset)
         }
         else{
             nameView.stringValue = ""
             startDateView.stringValue = ""
             endDateView.stringValue = ""
             timeZoneView.stringValue = ""
-            utcOffsetView.intValue = 0
+            utcOffsetLabel.intValue = 0
         }
     }
     

@@ -20,4 +20,13 @@ enum ImageSortType: String, Codable, CaseIterable{
         self.rawValue.localize()
     }
     
+    static func index(of type: ImageSortType) -> Int{
+        for (index, sortType) in ImageSortType.allCases.enumerated() {
+            if sortType == type {
+                return index
+            }
+        }
+        return 0
+    }
+    
 }

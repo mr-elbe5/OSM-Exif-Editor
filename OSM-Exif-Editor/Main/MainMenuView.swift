@@ -12,9 +12,6 @@ class MainMenuView: NSView{
     var rightMenu = NSView()
     
     var openFolderButton: NSButton!
-    var saveSelectedButton: NSButton!
-    var exportSelectedButton: NSButton!
-    var deleteSelectedButton: NSButton!
     
     var openPreferencesButton: NSButton!
     var openHelpButton: NSButton!
@@ -25,9 +22,6 @@ class MainMenuView: NSView{
         super.init(frame: .zero)
         
         openFolderButton = NSButton(title: "openFolder".localize(), image: NSImage(iconName: "folder")!, target: self, action: #selector(openFolder))
-        saveSelectedButton = NSButton(title: "saveSelected".localize(), image: NSImage(iconName: "square.and.arrow.down")!, target: self, action: #selector(saveSelectedImages))
-        exportSelectedButton = NSButton(title: "exportSelected".localize(), image: NSImage(iconName: "square.and.arrow.up")!, target: self, action: #selector(exportSelectedImages))
-        deleteSelectedButton = NSButton(title: "deleteSelected".localize(), image: NSImage(iconName: "trash")!.withTintColor(.red), target: self, action: #selector(deleteSelectedImages))
         
         openPreferencesButton = NSButton(icon: "gearshape", target: self, action: #selector(openPreferences))
         openPreferencesButton.toolTip = "settings".localize()
@@ -44,9 +38,6 @@ class MainMenuView: NSView{
         
         addSubviewWithAnchors(leftMenu, top: topAnchor, leading: leadingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.smallInsets)
         leftMenu.addSubviewToRight(openFolderButton, insets: insets)
-        leftMenu.addSubviewToRight(saveSelectedButton, leftView: openFolderButton, insets: insets)
-        leftMenu.addSubviewToRight(exportSelectedButton, leftView: saveSelectedButton, insets: insets)
-        leftMenu.addSubviewToRight(deleteSelectedButton, leftView: exportSelectedButton, insets: insets)
             .connectToRight(of: leftMenu, inset: .zero)
         
         addSubviewWithAnchors(rightMenu, top: topAnchor, trailing: trailingAnchor, bottom: bottomAnchor, insets: NSEdgeInsets.smallInsets)
@@ -57,18 +48,6 @@ class MainMenuView: NSView{
     
     @objc func openFolder(){
         MainViewController.shared.openFolder()
-    }
-    
-    @objc func saveSelectedImages(){
-        MainViewController.shared.saveSelectedImages()
-    }
-    
-    @objc func exportSelectedImages(){
-        MainViewController.shared.exportSelectedImages()
-    }
-    
-    @objc func deleteSelectedImages(){
-        MainViewController.shared.deleteSelectedImages()
     }
     
     @objc func openPreferences(){

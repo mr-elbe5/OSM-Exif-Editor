@@ -174,7 +174,7 @@ class MainViewController: ViewController {
                 if AppData.shared.setFolderUrl(url){
                     AppData.shared.setBookmark()
                     ImageEditContext.shared.setDetailImage(nil)
-                    imageGridView.updateHeaderView()
+                    imageGridView.headerView.updateView()
                     imageGridView.updateView()
                     sideView.detailImageDidChange()
                 }

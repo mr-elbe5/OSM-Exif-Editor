@@ -392,23 +392,6 @@
         }
       }
     },
-    "deleteSelected" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ausgewählte löschen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Delete selected"
-          }
-        }
-      }
-    },
     "deleteSelectedHint" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -422,6 +405,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deleting cannot be undone. "
+          }
+        }
+      }
+    },
+    "deleteSelectedImages" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausgewählte Bilder löschen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete selected Images"
           }
         }
       }
@@ -579,19 +579,19 @@
         }
       }
     },
-    "exportSelected" : {
+    "exportSelectedImages" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ausgewählte exportieren"
+            "value" : "Ausgewählte Bilder exportieren"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Export selected"
+            "value" : "Export selected Images"
           }
         }
       }
@@ -643,6 +643,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Find related Images"
+          }
+        }
+      }
+    },
+    "folder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verzeichnis"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
           }
         }
       }
@@ -1106,19 +1123,19 @@
         }
       }
     },
-    "saveSelected" : {
+    "saveSelectedImages" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ausgewählte speichern"
+            "value" : "Ausgewählte Bilder speichern"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Save selected"
+            "value" : "Save selected Images"
           }
         }
       }

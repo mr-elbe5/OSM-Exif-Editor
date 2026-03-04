@@ -74,12 +74,14 @@ class ImageEditContext{
         if let track = track{
             AppData.shared.images.deselectAll()
             for image in AppData.shared.images{
-                if image.coordinate == nil, let date = image.creationDate, let result = track.findClosestTrackpoint(at: date, maxSecDiff: 10){
-                    image.exifLatitude = result.0.coordinate.latitude
-                    image.exifLongitude = result.0.coordinate.longitude
-                    image.exifAltitude = result.0.altitude
+                if let date = image.creationDate, let result = track.findClosestTrackpoint(at: date, maxSecDiff: 10){
+                    if image.coordinate == nil{
+                        image.exifLatitude = result.0.coordinate.latitude
+                        image.exifLongitude = result.0.coordinate.longitude
+                        image.exifAltitude = result.0.altitude
+                        image.isModified = true
+                    }
                     image.selected = true
-                    image.isModified = true
                     hasResult = true
                 }
             }
