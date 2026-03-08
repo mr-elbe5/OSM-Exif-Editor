@@ -61,16 +61,16 @@ class ImageEditContext{
                 else{
                     self.trackUTCOffset = 0
                 }
-                Log.info("track timezone is \(result.identifier)")
-                Log.info("track utc offset is \(self.trackUTCOffset)")
+                //Log.info("track timezone is \(result.identifier)")
+                //Log.info("track utc offset is \(self.trackUTCOffset)")
                 self.delegate?.trackTimeZoneChanged()
                 completed?()
             }
         }
     }
     
-    func selectImagesWithCloseCreationDate() -> Bool{
-        var hasResult = false
+    func selectImagesWithCloseCreationDate() -> Int{
+        var changedImages = 0
         if let track = track{
             AppData.shared.images.deselectAll()
             for image in AppData.shared.images{
@@ -82,11 +82,11 @@ class ImageEditContext{
                         image.isModified = true
                     }
                     image.selected = true
-                    hasResult = true
+                    changedImages += 1
                 }
             }
         }
-        return hasResult
+        return changedImages
     }
     
     func getImagesOfTrackByDistance(track: Track, maxDistance: Double = 20) -> ImageList{

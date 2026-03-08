@@ -45,19 +45,6 @@ extension ImageList{
         }
     }
     
-    mutating func toggleSelection(){
-        var selected = false
-        for image in self{
-            if image.selected{
-                selected = true
-                break
-            }
-        }
-        for image in self{
-            image.selected = !selected
-        }
-    }
-    
     func findNearestImage(to coordinate: CLLocationCoordinate2D) -> (ImageData, Double)? {
         var nearestImage: ImageData?
         var minDistance: Double?

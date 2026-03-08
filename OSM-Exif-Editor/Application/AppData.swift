@@ -174,7 +174,6 @@ extension AppData: NSCollectionViewDataSource{
         }
         let item = ImageGridViewItem(image: image)
         item.isSelected = image.selected
-        item.setHighlightState()
         return item
     }
     

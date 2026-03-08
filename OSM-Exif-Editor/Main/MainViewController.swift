@@ -87,7 +87,7 @@ class MainViewController: ViewController {
     func itemsChanged(){
         mapView.updateItemLayerContent()
         mapView.updateTrackLayerContent()
-        updateImageGrid()
+        updateGridData()
     }
     
     // images
@@ -109,7 +109,7 @@ class MainViewController: ViewController {
         presenterView.setImages(images)
     }
     
-    func updateImageGrid(){
+    func updateGridData(){
         imageGridView.updateData()
     }
     
@@ -187,7 +187,7 @@ class MainViewController: ViewController {
 extension MainViewController: SideViewDelegate{
     
     func imageStatesChanged(){
-        updateImageGrid()
+        updateGridData()
     }
     
 }

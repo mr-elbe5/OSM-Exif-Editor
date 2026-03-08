@@ -32,7 +32,6 @@ class ImageGridViewItem: NSCollectionViewItem{
     init(image: ImageData) {
         self.image = image
         super.init(nibName: "", bundle: nil)
-        setHighlightState()
     }
     
     required init?(coder: NSCoder) {
@@ -43,7 +42,7 @@ class ImageGridViewItem: NSCollectionViewItem{
         let cellView = CellView(frame: NSRect(x: 0, y: 0, width: 200, height: 200))
         cellView.imageGridItem = self
         view = cellView
-        view.backgroundColor = .yellow
+        view.backgroundColor = .windowBackgroundColor
         view.setGrayRoundedBorders()
         view.addSubviewWithAnchors(centerView, top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, bottom: view.bottomAnchor, insets: Self.centerInsets)
         view.addSubviewWithAnchors(topView, top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, insets: Self.topInsets)
@@ -66,6 +65,17 @@ class ImageGridViewItem: NSCollectionViewItem{
         }
     }
     
+    override var isSelected: Bool{
+        get{
+            super.isSelected
+        }
+        set{
+            super.isSelected = newValue
+            image.selected = newValue
+            view.backgroundColor = newValue ? .selectedControlColor : .windowBackgroundColor
+        }
+    }
+    
     func updateCenterView(){
         centerView.removeAllSubviews()
         let imageView = NSImageView(image: image.preview)
@@ -73,7 +83,6 @@ class ImageGridViewItem: NSCollectionViewItem{
         centerView.addSubviewFilling(imageView, insets: NSEdgeInsets.smallInsets)
         updateNameView()
         updateBottomView()
-        setHighlightState()
     }
     
     func updateNameView(){
@@ -146,10 +155,6 @@ class ImageGridViewItem: NSCollectionViewItem{
             imageGridItem?.sizeChanged()
         }
         
-    }
-    
-    func setHighlightState() {
-        view.backgroundColor = isSelected ? .selectedControlColor : .windowBackgroundColor
     }
     
 }

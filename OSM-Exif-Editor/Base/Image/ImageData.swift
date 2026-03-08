@@ -146,8 +146,8 @@ class ImageData: Equatable{
             completed()
             return
         }
-        DispatchQueue.global(qos: .userInitiated).async {
-            print("completing file for exif and preview")
+        DispatchQueue.global(qos: .utility).async {
+            //print("completing file for exif and preview")
             if AppData.shared.startSecurityScope(){
                 let data = FileManager.default.readFile(url: self.url)
                 AppData.shared.stopSecurityScope()
@@ -160,9 +160,9 @@ class ImageData: Equatable{
                             }
                             return
                         }
-                        Log.info("creating preview for \(self.url.lastPathComponent)")
+                        //Log.info("creating preview for \(self.url.lastPathComponent)")
                         self.createPreviewData(original: image)
-                        print("preview created")
+                        //print("preview created")
                         DispatchQueue.main.async {
                             completed()
                         }

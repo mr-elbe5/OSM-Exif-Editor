@@ -101,9 +101,9 @@ class TrackEditView: NSView {
     }
     
     @objc func findRelatedImages(){
-        if ImageEditContext.shared.selectImagesWithCloseCreationDate(){
+        if ImageEditContext.shared.selectImagesWithCloseCreationDate() > 0{
             delegate?.showTrackOnMap()
-            MainViewController.shared.updateImageGrid()
+            MainViewController.shared.updateGridData()
         }
     }
     

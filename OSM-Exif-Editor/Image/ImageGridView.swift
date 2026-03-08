@@ -165,8 +165,6 @@ extension ImageGridView: NSCollectionViewDelegate, NSCollectionViewDelegateFlowL
         for indexPath in indexPaths{
             if let item = collectionView.item(at: indexPath) as? ImageGridViewItem{
                 item.image.selected = true
-                //print("selected \(item.image.fileName)")
-                item.setHighlightState()
             }
         }
     }
@@ -181,8 +179,6 @@ extension ImageGridView: NSCollectionViewDelegate, NSCollectionViewDelegateFlowL
         for indexPath in indexPaths{
             if let item = collectionView.item(at: indexPath) as? ImageGridViewItem{
                 item.image.selected = false
-                //print("deselected \(item.image.fileName)")
-                item.setHighlightState()
             }
         }
     }
